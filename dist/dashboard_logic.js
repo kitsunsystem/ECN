@@ -180,7 +180,7 @@ function logout() {
     location.reload();
 }
 
-async async async function changePassword() {
+async function changePassword() {
     const oldPassword = document.getElementById('oldPass').value;
     const newPassword = document.getElementById('newPass').value;
     if (!oldPassword || !newPassword) return alert("Veuillez remplir les deux champs.");
