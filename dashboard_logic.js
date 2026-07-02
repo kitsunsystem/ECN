@@ -337,11 +337,12 @@ async function initDashboard() {
         initCustomSelects();
     }
 
-    // Check URL hash for initial view redirect (e.g. #bot)
-    const hash = window.location.hash.replace('#', '');
-    if (typeof VIEW_IDS !== 'undefined' && VIEW_IDS.includes(hash)) {
-        switchView(hash);
-        if (hash === 'bot') {
+    // Check URL hash or query parameters for initial view redirect (e.g. #bot or ?tab=bot)
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetTab = urlParams.get('tab') || urlParams.get('view') || window.location.hash.replace('#', '');
+    if (targetTab && typeof VIEW_IDS !== 'undefined' && VIEW_IDS.includes(targetTab)) {
+        switchView(targetTab);
+        if (targetTab === 'bot') {
             selectBot('rubix');
         }
     }

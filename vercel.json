@@ -1,8 +1,0 @@
-{
-  "version": 2,
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index.js" },
-    { "source": "/dashboard", "destination": "/dashboard_app.html" },
-    { "source": "/dashboard_app", "destination": "/dashboard_app.html" }
-  ]
-}
