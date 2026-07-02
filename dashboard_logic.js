@@ -263,6 +263,7 @@ async function startSubsequentFlows() {
 }
 
 async function initDashboard() {
+    initThemeMode();
     if (!currentUser) {
         document.getElementById('authScreen').style.display = 'flex';
         document.getElementById('dashContent').style.display = 'none';
@@ -1042,7 +1043,10 @@ function setMitsuRegion(region) {
 
 function selectBot(botId) {
     selectedBotId = botId;
-    openConfigModal();
+    const el = document.getElementById('inline-simulator-anchor');
+    if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+    }
 }
 
 function activateFolder(bot) {
@@ -3502,29 +3506,18 @@ async function loadCommunityData() {
 
 
 // ─────────────────────────────────────────
-// SYNAPX BOT CONFIGURATION MODAL CONTROLLER
+
+
 // ─────────────────────────────────────────
-let modalMode = 'equilibre';
-let modalCapital = 15000;
+// SYNAPX BOT SIMULATOR & THEME CONTROLLERS
+// ─────────────────────────────────────────
+let inlineMode = 'equilibre';
+let inlineCapital = 15000;
 
-function openConfigModal() {
-    const modal = document.getElementById('synapxConfigModal');
-    if (modal) {
-        modal.style.display = 'flex';
-        setModalMode('equilibre');
-        updateModalCapital(15000);
-    }
-}
-
-function closeConfigModal() {
-    const modal = document.getElementById('synapxConfigModal');
-    if (modal) modal.style.display = 'none';
-}
-
-function setModalMode(mode) {
-    modalMode = mode;
+function setInlineMode(mode) {
+    inlineMode = mode;
     ['conservateur', 'equilibre', 'debride'].forEach(m => {
-        const btn = document.getElementById(`modal-mode-${m}`);
+        const btn = document.getElementById(`inline-mode-${m}`);
         if (btn) {
             if (m === mode) {
                 btn.className = "py-2.5 text-[9px] font-bold uppercase border rounded-lg transition-all bg-amber-500/5 border-amber-500 text-amber-400 shadow-md";
@@ -3533,49 +3526,128 @@ function setModalMode(mode) {
             }
         }
     });
-    calculateModalSim();
+    calculateInlineSim();
 }
 
-function updateModalCapital(val) {
-    modalCapital = Number(val);
-    const display = document.getElementById('modal-capital-display');
-    if (display) display.innerText = modalCapital.toLocaleString('fr-FR') + ' $';
-    calculateModalSim();
+function updateInlineCapital(val) {
+    inlineCapital = Number(val);
+    const display = document.getElementById('inline-capital-display');
+    if (display) display.innerText = inlineCapital.toLocaleString('fr-FR') + ' $';
+    calculateInlineSim();
 }
 
-function calculateModalSim() {
-    let perfText, riskText, priceText;
-    if (modalMode === 'conservateur') {
-        perfText = '7% à 15% (médiane ~11%) / mois';
+function calculateInlineSim() {
+    let perfRate, perfText, riskText, priceText;
+    if (inlineMode === 'conservateur') {
+        perfRate = 0.11; // 11%
+        perfText = '+11% / mois (médiane)';
         riskText = 'Faible';
         priceText = '150 € / an';
-    } else if (modalMode === 'equilibre') {
-        perfText = 'Jusqu\'à 45% (médiane ~30%) / mois';
+    } else if (inlineMode === 'equilibre') {
+        perfRate = 0.30; // 30%
+        perfText = '+30% / mois (médiane)';
         riskText = 'Modéré (~30%)';
         priceText = '300 € / an';
-    } else if (modalMode === 'debride') {
-        perfText = 'Jusqu\'à 100% (médiane ~70%) / mois';
+    } else if (inlineMode === 'debride') {
+        perfRate = 0.70; // 70%
+        perfText = '+70% / mois (médiane)';
         riskText = 'Élevé';
         priceText = '500 € / an';
     }
     
-    const perfEl = document.getElementById('modal-perf-target');
-    const riskEl = document.getElementById('modal-risk-target');
-    const priceEl = document.getElementById('modal-price-target');
-    
-    if (perfEl) perfEl.innerText = perfText;
-    if (riskEl) {
-        riskEl.innerText = riskText;
-        riskEl.className = modalMode === 'conservateur' ? 'text-emerald-400' : (modalMode === 'equilibre' ? 'text-amber-400' : 'text-rose-400');
+    // Calculate compound growth points for 12 months
+    const points = [];
+    let cap = inlineCapital;
+    points.push({ x: 0, y: cap });
+    for (let i = 1; i <= 12; i++) {
+        cap = cap * (1 + perfRate);
+        points.push({ x: i, y: cap });
     }
-    if (priceEl) priceEl.innerText = priceText;
+    
+    const futureCapital = points[12].y;
+    
+    // Draw SVG path
+    const maxVal = futureCapital;
+    const minVal = inlineCapital;
+    const svgWidth = 400;
+    const svgHeight = 150;
+    const padding = 20;
+    
+    let pathD = '';
+    let gradD = '';
+    
+    points.forEach((p, idx) => {
+        const x = (p.x / 12) * svgWidth;
+        const normY = (p.y / maxVal);
+        // Map Y from 120 (bottom padding) to 20 (top padding)
+        const y = svgHeight - (normY * (svgHeight - padding * 2) + padding);
+        
+        if (idx === 0) {
+            pathD += `M ${x} ${y}`;
+            gradD += `M ${x} ${svgHeight} L ${x} ${y}`;
+        } else {
+            pathD += ` L ${x} ${y}`;
+            gradD += ` L ${x} ${y}`;
+        }
+    });
+    
+    gradD += ` L ${svgWidth} ${svgHeight} Z`;
+    
+    const pathEl = document.getElementById('inline-simulation-path');
+    const gradEl = document.getElementById('inline-simulation-gradient');
+    const futureDisplay = document.getElementById('inline-future-display');
+    const priceDisplay = document.getElementById('inline-price-display');
+    const perfDisplay = document.getElementById('inline-perf-display');
+    
+    if (pathEl) pathEl.setAttribute('d', pathD);
+    if (gradEl) gradEl.setAttribute('d', gradD);
+    if (futureDisplay) futureDisplay.innerText = "Capital estimé : " + Math.round(futureCapital).toLocaleString('fr-FR') + ' $';
+    if (priceDisplay) priceDisplay.innerText = priceText;
+    if (perfDisplay) perfDisplay.innerText = perfText;
 }
 
-function submitConfigOrder() {
-    const modeName = modalMode.toUpperCase();
-    const message = `Bonjour Yassine, je souhaite commander un accès personnalisé pour le SynapX Bot.\n- Mode : ${modeName}\n- Capital : ${modalCapital} $\n- Prix Licence : ${modalMode === 'conservateur' ? '150€' : (modalMode === 'equilibre' ? '300€' : '500€')}`;
+function submitInlineOrder() {
+    const modeName = inlineMode.toUpperCase();
+    const message = `Bonjour Yassine, je souhaite commander un accès personnalisé pour le SynapX Bot.\n- Mode : ${modeName}\n- Capital : ${inlineCapital} $\n- Prix Licence : ${inlineMode === 'conservateur' ? '150€' : (inlineMode === 'equilibre' ? '300€' : '500€')}\n(Hébergement VPS Offert)`;
     const encoded = encodeURIComponent(message);
     window.open(`https://t.me/ysestp?text=${encoded}`, '_blank');
-    closeConfigModal();
     showToast('Redirection vers Telegram pour valider votre commande...', 'success');
 }
+
+// ─────────────────────────────────────────
+// DARK/LIGHT THEME SWITCHER
+// ─────────────────────────────────────────
+function toggleThemeMode() {
+    const toggle = document.getElementById('themeModeToggle');
+    const label = document.getElementById('themeToggleLabel');
+    if (toggle.checked) {
+        document.body.classList.remove('light-theme');
+        if (label) label.textContent = 'Mode Sombre Actif';
+        localStorage.setItem('dashboard-theme', 'dark');
+    } else {
+        document.body.classList.add('light-theme');
+        if (label) label.textContent = 'Mode Clair Actif';
+        localStorage.setItem('dashboard-theme', 'light');
+    }
+}
+
+function initThemeMode() {
+    const savedTheme = localStorage.getItem('dashboard-theme') || 'dark';
+    const toggle = document.getElementById('themeModeToggle');
+    const label = document.getElementById('themeToggleLabel');
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-theme');
+        if (toggle) toggle.checked = false;
+        if (label) label.textContent = 'Mode Clair Actif';
+    } else {
+        document.body.classList.remove('light-theme');
+        if (toggle) toggle.checked = true;
+        if (label) label.textContent = 'Mode Sombre Actif';
+    }
+}
+
+// Auto-run simulation on document load
+setTimeout(() => {
+    setInlineMode('equilibre');
+    updateInlineCapital(15000);
+}, 300);
