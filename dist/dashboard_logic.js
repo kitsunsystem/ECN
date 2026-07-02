@@ -263,6 +263,7 @@ async function startSubsequentFlows() {
 }
 
 async function initDashboard() {
+    initThemeMode();
     if (!currentUser) {
         document.getElementById('authScreen').style.display = 'flex';
         document.getElementById('dashContent').style.display = 'none';
@@ -337,11 +338,12 @@ async function initDashboard() {
         initCustomSelects();
     }
 
-    // Check URL hash for initial view redirect (e.g. #bot)
-    const hash = window.location.hash.replace('#', '');
-    if (typeof VIEW_IDS !== 'undefined' && VIEW_IDS.includes(hash)) {
-        switchView(hash);
-        if (hash === 'bot') {
+    // Check URL hash or query parameters for initial view redirect (e.g. #bot or ?tab=bot)
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetTab = urlParams.get('tab') || urlParams.get('view') || window.location.hash.replace('#', '');
+    if (targetTab && typeof VIEW_IDS !== 'undefined' && VIEW_IDS.includes(targetTab)) {
+        switchView(targetTab);
+        if (targetTab === 'bot') {
             selectBot('rubix');
         }
     }
@@ -1066,7 +1068,7 @@ function selectBot(botId) {
 }
 
 function activateFolder(bot) {
-    const cardMitsu = document.getElementById('tutoRubiXCard');
+    const cardMitsu = document.getElementById('tutoSynapXCard') || document.getElementById('tutoRubiXCard');
     const cardLion = document.getElementById('tutoLionXCard');
     if (!cardMitsu || !cardLion) return;
     
@@ -3517,5 +3519,38 @@ async function loadCommunityData() {
         }
     } catch (e) {
         console.error("Error loading community gains:", e);
+    }
+}
+
+
+// ─────────────────────────────────────────
+// DARK/LIGHT THEME SWITCHER
+// ─────────────────────────────────────────
+function toggleThemeMode() {
+    const toggle = document.getElementById('themeModeToggle');
+    const label = document.getElementById('themeToggleLabel');
+    if (toggle.checked) {
+        document.body.classList.remove('light-theme');
+        if (label) label.textContent = 'Mode Sombre Actif';
+        localStorage.setItem('dashboard-theme', 'dark');
+    } else {
+        document.body.classList.add('light-theme');
+        if (label) label.textContent = 'Mode Clair Actif';
+        localStorage.setItem('dashboard-theme', 'light');
+    }
+}
+
+function initThemeMode() {
+    const savedTheme = localStorage.getItem('dashboard-theme') || 'dark';
+    const toggle = document.getElementById('themeModeToggle');
+    const label = document.getElementById('themeToggleLabel');
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-theme');
+        if (toggle) toggle.checked = false;
+        if (label) label.textContent = 'Mode Clair Actif';
+    } else {
+        document.body.classList.remove('light-theme');
+        if (toggle) toggle.checked = true;
+        if (label) label.textContent = 'Mode Sombre Actif';
     }
 }
