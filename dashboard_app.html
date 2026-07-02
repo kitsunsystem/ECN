@@ -3595,10 +3595,10 @@
             
             <!-- Desktop User Profile summary -->
             <div class="hidden md:flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl p-3 backdrop-blur-md">
-                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold font-serif" id="headerAvatarLetter" style="background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); color: var(--theme);">U</div>
+                <div class="w-10 h-10 rounded-full bg-theme/10 border border-theme/30 text-theme flex items-center justify-center font-bold font-serif" id="headerAvatarLetter">U</div>
                 <div class="text-left">
                     <div class="text-xs font-bold text-white leading-none mb-1" id="headerUserName">Client</div>
-                    <div class="text-[9px] uppercase tracking-widest font-semibold" style="color: rgba(212, 175, 55, 0.8);">Accès VIP</div>
+                    <div class="text-[9px] uppercase tracking-widest text-theme/70 font-semibold">Accès VIP</div>
                 </div>
                 <button class="p-2 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl hover:bg-red-500/20 hover:text-white transition-all ml-2" onclick="logout()" title="Déconnexion">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -3734,31 +3734,85 @@
 
         <!-- ── VIEW: BOT ── -->
         <div id="viewBot" class="view">
-            <!-- Stage A: Selection of available Bots -->
-            <div id="botSelectionStage" style="max-w-xl mx-auto py-8">
-                <h2 style="font-size: 28px; margin-bottom: 8px; text-align: center; font-family: 'Cinzel', serif; font-style: normal; font-weight: 800;">Nos Solutions <span style="color: var(--theme); text-transform: uppercase; font-style: normal; letter-spacing: 0.5px; display: inline-block;">Algorithmiques</span></h2>
-                <p style="color:var(--text-dim); font-size:12px; text-align:center; margin-bottom:32px; font-family:'Plus Jakarta Sans',sans-serif;">Sélectionnez notre algorithme d'exception pour configurer et activer votre licence de trading.</p>
+            <!-- Stage A: Selection of available Bots + Video Section -->
+            <div id="botSelectionStage">
+                <h2 style="font-size: 32px; margin-bottom: 12px; text-align: center; font-family: 'Cinzel', serif; font-style: normal; font-weight: 800;">Nos Solutions <span style="color: var(--theme); font-size: 40px; font-weight: 900; text-transform: uppercase; font-style: normal; letter-spacing: 0.5px; display: inline-block; text-shadow: 0 0 20px rgba(212,175,55,0.2);">Algorithmiques</span></h2>
+                <p style="color:var(--text-dim); font-size:13px; text-align:center; max-width: 600px; margin: 0 auto 36px;">Sélectionnez le robot de trading adapté à vos objectifs financiers pour accéder à sa configuration.</p>
                 
-                <!-- SynapX Bot Card -->
-                <div class="glass bot-selection-card mitsu-card-theme hover:scale-[1.02] transition-all duration-300" id="tutoSynapXCard" onclick="selectBot('rubix')" style="cursor: pointer; padding: 24px; border: 1px solid var(--border); border-radius: 24px; position: relative; overflow: hidden; background: var(--panel);">
-                    <div class="bot-selection-layout" style="display: flex; gap: 20px; align-items: center;">
-                        <div style="width: 72px; height: 72px; border-radius: 50%; border: 1.5px solid var(--theme); background: #030712; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 0 20px rgba(212, 175, 55, 0.25); flex-shrink: 0;">
-                            <img src="icon.png" alt="SynapX Bot" style="width: 100%; height: 100%; object-fit: cover;">
-                        </div>
-                        <div style="flex: 1; min-width: 0; text-align: left;">
-                            <h3 class="bot-title" style="font-size: 20px; margin-bottom: 4px; color: white; font-family: 'Cinzel', serif; font-style: normal; font-weight: 700;">SynapX Bot</h3>
-                            <span class="active-badge" style="position: static; display: inline-block; margin-bottom: 6px; font-size: 9px; padding: 2px 8px; border-radius: 4px; background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.25); color: var(--theme);">Disponible</span>
-                            <p class="bot-desc" style="font-size: 11.5px; color: var(--text-dim); line-height: 1.45; margin: 0; font-family: 'Plus Jakarta Sans', sans-serif;">
-                                Algorithme de trading sur Or (XAU/USD) d'exception, alliant croissance durable, couverture adaptative et drawdown contrôlé à environ 30%.
-                            </p>
+                <div class="stage-a-grid">
+                    <!-- Column Left: Available Bots Stack -->
+                    <div>
+                        <h3 class="bot-selection-header" style="font-size: 20px; margin-bottom: 8px; font-style: italic;">🤖 Robots Disponibles</h3>
+                        <p class="bot-selection-sub" style="color: var(--text-dim); font-size: 11px; margin-bottom: 20px;">Sélectionnez le robot de trading adapté à vos objectifs financiers pour accéder à sa configuration.</p>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 20px;" id="tutoBotList">
+                            <!-- SynapX Bot Card -->
+                            <div class="glass bot-selection-card mitsu-card-theme" id="tutoSynapXCard" onclick="selectBot('rubix')">
+                                
+                                <div class="bot-selection-layout" style="display: flex; gap: 20px; align-items: center; position: relative; z-index: 10;">
+                                    <div style="width: 72px; height: 72px; border-radius: 50%; border: 1.5px solid var(--theme); background: #030712; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 0 20px rgba(212, 175, 55, 0.25); flex-shrink: 0;">
+                                        <img src="icon.png" alt="SynapX Bot" style="width: 100%; height: 100%; object-fit: cover;">
+                                    </div>
+                                    <div style="flex: 1; min-width: 0;">
+                                        <h3 class="bot-title" style="font-size: 20px; margin-bottom: 4px; color: white;">SynapX Bot</h3>
+                                        <span class="active-badge" style="position: static; display: inline-block; margin-bottom: 8px;">Disponible</span>
+                                        <p class="bot-desc" style="font-size: 12px; color: var(--text-dim); line-height: 1.4; margin: 0;">
+                                            Algorithme phare combinant croissance stable, couverture adaptative et gestion intelligente du risque.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="bot-selection-footer" style="margin-top: 18px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 16px; position: relative; z-index: 10; text-align: center;">
+                                    <span style="display: block; font-size: 11px; color: rgba(255, 183, 197, 0.85); font-weight: 500; margin-bottom: 12px;">Modes Low Cost, Normal & Extreme</span>
+                                    <button class="bot-cta-btn mitsu-btn">Configurer ce Robot</button>
+                                </div>
+                            </div>
+                            
+                            <!-- SynapX Lion X Card -->
+                            <div class="glass bot-selection-card lion-card-theme" id="tutoLionXCard" onclick="selectBot('lionx')">
+                                <div class="lion-glow"></div>
+                                <div class="bot-selection-layout" style="display: flex; gap: 20px; align-items: center; position: relative; z-index: 10;">
+                                    <div class="lion-img-wrapper">
+                                        <div class="lion-img-aura"></div>
+                                        <img src="lion.webp" alt="SynapX Lion X" class="bot-logo-img lion-logo" style="width: 72px; height: 72px; margin: 0; position: relative; z-index: 2;">
+                                    </div>
+                                    <div style="flex: 1; min-width: 0;">
+                                        <h3 class="bot-title" style="font-size: 20px; margin-bottom: 4px; color: white;">SynapX Lion X</h3>
+                                        <span class="active-badge" style="position: static; display: inline-block; margin-bottom: 8px; color: #D4AF37;">Disponible</span>
+                                        <p class="bot-desc" style="font-size: 12px; color: var(--text-dim); line-height: 1.4; margin: 0;">
+                                            L'algorithme suprême sur l'Or (XAUUSD). Stratégie à fort potentiel de gains hebdomadaires et mensuels.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="bot-selection-footer" style="margin-top: 18px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 16px; position: relative; z-index: 10; text-align: center;">
+                                    <span style="display: block; font-size: 11px; color: rgba(212, 175, 55, 0.85); font-weight: 500; margin-bottom: 12px;">Licence Partenaire & Payante</span>
+                                    <button class="bot-cta-btn lion-btn">Configurer ce Robot</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="bot-selection-footer" style="margin-top: 18px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 16px; text-align: center;">
-                        <span style="display: block; font-size: 10.5px; color: var(--theme); font-weight: 600; margin-bottom: 12px; letter-spacing: 1px; text-transform: uppercase;">Modes : Conservateur • Équilibré • Débridé</span>
-                        <button class="bot-cta-btn mitsu-btn glossy-gold-btn px-6 py-2 rounded-full font-bold uppercase tracking-widest text-[9px]">Configurer ce Robot</button>
+
+                    <!-- Column Right: Video Tutorial Section -->
+                    <div class="glass" style="padding: 24px; border: 1px solid var(--border); border-radius: 20px; display: flex; flex-direction: column; justify-content: space-between; min-height: 480px; margin-top: 0;">
+                        <div>
+                            <h3 style="font-size: 20px; margin-bottom: 16px; font-style: italic; color: var(--theme);">🎬 Tutoriel Vidéo : Premiers Pas</h3>
+                            <div class="video-container" style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0; background: rgba(0, 0, 0, 0.45); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); overflow: hidden;">
+                                <iframe
+                                    src="https://www.youtube.com/embed/Fxs1wmeQWiI?start=51&rel=0&modestbranding=1&color=white"
+                                    title="Tutoriel Vidéo : Premiers Pas"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen
+                                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+                                ></iframe>
+                            </div>
+                        </div>
+                        <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.06); color:var(--text-dim); font-size:12px; line-height: 1.5; font-family: 'Plus Jakarta Sans', sans-serif;">
+                            Découvrez comment connecter vos robots, choisir les configurations adaptées et maximiser vos profits en toute simplicité. Suivez notre guide pas à pas.
+                        </div>
                     </div>
                 </div>
             </div>
+
             <!-- Stage B1: SynapX Bot Configurator -->
             <div id="rubixConfiguratorStage" style="display: none;">
                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
@@ -5012,73 +5066,6 @@ function capitalize(str) {
 </script>
 
 <script src="dashboard_logic.js?v=2.7.0"></script>
-
-
-<!-- Custom Modal for SynapX Bot Configuration -->
-<div id="synapxConfigModal" class="mitsu-modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 4000;">
-    <div class="glass mitsu-modal-card" style="width: 92%; max-width: 500px; padding: 24px; position: relative;">
-        <!-- Close button -->
-        <button onclick="closeConfigModal()" class="absolute top-4 right-4 p-2 bg-white/5 border border-white/10 hover:border-amber-400/50 rounded-full text-amber-400 hover:text-white transition-all">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-        
-        <div class="text-center mb-6">
-            <div style="width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--theme); background: #030712; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; overflow: hidden; box-shadow: 0 0 15px rgba(212, 175, 55, 0.25);">
-                <img src="icon.png" alt="SynapX Logo" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-            <h3 style="font-family: 'Cinzel', serif; font-size: 20px; color: #fff; font-weight: 700; margin-bottom: 2px;">Configuration SynapX Bot</h3>
-            <p style="color: var(--text-dim); font-size: 11px;">Configurez votre algorithme et validez votre accès</p>
-        </div>
-        
-        <div style="display: flex; flex-direction: column; gap: 16px;">
-            <!-- Mode Selection -->
-            <div style="text-align: left;">
-                <label style="font-size: 10px; text-transform: uppercase; tracking-wider: 1px; color: #94a3b8; font-weight: 700; display: block; margin-bottom: 8px;">1. Mode de Performance :</label>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
-                    <button id="modal-mode-conservateur" onclick="setModalMode('conservateur')" style="padding: 10px 0;" class="text-[9px] font-bold uppercase border rounded-lg transition-all bg-transparent border-slate-800 text-slate-400">
-                        Conservateur
-                    </button>
-                    <button id="modal-mode-equilibre" onclick="setModalMode('equilibre')" style="padding: 10px 0;" class="text-[9px] font-bold uppercase border rounded-lg transition-all bg-transparent border-slate-800 text-slate-400">
-                        Équilibré
-                    </button>
-                    <button id="modal-mode-debride" onclick="setModalMode('debride')" style="padding: 10px 0;" class="text-[9px] font-bold uppercase border rounded-lg transition-all bg-transparent border-slate-800 text-slate-400">
-                        Débridé
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Capital Range Slider -->
-            <div style="text-align: left;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <label style="font-size: 10px; text-transform: uppercase; tracking-wider: 1px; color: #94a3b8; font-weight: 700;">2. Capital Alloué :</label>
-                    <span class="font-mono text-sm font-bold text-amber-400" id="modal-capital-display">15 000 $</span>
-                </div>
-                <input id="modal-capital-range" type="range" min="1000" max="100000" step="1000" value="15000" oninput="updateModalCapital(this.value)" style="width: 100%; height: 4px; background: #1e293b; border-radius: 8px; outline: none; cursor: pointer; accent-color: #D4AF37;">
-            </div>
-            
-            <!-- Fast simulation summary box -->
-            <div style="padding: 14px; border-radius: 12px; background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(212, 175, 55, 0.15); display: flex; flex-direction: column; gap: 8px; text-align: left;">
-                <div style="display: flex; justify-content: space-between; font-size: 11px;">
-                    <span style="color: #94a3b8;">Rendement Cible :</span>
-                    <strong style="color: #34d399;" id="modal-perf-target">+30% / mois</strong>
-                </div>
-                <div style="display: flex; justify-content: space-between; font-size: 11px;">
-                    <span style="color: #94a3b8;">Risque / Drawdown :</span>
-                    <strong style="color: #fbbf24;" id="modal-risk-target">Modéré (~30%)</strong>
-                </div>
-                <div style="display: flex; justify-content: space-between; font-size: 11px; padding-top: 8px; border-top: 1px solid rgba(212, 175, 55, 0.1);">
-                    <span style="color: #cbd5e1;">Prix de la Licence :</span>
-                    <strong style="color: #fff;" id="modal-price-target">300 € / an</strong>
-                </div>
-            </div>
-            
-            <!-- Order Button -->
-            <button onclick="submitConfigOrder()" class="w-full py-3.5 glossy-gold-btn font-bold text-xs uppercase tracking-widest rounded-xl flex items-center justify-center space-x-2">
-                <span>Confirmer la commande</span>
-            </button>
-        </div>
-    </div>
-</div>
 
 </body>
 </html>

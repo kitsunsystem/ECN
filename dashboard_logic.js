@@ -1043,7 +1043,28 @@ function setMitsuRegion(region) {
 
 function selectBot(botId) {
     selectedBotId = botId;
-    openConfigModal();
+    
+    document.getElementById('botSelectionStage').style.display = 'none';
+    
+    if (botId === 'rubix') {
+        document.getElementById('rubixConfiguratorStage').style.display = 'block';
+        document.getElementById('lionxConfiguratorStage').style.display = 'none';
+        setTimeout(() => {
+            initMitsuConfigurator();
+            if (typeof initCustomSelects === 'function') {
+                initCustomSelects();
+            }
+        }, 50);
+    } else if (botId === 'lionx') {
+        document.getElementById('rubixConfiguratorStage').style.display = 'none';
+        document.getElementById('lionxConfiguratorStage').style.display = 'block';
+        setTimeout(() => {
+            initLionConfigurator();
+            if (typeof initCustomSelects === 'function') {
+                initCustomSelects();
+            }
+        }, 50);
+    }
 }
 
 function activateFolder(bot) {
@@ -3499,86 +3520,6 @@ async function loadCommunityData() {
     } catch (e) {
         console.error("Error loading community gains:", e);
     }
-}
-
-
-// ─────────────────────────────────────────
-// SYNAPX BOT CONFIGURATION MODAL CONTROLLER
-// ─────────────────────────────────────────
-let modalMode = 'equilibre';
-let modalCapital = 15000;
-
-function openConfigModal() {
-    const modal = document.getElementById('synapxConfigModal');
-    if (modal) {
-        modal.style.display = 'flex';
-        setModalMode('equilibre');
-        updateModalCapital(15000);
-    }
-}
-
-function closeConfigModal() {
-    const modal = document.getElementById('synapxConfigModal');
-    if (modal) modal.style.display = 'none';
-}
-
-function setModalMode(mode) {
-    modalMode = mode;
-    ['conservateur', 'equilibre', 'debride'].forEach(m => {
-        const btn = document.getElementById(`modal-mode-${m}`);
-        if (btn) {
-            if (m === mode) {
-                btn.className = "py-2.5 text-[9px] font-bold uppercase border rounded-lg transition-all bg-amber-500/5 border-amber-500 text-amber-400 shadow-md";
-            } else {
-                btn.className = "py-2.5 text-[9px] font-bold uppercase border rounded-lg transition-all bg-transparent border-slate-800 text-slate-400";
-            }
-        }
-    });
-    calculateModalSim();
-}
-
-function updateModalCapital(val) {
-    modalCapital = Number(val);
-    const display = document.getElementById('modal-capital-display');
-    if (display) display.innerText = modalCapital.toLocaleString('fr-FR') + ' $';
-    calculateModalSim();
-}
-
-function calculateModalSim() {
-    let perfText, riskText, priceText;
-    if (modalMode === 'conservateur') {
-        perfText = '7% à 15% (médiane ~11%) / mois';
-        riskText = 'Faible';
-        priceText = '150 € / an';
-    } else if (modalMode === 'equilibre') {
-        perfText = 'Jusqu\'à 45% (médiane ~30%) / mois';
-        riskText = 'Modéré (~30%)';
-        priceText = '300 € / an';
-    } else if (modalMode === 'debride') {
-        perfText = 'Jusqu\'à 100% (médiane ~70%) / mois';
-        riskText = 'Élevé';
-        priceText = '500 € / an';
-    }
-    
-    const perfEl = document.getElementById('modal-perf-target');
-    const riskEl = document.getElementById('modal-risk-target');
-    const priceEl = document.getElementById('modal-price-target');
-    
-    if (perfEl) perfEl.innerText = perfText;
-    if (riskEl) {
-        riskEl.innerText = riskText;
-        riskEl.className = modalMode === 'conservateur' ? 'text-emerald-400' : (modalMode === 'equilibre' ? 'text-amber-400' : 'text-rose-400');
-    }
-    if (priceEl) priceEl.innerText = priceText;
-}
-
-function submitConfigOrder() {
-    const modeName = modalMode.toUpperCase();
-    const message = `Bonjour Yassine, je souhaite commander un accès personnalisé pour le SynapX Bot.\n- Mode : ${modeName}\n- Capital : ${modalCapital} $\n- Prix Licence : ${modalMode === 'conservateur' ? '150€' : (modalMode === 'equilibre' ? '300€' : '500€')}`;
-    const encoded = encodeURIComponent(message);
-    window.open(`https://t.me/ysestp?text=${encoded}`, '_blank');
-    closeConfigModal();
-    showToast('Redirection vers Telegram pour valider votre commande...', 'success');
 }
 
 
