@@ -23,33 +23,33 @@
                         borderColor: 'var(--border-color)',
                     },
                     fontFamily: {
-                        sans: ['Outfit', 'Inter', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Space Grotesk', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #070103;
-            --theme-color: #E0115F;
-            --theme-glow: rgba(224, 17, 95, 0.4);
-            --card-bg: rgba(18, 3, 7, 0.4);
-            --border-color: rgba(224, 17, 95, 0.1);
-            --text-color: #f4f4f5;
-            --text-muted: #a1a1aa;
+            --bg-color: #121316; /* Titanium slate gray (No pure black) */
+            --theme-color: #E0115F; /* Ruby Red */
+            --theme-glow: rgba(224, 17, 95, 0.45);
+            --card-bg: rgba(26, 28, 34, 0.45); /* Darker gray glass panel */
+            --border-color: rgba(224, 17, 95, 0.15);
+            --text-color: #f4f4f6;
+            --text-muted: #9ba0aa;
         }
 
         html.light {
-            --bg-color: #fff9fa;
+            --bg-color: #f5f6f9; /* Warm light gray */
             --theme-color: #d8004f;
             --theme-glow: rgba(216, 0, 79, 0.15);
-            --card-bg: rgba(255, 240, 243, 0.6);
-            --border-color: rgba(216, 0, 79, 0.15);
-            --text-color: #1f1f23;
-            --text-muted: #71717a;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --border-color: rgba(216, 0, 79, 0.12);
+            --text-color: #1e2025;
+            --text-muted: #6b7280;
         }
         
         body {
@@ -64,7 +64,7 @@
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             border: 1px solid var(--border-color);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -106,20 +106,17 @@
             transform: scale(1.2);
         }
 
-        /* Menu Overlay Glassmorphism */
+        /* Menu Overlay Glassmorphism - Pure CSS toggle to guarantee no click blocking */
         #menu-overlay {
-            pointer-events: none;
             opacity: 0;
-            transition: opacity 0.5s ease;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
         }
         #menu-overlay.active {
-            pointer-events: auto;
             opacity: 1;
-        }
-
-        /* Cut Ruby Particles shapes */
-        .ruby-crystal-particle {
-            transition: background-color 0.4s ease;
+            visibility: visible;
+            pointer-events: auto;
         }
 
         /* Text glow */
@@ -136,8 +133,8 @@
 
     <!-- SPECTACULAR CINEMATIC LOADER -->
     <div id="loader" class="fixed inset-0 z-[200] pointer-events-none">
-        <div id="loader-left" class="absolute inset-y-0 left-0 w-1/2 bg-[#070103] border-r border-theme/10"></div>
-        <div id="loader-right" class="absolute inset-y-0 right-0 w-1/2 bg-[#070103] border-l border-theme/10"></div>
+        <div id="loader-left" class="absolute inset-y-0 left-0 w-1/2 bg-[#121316] border-r border-theme/10"></div>
+        <div id="loader-right" class="absolute inset-y-0 right-0 w-1/2 bg-[#121316] border-l border-theme/10"></div>
         
         <div id="loader-content" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-auto">
             <div class="relative w-24 h-24 mb-6 flex items-center justify-center">
@@ -149,7 +146,8 @@
         </div>
     </div>
 
-    <!-- BACKGROUND ANIMATIONS (FLOATING RUBY CRYSTALS) -->
+    <!-- BACKGROUND ANIMATIONS (FLOATING CANVAS WAVES & PARTICLES) -->
+    <canvas id="bg-canvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
     <div id="bg-particles" class="fixed inset-0 pointer-events-none z-0 overflow-hidden"></div>
     <div id="glow-1" class="fixed top-1/4 -left-1/4 w-[500px] h-[500px] bg-theme/5 rounded-full blur-[150px] pointer-events-none z-0"></div>
     <div id="glow-2" class="fixed bottom-1/4 -right-1/4 w-[500px] h-[500px] bg-theme/5 rounded-full blur-[150px] pointer-events-none z-0"></div>
@@ -183,7 +181,7 @@
     </header>
 
     <!-- FULL SCREEN MENU OVERLAY -->
-    <div id="menu-overlay" class="fixed inset-0 z-45 bg-[#070103]/85 backdrop-blur-3xl flex flex-col justify-center px-8 md:px-24">
+    <div id="menu-overlay" class="fixed inset-0 z-45 bg-bgColor/90 backdrop-blur-3xl flex flex-col justify-center px-8 md:px-24">
         <!-- Inner sliding glass panels -->
         <div class="absolute inset-0 grid grid-cols-1 md:grid-cols-3 pointer-events-none">
             <div class="bg-gradient-to-b from-theme/5 to-transparent border-r border-white/5 transform -translate-y-full menu-panel"></div>
@@ -194,19 +192,19 @@
         <nav class="relative z-10 space-y-6 text-left max-w-lg">
             <div class="text-[9px] uppercase tracking-[0.5em] text-theme font-bold mb-4">RubiX Ecosystem</div>
             <div>
-                <a href="#hero" onclick="closeMenu()" class="inline-block text-4xl md:text-5xl font-serif text-white hover:text-theme italic transition-colors py-2">01. Accueil</a>
+                <a href="#hero" onclick="closeMenu()" class="inline-block text-4xl md:text-5xl font-serif text-textColor hover:text-theme italic transition-colors py-2">01. Accueil</a>
             </div>
             <div>
-                <a href="#presentation" onclick="closeMenu()" class="inline-block text-4xl md:text-5xl font-serif text-white hover:text-theme italic transition-colors py-2">02. Présentation du Projet</a>
+                <a href="#presentation" onclick="closeMenu()" class="inline-block text-4xl md:text-5xl font-serif text-textColor hover:text-theme italic transition-colors py-2">02. Présentation du Projet</a>
             </div>
             <div>
-                <a href="#modes" onclick="closeMenu()" class="inline-block text-4xl md:text-5xl font-serif text-white hover:text-theme italic transition-colors py-2">03. Les 3 Modes Disponibles</a>
+                <a href="#modes" onclick="closeMenu()" class="inline-block text-4xl md:text-5xl font-serif text-textColor hover:text-theme italic transition-colors py-2">03. Les 3 Modes Disponibles</a>
             </div>
             <div>
-                <a href="#risques" onclick="closeMenu()" class="inline-block text-4xl md:text-5xl font-serif text-white hover:text-theme italic transition-colors py-2">04. Risques & Protections</a>
+                <a href="#risques" onclick="closeMenu()" class="inline-block text-4xl md:text-5xl font-serif text-textColor hover:text-theme italic transition-colors py-2">04. Risques & Protections</a>
             </div>
             <div>
-                <a href="#simulateur" onclick="closeMenu()" class="inline-block text-4xl md:text-5xl font-serif text-white hover:text-theme italic transition-colors py-2">05. Calculateur de Profits</a>
+                <a href="#simulateur" onclick="closeMenu()" class="inline-block text-4xl md:text-5xl font-serif text-textColor hover:text-theme italic transition-colors py-2">05. Calculateur de Profits</a>
             </div>
             <div class="pt-8 border-t border-white/10 max-w-sm">
                 <a href="dashboard_app.html" class="flex items-center justify-center px-6 py-4 bg-theme text-black font-bold text-xs uppercase tracking-widest rounded shadow-glow hover:scale-105 transition-transform">
@@ -241,7 +239,7 @@
                 </div>
 
                 <h1 class="gsap-reveal-hero text-5xl md:text-7xl lg:text-8xl font-serif text-glow mb-6 tracking-tighter leading-tight drop-shadow-2xl">
-                    RubiX <span class="text-transparent bg-clip-text bg-gradient-to-r from-theme to-white italic">Bot</span>
+                    RubiX <span class="text-transparent bg-clip-text bg-gradient-to-r from-theme to-textColor italic">Bot</span>
                 </h1>
 
                 <p class="gsap-reveal-hero max-w-2xl text-textMuted text-xs md:text-sm font-light leading-relaxed mb-12 uppercase tracking-[0.2em]">
@@ -249,7 +247,7 @@
                 </p>
 
                 <div class="gsap-reveal-hero flex flex-col sm:flex-row gap-6 w-full max-w-md justify-center">
-                    <a href="#presentation" class="px-10 py-5 border border-white/20 text-[10px] uppercase font-bold tracking-[0.3em] rounded hover:border-theme transition-colors flex items-center justify-center">
+                    <a href="#presentation" class="px-10 py-5 border border-white/20 text-[10px] uppercase font-bold tracking-[0.3em] rounded hover:border-theme transition-colors flex items-center justify-center text-textColor">
                         Explorer la Technologie
                     </a>
                     <a href="dashboard_app.html" class="px-10 py-5 bg-theme text-black font-bold text-[10px] uppercase tracking-[0.3em] rounded shadow-glow hover:scale-105 transition-transform flex items-center justify-center">
@@ -261,82 +259,75 @@
         </section>
 
         <!-- SECTION 1: PRESENTATION DU PROJET (Image 3) -->
-        <section id="presentation" class="py-32 px-6 md:px-12 lg:px-24 max-w-6xl mx-auto border-t border-white/5">
+        <section id="presentation" class="py-32 px-6 md:px-12 lg:px-24 max-w-6xl mx-auto border-t border-borderColor">
             <div class="gsap-reveal text-center mb-20">
                 <span class="text-theme font-bold text-[10px] uppercase tracking-[0.5em] mb-4 block">01. PRÉSENTATION</span>
                 <h2 class="text-4xl md:text-5xl font-serif italic text-glow">Présentation du Projet</h2>
                 <p class="text-theme font-bold text-xs uppercase tracking-[0.2em] mt-3">Notre Vision. Notre Technologie. Notre Engagement.</p>
                 <div class="w-20 h-[1.5px] bg-theme mx-auto mt-6"></div>
-                <p class="text-textMuted text-xs md:text-sm max-w-2xl mx-auto leading-relaxed mt-6">
-                    Nous avons développé un bot de trading algorithmique exclusivement dédié à l'or (XAU/USD), avec un objectif clair : rechercher la performance sur le long terme tout en maintenant une gestion rigoureuse du risque.
-                </p>
             </div>
 
-            <!-- 5 Pillars Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-                <!-- Pillar 1 -->
-                <div class="gsap-reveal glass-card p-8 rounded-2xl flex flex-col justify-between">
-                    <div>
-                        <div class="w-12 h-12 rounded-xl bg-theme/10 flex items-center justify-center mb-6">
-                            🌍
+            <!-- Double Column layout incorporating generated illustration -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-20">
+                <!-- Left text & pillars description -->
+                <div class="lg:col-span-7 space-y-6">
+                    <p class="text-textMuted text-xs md:text-sm leading-relaxed">
+                        Nous avons développé un bot de trading algorithmique exclusivement dédié à l'or (XAU/USD), avec un objectif clair : rechercher la performance sur le long terme tout en maintenant une gestion rigoureuse du risque.
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <!-- Pillar 1 -->
+                        <div class="flex gap-4 items-start">
+                            <div class="w-8 h-8 rounded-lg bg-theme/15 flex items-center justify-center shrink-0 text-theme text-xs font-bold">1</div>
+                            <div>
+                                <h4 class="text-sm font-serif font-bold text-textColor">Un Marché Porteur</h4>
+                                <p class="text-[11px] text-textMuted leading-relaxed mt-1">L'or est une valeur refuge mondiale, offrant de multiples opportunités de trading algorithmique.</p>
+                            </div>
                         </div>
-                        <h3 class="text-lg font-serif italic">Un Marché Porteur</h3>
-                        <p class="text-textMuted text-xs leading-relaxed mt-3">
-                            L'or est une valeur refuge mondiale, influencée par des facteurs économiques et géopolitiques constants, offrant de nombreuses opportunités de trading.
-                        </p>
+                        <!-- Pillar 2 -->
+                        <div class="flex gap-4 items-start">
+                            <div class="w-8 h-8 rounded-lg bg-theme/15 flex items-center justify-center shrink-0 text-theme text-xs font-bold">2</div>
+                            <div>
+                                <h4 class="text-sm font-serif font-bold text-textColor">Automatisation Intelligente</h4>
+                                <p class="text-[11px] text-textMuted leading-relaxed mt-1">Élimination totale des émotions humaines via une exécution disciplinée du plan de trading, 24h/24.</p>
+                            </div>
+                        </div>
+                        <!-- Pillar 3 -->
+                        <div class="flex gap-4 items-start">
+                            <div class="w-8 h-8 rounded-lg bg-theme/15 flex items-center justify-center shrink-0 text-theme text-xs font-bold">3</div>
+                            <div>
+                                <h4 class="text-sm font-serif font-bold text-textColor">Surveillance Humaine</h4>
+                                <p class="text-[11px] text-textMuted leading-relaxed mt-1">Expertise quantitative continue pour valider et calibrer l'algorithme face aux phases de marché exceptionnelles.</p>
+                            </div>
+                        </div>
                     </div>
-                    <span class="text-[9px] font-bold tracking-widest text-theme/60 mt-6 uppercase">XAU/USD Spécialisé</span>
                 </div>
 
-                <!-- Pillar 2 -->
-                <div class="gsap-reveal glass-card p-8 rounded-2xl flex flex-col justify-between">
-                    <div>
-                        <div class="w-12 h-12 rounded-xl bg-theme/10 flex items-center justify-center mb-6">
-                            🤖
+                <!-- Right illustration -->
+                <div class="lg:col-span-5 flex justify-center">
+                    <div class="glass-card p-4 rounded-3xl w-full max-w-sm rotate-2 hover:rotate-0 transition-transform duration-500">
+                        <img src="illustration_trading.jpg" alt="RubiX AI Trading Gold" class="w-full h-64 object-cover rounded-2xl border border-borderColor">
+                        <div class="text-center mt-3 text-[9px] uppercase tracking-widest text-textMuted font-bold">
+                            Visualisation Technologique de l'Algorithme XAU/USD
                         </div>
-                        <h3 class="text-lg font-serif italic">Automatisation Intelligente</h3>
-                        <p class="text-textMuted text-xs leading-relaxed mt-3">
-                            Les émotions sont l'un des principaux obstacles à la réussite en trading. Notre bot exécute un plan de trading discipliné, 24h/24, sans émotion.
-                        </p>
                     </div>
-                    <span class="text-[9px] font-bold tracking-widest text-theme/60 mt-6 uppercase">100% Autonome</span>
                 </div>
+            </div>
 
-                <!-- Pillar 3 -->
+            <!-- Pillars 4 and 5 details -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
                 <div class="gsap-reveal glass-card p-8 rounded-2xl flex flex-col justify-between">
                     <div>
-                        <div class="w-12 h-12 rounded-xl bg-theme/10 flex items-center justify-center mb-6">
-                            👁️
-                        </div>
-                        <h3 class="text-lg font-serif italic">Surveillance Humaine</h3>
-                        <p class="text-textMuted text-xs leading-relaxed mt-3">
-                            La technologie est au cœur du système, mais l'expertise humaine reste essentielle pour valider et ajuster dans des situations de marché exceptionnelles.
-                        </p>
-                    </div>
-                    <span class="text-[9px] font-bold tracking-widest text-theme/60 mt-6 uppercase">Sécurité Hybride</span>
-                </div>
-
-                <!-- Pillar 4 -->
-                <div class="gsap-reveal glass-card p-8 rounded-2xl flex flex-col justify-between">
-                    <div>
-                        <div class="w-12 h-12 rounded-xl bg-theme/10 flex items-center justify-center mb-6">
-                            📈
-                        </div>
-                        <h3 class="text-lg font-serif italic">Vision Long Terme</h3>
+                        <h3 class="text-lg font-serif italic text-textColor">Vision Long Terme</h3>
                         <p class="text-textMuted text-xs leading-relaxed mt-3">
                             Nous ne cherchons pas des gains rapides, mais une croissance durable du capital grâce à une approche méthodique et évolutive.
                         </p>
                     </div>
                     <span class="text-[9px] font-bold tracking-widest text-theme/60 mt-6 uppercase">Pérennité</span>
                 </div>
-
-                <!-- Pillar 5 -->
                 <div class="gsap-reveal glass-card p-8 rounded-2xl flex flex-col justify-between">
                     <div>
-                        <div class="w-12 h-12 rounded-xl bg-theme/10 flex items-center justify-center mb-6">
-                            🔄
-                        </div>
-                        <h3 class="text-lg font-serif italic">Amélioration Continue</h3>
+                        <h3 class="text-lg font-serif italic text-textColor">Amélioration Continue</h3>
                         <p class="text-textMuted text-xs leading-relaxed mt-3">
                             Le marché évolue, notre technologie aussi. Nous optimisons en permanence notre algorithme pour rester performant dans le temps.
                         </p>
@@ -357,19 +348,19 @@
                     </div>
                     <div class="lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-4 text-left w-full">
                         <div class="p-4 bg-white/5 border border-white/10 rounded-xl">
-                            <span class="text-theme font-bold text-xs block mb-1">📊 Analyses</span>
+                            <span class="text-theme font-bold text-xs block mb-1">Analyses</span>
                             <p class="text-[10px] text-textMuted">Analyses techniques quotidiennes du développeur de l'algorithme.</p>
                         </div>
                         <div class="p-4 bg-white/5 border border-white/10 rounded-xl">
-                            <span class="text-theme font-bold text-xs block mb-1">🔔 Positions</span>
+                            <span class="text-theme font-bold text-xs block mb-1">Positions</span>
                             <p class="text-[10px] text-textMuted">Suivi et notification des prises de position du bot en temps réel.</p>
                         </div>
                         <div class="p-4 bg-white/5 border border-white/10 rounded-xl">
-                            <span class="text-theme font-bold text-xs block mb-1">💬 Explications</span>
+                            <span class="text-theme font-bold text-xs block mb-1">Explications</span>
                             <p class="text-[10px] text-textMuted">Explications pédagogiques sur les mouvements majeurs du marché.</p>
                         </div>
                         <div class="p-4 bg-white/5 border border-white/10 rounded-xl">
-                            <span class="text-theme font-bold text-xs block mb-1">⚙️ Ajustements</span>
+                            <span class="text-theme font-bold text-xs block mb-1">Ajustements</span>
                             <p class="text-[10px] text-textMuted">Ajustements et commentaires en direct sur les conditions de marché.</p>
                         </div>
                     </div>
@@ -383,7 +374,7 @@
         </section>
 
         <!-- SECTION 2: LES 3 MODES DISPONIBLES (Image 2) -->
-        <section id="modes" class="py-32 px-6 md:px-12 lg:px-24 max-w-6xl mx-auto border-t border-white/5">
+        <section id="modes" class="py-32 px-6 md:px-12 lg:px-24 max-w-6xl mx-auto border-t border-borderColor">
             <div class="gsap-reveal text-center mb-20">
                 <span class="text-theme font-bold text-[10px] uppercase tracking-[0.5em] mb-4 block">02. MODES DE PERFORMANCE</span>
                 <h2 class="text-4xl md:text-5xl font-serif italic text-glow">Les 3 Modes Disponibles</h2>
@@ -408,10 +399,10 @@
                             <span class="text-4xl font-serif text-emerald-400 italic font-bold">7% à 15%</span>
                         </div>
                         <ul class="space-y-3 text-xs text-textMuted mb-8">
-                            <li class="flex items-center gap-2.5">🛡️ Exposition au risque minimale</li>
-                            <li class="flex items-center gap-2.5">🟢 Approche prudente</li>
-                            <li class="flex items-center gap-2.5">⭐ Protection du capital prioritaire</li>
-                            <li class="flex items-center gap-2.5">📈 Idéal pour une croissance stable</li>
+                            <li class="flex items-center gap-2.5">Exposition au risque minimale</li>
+                            <li class="flex items-center gap-2.5">Approche prudente</li>
+                            <li class="flex items-center gap-2.5">Protection du capital prioritaire</li>
+                            <li class="flex items-center gap-2.5">Idéal pour une croissance stable</li>
                         </ul>
                     </div>
                     <div>
@@ -435,10 +426,10 @@
                             <span class="text-4xl font-serif text-sky-400 italic font-bold">Jusqu'à 45%</span>
                         </div>
                         <ul class="space-y-3 text-xs text-textMuted mb-8">
-                            <li class="flex items-center gap-2.5">⚖️ Équilibre rendement/sécurité</li>
-                            <li class="flex items-center gap-2.5">🔵 Gestion du risque maîtrisée</li>
-                            <li class="flex items-center gap-2.5">📈 Régularité des performances</li>
-                            <li class="flex items-center gap-2.5">👥 Adapté à la majorité des traders</li>
+                            <li class="flex items-center gap-2.5">Équilibre rendement/sécurité</li>
+                            <li class="flex items-center gap-2.5">Gestion du risque maîtrisée</li>
+                            <li class="flex items-center gap-2.5">Régularité des performances</li>
+                            <li class="flex items-center gap-2.5">Adapté à la majorité des traders</li>
                         </ul>
                     </div>
                     <div>
@@ -450,7 +441,7 @@
                     </div>
                 </div>
 
-                <!-- Mode Agressif / Débridé -->
+                <!-- Mode Débridé -->
                 <div class="gsap-reveal glass-card p-8 rounded-3xl border-theme/20 bg-theme/5 relative overflow-hidden flex flex-col justify-between">
                     <div>
                         <div class="flex justify-between items-center mb-6">
@@ -462,10 +453,10 @@
                             <span class="text-4xl font-serif text-theme italic font-bold">Jusqu'à 100%</span>
                         </div>
                         <ul class="space-y-3 text-xs text-textMuted mb-8">
-                            <li class="flex items-center gap-2.5">🚀 Recherche de gains maximaux</li>
-                            <li class="flex items-center gap-2.5">🔴 Exposition au risque plus élevée</li>
-                            <li class="flex items-center gap-2.5">⚡ Potentiel de gains très élevé</li>
-                            <li class="flex items-center gap-2.5">🔥 Pour traders expérimentés uniquement</li>
+                            <li class="flex items-center gap-2.5">Recherche de gains maximaux</li>
+                            <li class="flex items-center gap-2.5">Exposition au risque plus élevée</li>
+                            <li class="flex items-center gap-2.5">Potentiel de gains très élevé</li>
+                            <li class="flex items-center gap-2.5">Pour traders expérimentés uniquement</li>
                         </ul>
                     </div>
                     <div>
@@ -481,7 +472,7 @@
             <!-- Note information -->
             <div class="gsap-reveal p-6 bg-white/5 border border-white/10 rounded-2xl max-w-4xl mx-auto flex flex-col sm:flex-row gap-6 justify-between items-center mb-16">
                 <div class="text-left">
-                    <span class="text-theme font-bold text-xs uppercase tracking-widest block mb-1">ℹ️ Note Importante</span>
+                    <span class="text-theme font-bold text-xs uppercase tracking-widest block mb-1">Note Importante</span>
                     <p class="text-xs text-textMuted leading-relaxed">
                         Plus l'objectif de performance mensuelle est élevé, plus le niveau de risque associé augmente. À l'inverse, en réduisant l'objectif, la probabilité d'atteindre le drawdown maximal autorisé diminue également.
                     </p>
@@ -539,7 +530,7 @@
         </section>
 
         <!-- SECTION 3: RISQUES & PROTECTIONS (Image 1) -->
-        <section id="risques" class="py-32 px-6 md:px-12 lg:px-24 max-w-6xl mx-auto border-t border-white/5">
+        <section id="risques" class="py-32 px-6 md:px-12 lg:px-24 max-w-6xl mx-auto border-t border-borderColor">
             <div class="gsap-reveal text-center mb-20">
                 <span class="text-theme font-bold text-[10px] uppercase tracking-[0.5em] mb-4 block">03. TRANSPARENCE</span>
                 <h2 class="text-4xl md:text-5xl font-serif italic text-glow">Risques & Protections</h2>
@@ -550,56 +541,41 @@
                 </p>
             </div>
 
-            <!-- Risks vs Protections Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16">
-                <!-- Risks Column -->
-                <div class="gsap-reveal glass-card p-8 rounded-3xl border-red-500/20 bg-red-950/5">
-                    <h3 class="text-xl font-serif text-red-400 mb-6 italic flex items-center gap-2">⚠️ Les Risques Existent</h3>
-                    <p class="text-xs text-textMuted mb-6 uppercase tracking-widest leading-relaxed">
-                        Aucun système de trading ne peut garantir des performances constantes ni éliminer totalement le risque.
-                    </p>
-                    <div class="space-y-4">
-                        <div class="p-4 bg-white/5 rounded-xl border border-white/5">
-                            <span class="text-red-400 text-xs font-bold block mb-1">🌍 Événements Économiques Exceptionnels</span>
-                            <p class="text-[10px] text-textMuted">Actualités majeures imprévisibles pouvant engendrer une volatilité extrême.</p>
-                        </div>
-                        <div class="p-4 bg-white/5 rounded-xl border border-white/5">
-                            <span class="text-red-400 text-xs font-bold block mb-1">⚙️ Dysfonctionnement du Broker</span>
-                            <p class="text-[10px] text-textMuted">Interruptions, pannes ou problèmes techniques pouvant affecter l'exécution des ordres.</p>
-                        </div>
-                        <div class="p-4 bg-white/5 rounded-xl border border-white/5">
-                            <span class="text-red-400 text-xs font-bold block mb-1">📉 Conditions de Marché Atypiques</span>
-                            <p class="text-[10px] text-textMuted">Changements structurels ou phases de marché inhabituelles nécessitant une adaptation.</p>
-                        </div>
-                        <div class="p-4 bg-white/5 rounded-xl border border-white/5">
-                            <span class="text-red-400 text-xs font-bold block mb-1">⚡ Volatilité Extrême et Gaps Rapides</span>
-                            <p class="text-[10px] text-textMuted">Mouvements brusques pouvant dépasser les niveaux de protection habituels.</p>
+            <!-- Double column incorporating generated dashboard illustration -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
+                <!-- Left: mockup illustration -->
+                <div class="lg:col-span-5 order-2 lg:order-1 flex justify-center">
+                    <div class="glass-card p-4 rounded-3xl w-full max-w-sm -rotate-2 hover:rotate-0 transition-transform duration-500">
+                        <img src="illustration_metrics.jpg" alt="RubiX Risk Protections Analytics" class="w-full h-64 object-cover rounded-2xl border border-borderColor">
+                        <div class="text-center mt-3 text-[9px] uppercase tracking-widest text-textMuted font-bold">
+                            Visualisation du Module de Contrôle du Drawdown
                         </div>
                     </div>
                 </div>
 
-                <!-- Protections Column -->
-                <div class="gsap-reveal glass-card p-8 rounded-3xl border-emerald-500/20 bg-emerald-950/5">
-                    <h3 class="text-xl font-serif text-emerald-400 mb-6 italic flex items-center gap-2">🛡️ Protections Intégrées</h3>
-                    <p class="text-xs text-textMuted mb-6 uppercase tracking-widest leading-relaxed">
-                        Notre technologie intègre plusieurs mécanismes de protection conçus pour limiter les pertes potentielles.
-                    </p>
-                    <div class="space-y-4">
-                        <div class="p-4 bg-white/5 rounded-xl border border-white/5">
-                            <span class="text-emerald-400 text-xs font-bold block mb-1">📉 Contrôle du Drawdown</span>
-                            <p class="text-[10px] text-textMuted">Surveillance continue du risque. En cas d'atteinte d'un seuil prédéfini, les positions sont réduites ou fermées.</p>
+                <!-- Right: Risks vs Protections details -->
+                <div class="lg:col-span-7 order-1 lg:order-2 space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <!-- Risks block -->
+                        <div class="p-6 bg-red-500/5 rounded-2xl border border-red-500/20">
+                            <h4 class="text-sm font-serif font-bold text-red-400 mb-4">Risques</h4>
+                            <ul class="space-y-2 text-[10px] text-textMuted list-disc pl-4">
+                                <li>Événements Économiques Exceptionnels</li>
+                                <li>Dysfonctionnement du Broker</li>
+                                <li>Conditions de Marché Atypiques</li>
+                                <li>Volatilité Extrême et Gaps Rapides</li>
+                            </ul>
                         </div>
-                        <div class="p-4 bg-white/5 rounded-xl border border-white/5">
-                            <span class="text-emerald-400 text-xs font-bold block mb-1">🛑 Fermeture Automatique</span>
-                            <p class="text-[10px] text-textMuted">Fermeture automatique des positions en cas d'atteinte du drawdown maximal autorisé.</p>
-                        </div>
-                        <div class="p-4 bg-white/5 rounded-xl border border-white/5">
-                            <span class="text-emerald-400 text-xs font-bold block mb-1">📊 Gestion Stricte du Risque</span>
-                            <p class="text-[10px] text-textMuted">Gestion dynamique des positions par grille contrôlée et limitation de l'exposition.</p>
-                        </div>
-                        <div class="p-4 bg-white/5 rounded-xl border border-white/5">
-                            <span class="text-emerald-400 text-xs font-bold block mb-1">👁️ Surveillance Humaine</span>
-                            <p class="text-[10px] text-textMuted">Intervention humaine pour valider certaines situations de marché exceptionnelles.</p>
+                        
+                        <!-- Protections block -->
+                        <div class="p-6 bg-emerald-500/5 rounded-2xl border border-emerald-500/20">
+                            <h4 class="text-sm font-serif font-bold text-emerald-400 mb-4">Protections</h4>
+                            <ul class="space-y-2 text-[10px] text-textMuted list-disc pl-4">
+                                <li>Contrôle Continu du Drawdown</li>
+                                <li>Fermeture Automatique des Positions</li>
+                                <li>Gestion Stricte et Limitation d'Exposition</li>
+                                <li>Surveillance Humaine Active</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -608,21 +584,21 @@
             <!-- Drawdown limit engagement -->
             <div class="gsap-reveal p-8 bg-theme/5 border border-theme/20 rounded-3xl max-w-4xl mx-auto flex flex-col md:flex-row gap-8 justify-between items-center">
                 <div class="text-left md:w-2/3">
-                    <span class="text-theme font-bold text-xs uppercase tracking-widest block mb-1">🎯 Objectif de Limitation des Pertes</span>
+                    <span class="text-theme font-bold text-xs uppercase tracking-widest block mb-1">Objectif de Limitation des Pertes</span>
                     <h4 class="text-2xl font-serif text-glow mb-2 italic">Environ 30% du capital</h4>
                     <p class="text-xs text-textMuted leading-relaxed">
                         Dans un scénario défavorable majeur, notre système vise à limiter la perte maximale à environ 30% du capital, contrairement à d'autres systèmes qui peuvent exposer la totalité du compte.
                     </p>
                 </div>
                 <div class="p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-center md:w-1/3 w-full shrink-0">
-                    <span class="text-red-400 text-xs font-bold uppercase tracking-widest block mb-1">⚠️ AUCUN RENDEMENT GARANTI</span>
+                    <span class="text-red-400 text-xs font-bold uppercase tracking-widest block mb-1">AUCUN RENDEMENT GARANTI</span>
                     <p class="text-[9px] text-textMuted uppercase tracking-widest leading-relaxed">Le trading comporte un risque de perte. Tradez uniquement le capital que vous pouvez vous permettre de perdre.</p>
                 </div>
             </div>
         </section>
 
         <!-- FOOTER -->
-        <footer class="py-12 border-t border-white/5 bg-black/60 relative z-10 text-center">
+        <footer class="py-12 border-t border-borderColor bg-black/60 relative z-10 text-center">
             <div class="max-w-4xl mx-auto px-6">
                 <div class="flex items-center justify-center gap-3 mb-6">
                     <img src="rubix_logo.jpg" alt="RubiX Logo" class="w-8 h-8 rounded-lg object-cover mix-blend-screen opacity-70">
@@ -641,29 +617,9 @@
 
     <!-- SCRIPTS -->
     <script>
-        // Open/Close slide-out overlay menu using GSAP timelines
+        // Open/Close slide-out overlay menu using pure CSS transitions for visibility and pointer-events (guarantees zero click-blocking)
         const menuTrigger = document.getElementById('menu-trigger');
         const menuOverlay = document.getElementById('menu-overlay');
-
-        const menuTl = gsap.timeline({ paused: true });
-
-        // Build premium staggered sliding glass panel animation for menu
-        menuTl.to(menuOverlay, { 
-            opacity: 1, 
-            pointerEvents: "auto", 
-            duration: 0.3 
-        })
-        .to(".menu-panel", { 
-            y: 0, 
-            duration: 0.5, 
-            stagger: 0.08, 
-            ease: "power2.out" 
-        }, "-=0.2")
-        .fromTo("#menu-overlay nav div", 
-            { opacity: 0, x: -30 }, 
-            { opacity: 1, x: 0, duration: 0.35, stagger: 0.06, ease: "power2.out" }, 
-            "-=0.3"
-        );
 
         let menuOpen = false;
         menuTrigger.addEventListener('click', () => {
@@ -672,12 +628,22 @@
             
             if (menuOpen) {
                 menuOverlay.classList.add('active');
-                menuTl.play();
+                
+                // GSAP animation for columns and links inside
+                gsap.to(".menu-panel", { y: 0, duration: 0.5, stagger: 0.08, ease: "power2.out" });
+                gsap.fromTo("#menu-overlay nav div", 
+                    { opacity: 0, x: -30 }, 
+                    { opacity: 1, x: 0, duration: 0.35, stagger: 0.06, ease: "power2.out", delay: 0.2 }
+                );
+                
                 bars[0].style.transform = 'translateY(4px) rotate(45deg)';
                 bars[1].style.transform = 'translateY(-4px) rotate(-45deg)';
             } else {
                 menuOverlay.classList.remove('active');
-                menuTl.reverse();
+                
+                gsap.to(".menu-panel", { y: "-100%", duration: 0.4, ease: "power2.in" });
+                gsap.to("#menu-overlay nav div", { opacity: 0, x: -20, duration: 0.2 });
+                
                 bars[0].style.transform = 'none';
                 bars[1].style.transform = 'none';
             }
@@ -686,7 +652,10 @@
         function closeMenu() {
             menuOpen = false;
             menuOverlay.classList.remove('active');
-            menuTl.reverse();
+            
+            gsap.to(".menu-panel", { y: "-100%", duration: 0.4, ease: "power2.in" });
+            gsap.to("#menu-overlay nav div", { opacity: 0, x: -20, duration: 0.2 });
+            
             const bars = menuTrigger.querySelectorAll('span');
             bars[0].style.transform = 'none';
             bars[1].style.transform = 'none';
@@ -713,24 +682,71 @@
             initRubyParticles();
         });
 
+        // 60FPS Constant Waving Grid on HTML5 Canvas in the background
+        function initCanvasWaves() {
+            const canvas = document.getElementById('bg-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+            
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+            
+            let tick = 0;
+            const waves = [
+                { y: 0.65, length: 0.002, amplitude: 50, speed: 0.006, opacity: 0.03 },
+                { y: 0.75, length: 0.0015, amplitude: 70, speed: -0.004, opacity: 0.02 },
+                { y: 0.85, length: 0.001, amplitude: 90, speed: 0.003, opacity: 0.015 }
+            ];
+            
+            function animate() {
+                tick++;
+                ctx.clearRect(0, 0, width, height);
+                
+                // Draw waving trend lines
+                waves.forEach(wave => {
+                    ctx.beginPath();
+                    const isLight = document.documentElement.classList.contains('light');
+                    ctx.strokeStyle = isLight 
+                        ? `rgba(216, 0, 79, ${wave.opacity * 1.5})` 
+                        : `rgba(224, 17, 95, ${wave.opacity})`;
+                    ctx.lineWidth = 1.2;
+                    
+                    for (let x = 0; x < width; x++) {
+                        const y = Math.sin(x * wave.length + tick * wave.speed) * wave.amplitude + (height * wave.y);
+                        if (x === 0) {
+                            ctx.moveTo(x, y);
+                        } else {
+                            ctx.lineTo(x, y);
+                        }
+                    }
+                    ctx.stroke();
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+
         // Particle floating animations with custom cut ruby diamond shapes
         function initRubyParticles() {
             const container = document.getElementById('bg-particles');
             if (!container) return;
             container.innerHTML = '';
             
-            const count = window.innerWidth < 768 ? 15 : 35;
+            const count = window.innerWidth < 768 ? 12 : 28;
             for (let i = 0; i < count; i++) {
                 const p = document.createElement('div');
-                p.className = 'absolute ruby-crystal-particle pointer-events-none opacity-20';
+                p.className = 'absolute ruby-crystal-particle pointer-events-none opacity-[0.12]';
                 
                 const size = Math.random() * 20 + 8;
                 p.style.width = size + 'px';
                 p.style.height = size + 'px';
-                
-                // Color depending on active theme
-                const isLightTheme = document.documentElement.classList.contains('light');
-                const rubyGlow = isLightTheme ? 'rgba(216, 0, 79, 0.4)' : 'rgba(224, 17, 95, 0.5)';
                 p.style.background = `linear-gradient(135deg, var(--theme-color), rgba(224, 17, 95, 0))`;
                 p.style.clipPath = 'polygon(50% 0%, 90% 30%, 75% 90%, 25% 90%, 10% 30%)';
                 
@@ -864,10 +880,11 @@
         window.onload = () => {
             gsap.registerPlugin(ScrollTrigger);
 
-            // Re-render default simulator values
+            // Re-render default values and background canvas
             setPersoTier('lowcost');
             setSimMode('neutre');
             initRubyParticles();
+            initCanvasWaves();
 
             // Loader GSAP Timeline
             const loaderTl = gsap.timeline({

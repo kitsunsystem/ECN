@@ -25,7 +25,9 @@ const filesToCopy = [
     'icon.png',
     'mitsuyoshi_presentation.pdf',
     'test.html',
-    'rubix_logo.jpg'
+    'rubix_logo.jpg',
+    'illustration_trading.jpg',
+    'illustration_metrics.jpg'
 ];
 
 // Copy files
