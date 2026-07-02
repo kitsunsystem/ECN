@@ -1455,8 +1455,8 @@
             if (chartFixed) chartFixed.destroy();
 
             const gradient = ctx.createLinearGradient(0, 0, 0, 180);
-            gradient.addColorStop(0, 'rgba(212, 175, 55, 0.15)');
-            gradient.addColorStop(1, 'rgba(212, 175, 55, 0.0)');
+            gradient.addColorStop(0, 'rgba(224, 17, 95, 0.15)');
+            gradient.addColorStop(1, 'rgba(224, 17, 95, 0.0)');
 
             chartFixed = new Chart(ctx, {
                 type: 'line',
@@ -1464,12 +1464,12 @@
                     labels: points.map(p => p.x),
                     datasets: [{
                         data: points.map(p => p.y),
-                        borderColor: '#D4AF37',
+                        borderColor: '#E0115F',
                         borderWidth: 2,
                         tension: 0.35,
                         fill: true,
                         backgroundColor: gradient,
-                        pointBackgroundColor: '#D4AF37',
+                        pointBackgroundColor: '#E0115F',
                         pointRadius: points.length > 20 ? 0 : 3
                     }]
                 },

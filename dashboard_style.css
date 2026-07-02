@@ -221,7 +221,7 @@ body {
 }
 
 .btn-timeframe:hover {
-    background: rgba(212, 175, 55, 0.1);
+    background: rgba(224, 17, 95, 0.1);
     border-color: var(--accent);
 }
 

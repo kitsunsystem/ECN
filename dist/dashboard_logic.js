@@ -852,8 +852,8 @@ function renderChart(points) {
     if (currentChart) currentChart.destroy();
 
     const gradient = ctx.createLinearGradient(0, 0, 0, 360);
-    gradient.addColorStop(0,   'rgba(212, 175, 55, 0.18)');
-    gradient.addColorStop(1,   'rgba(212, 175, 55, 0.00)');
+    gradient.addColorStop(0,   'rgba(224, 17, 95, 0.18)');
+    gradient.addColorStop(1,   'rgba(224, 17, 95, 0.00)');
 
     currentChart = new Chart(ctx, {
         type: 'line',
@@ -861,13 +861,13 @@ function renderChart(points) {
             labels: points.map(p => p.x),
             datasets: [{
                 data: points.map(p => p.y),
-                borderColor:     '#D4AF37',
+                borderColor:     '#E0115F',
                 borderWidth:     2,
                 fill:            true,
                 backgroundColor: gradient,
                 tension:         0.35,
                 pointRadius:     points.length > 30 ? 0 : 3,
-                pointBackgroundColor: '#D4AF37',
+                pointBackgroundColor: '#E0115F',
                 pointBorderColor:    'transparent',
             }]
         },
@@ -881,7 +881,7 @@ function renderChart(points) {
                     backgroundColor: 'rgba(10,10,15,0.9)',
                     borderColor: 'rgba(212,175,55,0.3)',
                     borderWidth: 1,
-                    titleColor: '#D4AF37',
+                    titleColor: '#E0115F',
                     bodyColor: '#e4e4e7',
                     padding: 12,
                     callbacks: {
@@ -1347,8 +1347,8 @@ function renderMitsuChart(labels, dataPoints) {
     if (mitsuChart) mitsuChart.destroy();
     
     const gradient = ctx.createLinearGradient(0, 0, 0, 200);
-    gradient.addColorStop(0, 'rgba(212, 175, 55, 0.2)');
-    gradient.addColorStop(1, 'rgba(212, 175, 55, 0.0)');
+    gradient.addColorStop(0, 'rgba(224, 17, 95, 0.2)');
+    gradient.addColorStop(1, 'rgba(224, 17, 95, 0.0)');
     
     mitsuChart = new Chart(ctx, {
         type: 'line',
@@ -1357,12 +1357,12 @@ function renderMitsuChart(labels, dataPoints) {
             datasets: [{
                 label: 'Équité Estimée (12 Mois)',
                 data: dataPoints,
-                borderColor: '#D4AF37',
+                borderColor: '#E0115F',
                 borderWidth: 2,
                 backgroundColor: gradient,
                 fill: true,
                 tension: 0.3,
-                pointBackgroundColor: '#D4AF37',
+                pointBackgroundColor: '#E0115F',
                 pointBorderColor: 'rgba(255,255,255,0.8)',
                 pointHoverRadius: 6
             }]
@@ -1475,8 +1475,8 @@ function renderLionChart(labels, dataPoints) {
     if (lionChart) lionChart.destroy();
     
     const gradient = ctx.createLinearGradient(0, 0, 0, 200);
-    gradient.addColorStop(0, 'rgba(212, 175, 55, 0.25)');
-    gradient.addColorStop(1, 'rgba(212, 175, 55, 0.0)');
+    gradient.addColorStop(0, 'rgba(224, 17, 95, 0.25)');
+    gradient.addColorStop(1, 'rgba(224, 17, 95, 0.0)');
     
     lionChart = new Chart(ctx, {
         type: 'line',
@@ -1485,12 +1485,12 @@ function renderLionChart(labels, dataPoints) {
             datasets: [{
                 label: 'Équité Estimée (12 Semaines)',
                 data: dataPoints,
-                borderColor: '#D4AF37',
+                borderColor: '#E0115F',
                 borderWidth: 2,
                 backgroundColor: gradient,
                 fill: true,
                 tension: 0.3,
-                pointBackgroundColor: '#D4AF37',
+                pointBackgroundColor: '#E0115F',
                 pointBorderColor: 'rgba(255,255,255,0.8)',
                 pointHoverRadius: 6
             }]
@@ -1878,8 +1878,8 @@ function renderSimulationChart(dataPoints, bePoints) {
     if (botSimChart) botSimChart.destroy();
     
     const gradient = ctx.createLinearGradient(0, 0, 0, 240);
-    gradient.addColorStop(0, 'rgba(212, 175, 55, 0.2)');
-    gradient.addColorStop(1, 'rgba(212, 175, 55, 0.0)');
+    gradient.addColorStop(0, 'rgba(224, 17, 95, 0.2)');
+    gradient.addColorStop(1, 'rgba(224, 17, 95, 0.0)');
     
     const labels = ["M0", "M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "M10", "M11", "M12"];
     
@@ -1891,13 +1891,13 @@ function renderSimulationChart(dataPoints, bePoints) {
                 {
                     label: "Capital Net Projeté",
                     data: dataPoints,
-                    borderColor: '#D4AF37',
+                    borderColor: '#E0115F',
                     borderWidth: 2.5,
                     fill: true,
                     backgroundColor: gradient,
                     tension: 0.35,
                     pointRadius: 3,
-                    pointBackgroundColor: '#D4AF37',
+                    pointBackgroundColor: '#E0115F',
                     pointBorderColor: 'transparent'
                 },
                 {
@@ -1921,7 +1921,7 @@ function renderSimulationChart(dataPoints, bePoints) {
                     backgroundColor: 'rgba(10,10,15,0.95)',
                     borderColor: 'rgba(255,255,255,0.08)',
                     borderWidth: 1,
-                    titleColor: '#D4AF37',
+                    titleColor: '#E0115F',
                     bodyColor: '#e4e4e7',
                     mode: 'index',
                     intersect: false,
@@ -3048,14 +3048,14 @@ function drawSparkline(canvasId, dataset) {
     ctx.clearRect(0, 0, width, height);
     
     // Theme colors tailored by plan ID
-    let themeColor = '#D4AF37'; // gold default
-    let glowColor = 'rgba(212, 175, 55, 0.15)';
+    let themeColor = '#E0115F'; // gold default
+    let glowColor = 'rgba(224, 17, 95, 0.15)';
     if (canvasId.includes('lowcost')) {
         themeColor = '#22c55e'; // green (success)
         glowColor = 'rgba(34, 197, 94, 0.15)';
     } else if (canvasId.includes('normal')) {
-        themeColor = '#D4AF37'; // gold
-        glowColor = 'rgba(212, 175, 55, 0.15)';
+        themeColor = '#E0115F'; // gold
+        glowColor = 'rgba(224, 17, 95, 0.15)';
     } else if (canvasId.includes('extreme')) {
         themeColor = '#ef4444'; // red (danger)
         glowColor = 'rgba(239, 68, 68, 0.15)';
@@ -3150,7 +3150,7 @@ function generateSimpleModePlans(capital, gain) {
             vpsFee: 50,
             drawdown: '3%',
             prob: '2%',
-            color: '#D4AF37'
+            color: '#E0115F'
         },
         {
             id: 'extreme',
@@ -3184,7 +3184,7 @@ function generateSimpleModePlans(capital, gain) {
             vpsFee: 50,
             drawdown: '30%',
             prob: '2%',
-            color: '#D4AF37'
+            color: '#E0115F'
         },
         {
             id: 'extreme',
