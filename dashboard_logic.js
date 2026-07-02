@@ -1044,18 +1044,6 @@ function selectBot(botId) {
     selectedBotId = botId;
     openConfigModal();
 }
-        }, 50);
-    } else if (botId === 'lionx') {
-        document.getElementById('rubixConfiguratorStage').style.display = 'none';
-        document.getElementById('lionxConfiguratorStage').style.display = 'block';
-        setTimeout(() => {
-            initLionConfigurator();
-            if (typeof initCustomSelects === 'function') {
-                initCustomSelects();
-            }
-        }, 50);
-    }
-}
 
 function activateFolder(bot) {
     const cardMitsu = document.getElementById('tutoSynapXCard') || document.getElementById('tutoRubiXCard');
