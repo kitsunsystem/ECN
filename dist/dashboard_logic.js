@@ -180,7 +180,7 @@ function logout() {
     location.reload();
 }
 
-async function changePassword() {
+async async async function changePassword() {
     const oldPassword = document.getElementById('oldPass').value;
     const newPassword = document.getElementById('newPass').value;
     if (!oldPassword || !newPassword) return alert("Veuillez remplir les deux champs.");
@@ -1300,17 +1300,17 @@ function updateMitsuPlanDetails() {
     const detailsBox = document.getElementById('mitsuPlanDetailsBox');
     if (!detailsBox) return;
     
-    let planTitle = "Plan Low Cost";
+    let planTitle = "Plan Conservateur";
     let icon = "🛡️";
-    let monthlyPct = isProp ? "2.5%" : "25.0%";
-    let weeklyPct = isProp ? "0.57%" : "5.7%";
+    let monthlyPct = isProp ? "2.5%" : "7.0% - 15.0%";
+    let weeklyPct = isProp ? "0.57%" : "1.6% - 3.4%";
     let risk = isProp ? "Extrêmement Faible" : "Prudent & Modéré";
     let desc = isProp 
         ? "Configuration conçue pour passer et conserver les comptes Prop Firm sans enfreindre la limite maximale de drawdown."
         : "Idéal pour sécuriser un capital régulier avec un drawdown minimal et un risque contrôlé.";
         
     if (mitsuPlan === 'normal') {
-        planTitle = "Plan Normal";
+        planTitle = "Plan Équilibré";
         icon = "⚖️";
         monthlyPct = isProp ? "4.5%" : "45.0%";
         weeklyPct = isProp ? "0.97%" : "9.7%";
@@ -1319,10 +1319,10 @@ function updateMitsuPlanDetails() {
             ? "Profil de risque équilibré idéal pour les challenges Prop Firm avec un objectif de profit journalier confortable."
             : "Le meilleur ratio performance/risque pour accroître votre capital personnel de façon constante.";
     } else if (mitsuPlan === 'extreme') {
-        planTitle = "Plan Extreme";
+        planTitle = "Plan Débridé";
         icon = "⚡";
-        monthlyPct = isProp ? "6.5%" : "65.0%";
-        weeklyPct = isProp ? "1.33%" : "13.3%";
+        monthlyPct = isProp ? "6.5%" : "jusqu'à 100.0%";
+        weeklyPct = isProp ? "1.33%" : "jusqu'à 18.9%";
         risk = isProp ? "Modéré" : "Agressif / Fort Rendement";
         desc = isProp
             ? "Maximise les gains sur Prop Firm en poussant l'algorithme vers des objectifs élevés tout en surveillant la limite quotidienne."
@@ -1707,7 +1707,7 @@ function switchBotMode(mode) {
         maxDrawdownEl.textContent = isProp ? "3% possible" : "30% possible";
     }
     if (risqueDrawdownEl) {
-        risqueDrawdownEl.textContent = (mode === 'lowcost' ? "1%" : mode === 'normal' ? "2%" : "2.5%") + " de probabilité";
+        risqueDrawdownEl.textContent = (mode === 'lowcost' ? "1%" : mode === 'normal' ? "2%" : "3%") + " de probabilité";
     }
     if (minBrokerText) {
         minBrokerText.textContent = isProp ? "10 000 €/$ (obligatoire pour vous)" : "500 €/$ (obligatoire pour vous)";
@@ -1716,15 +1716,15 @@ function switchBotMode(mode) {
     if (mode === 'lowcost') {
         if (tabLC) tabLC.classList.add('active');
         
-        sliderProfit.min = 10;
-        sliderProfit.max = 25;
+        sliderProfit.min = 7;
+        sliderProfit.max = 15;
         let val = parseFloat(sliderProfit.value);
-        if (isNaN(val) || val > 25) sliderProfit.value = 25;
-        else if (val < 10) sliderProfit.value = 10;
+        if (isNaN(val) || val > 15) sliderProfit.value = 15;
+        else if (val < 7) sliderProfit.value = 7;
         
         labelProfit.textContent = isProp 
-            ? "Cible de Profit Mensuel (Mode Low Cost - Prop Firm)" 
-            : "Cible de Profit Mensuel (Mode Low Cost)";
+            ? "Cible de Profit Mensuel (Mode Conservateur - Prop Firm)" 
+            : "Cible de Profit Mensuel (Mode Conservateur)";
         
         sliderPrice.value = 300;
         
@@ -1743,8 +1743,8 @@ function switchBotMode(mode) {
         else if (val < 10) sliderProfit.value = 10;
         
         labelProfit.textContent = isProp 
-            ? "Cible de Profit Mensuel (Mode Normal - Prop Firm)" 
-            : "Cible de Profit Mensuel (Mode Normal)";
+            ? "Cible de Profit Mensuel (Mode Équilibré - Prop Firm)" 
+            : "Cible de Profit Mensuel (Mode Équilibré)";
         
         sliderPrice.value = 600;
         
@@ -1757,14 +1757,14 @@ function switchBotMode(mode) {
         if (tabEX) tabEX.classList.add('active');
         
         sliderProfit.min = 10;
-        sliderProfit.max = 65;
+        sliderProfit.max = 100;
         let val = parseFloat(sliderProfit.value);
-        if (isNaN(val) || val > 65) sliderProfit.value = 65;
+        if (isNaN(val) || val > 100) sliderProfit.value = 100;
         else if (val < 10) sliderProfit.value = 10;
         
         labelProfit.textContent = isProp 
-            ? "Cible de Profit Mensuel (Mode Extreme - Prop Firm)" 
-            : "Cible de Profit Mensuel (Mode Extreme)";
+            ? "Cible de Profit Mensuel (Mode Débridé - Prop Firm)" 
+            : "Cible de Profit Mensuel (Mode Débridé)";
         
         sliderPrice.value = 950;
         
@@ -1809,7 +1809,7 @@ function updateBotCalculator() {
         capital = maxCapital;
         inputCapital.value = maxCapital;
         if (typeof showToast === 'function') {
-            showToast(`Capital limité au maximum de ${maxCapital.toLocaleString()} €/$ pour le mode ${currentBotMode === 'lowcost' ? 'Low Cost' : currentBotMode === 'normal' ? 'Normal' : 'Extreme'}.`, "info");
+            showToast(`Capital limité au maximum de ${maxCapital.toLocaleString()} €/$ pour le mode ${currentBotMode === 'lowcost' ? 'Conservateur' : currentBotMode === 'normal' ? 'Équilibré' : 'Débridé'}.`, "info");
         }
     }
     
@@ -3168,9 +3168,9 @@ function generateSimpleModePlans(capital, gain) {
     ] : [
         {
             id: 'lowcost',
-            title: 'Plan Low Cost — Sécurisé',
+            title: 'Plan Conservateur — Sécurisé',
             maxCapital: 2500,
-            maxProfit: 25,
+            maxProfit: 15,
             uniquePrice: 300,
             vpsFee: 25,
             drawdown: '30%',
@@ -3179,7 +3179,7 @@ function generateSimpleModePlans(capital, gain) {
         },
         {
             id: 'normal',
-            title: 'Plan Normal — Équilibré',
+            title: 'Plan Équilibré — Performance',
             maxCapital: 7000,
             maxProfit: 45,
             uniquePrice: 600,
@@ -3190,9 +3190,9 @@ function generateSimpleModePlans(capital, gain) {
         },
         {
             id: 'extreme',
-            title: 'Plan Extreme — Rendement Max',
+            title: 'Plan Débridé — Rendement Max',
             maxCapital: 10000,
-            maxProfit: 65,
+            maxProfit: 100,
             uniquePrice: 950,
             vpsFee: 100,
             drawdown: '30%',
@@ -3310,10 +3310,10 @@ function generateSimpleModePlans(capital, gain) {
 
 function sendSimpleBotOrderTelegram(planId, capital, profitPct, initialPrice, monthlyFee) {
     const isProp = (currentCapitalType === 'propfirm');
-    let modeText = planId === 'lowcost' ? 'Low Cost' : planId === 'normal' ? 'Normal' : 'Extreme';
+    let modeText = planId === 'lowcost' ? 'Conservateur' : planId === 'normal' ? 'Équilibré' : 'Débridé';
     const capLabel = isProp ? "Taille du Compte challenge (Prop Firm)" : "Capital broker de départ";
     const profitText = profitPct.toFixed(isProp ? 1 : 0);
-    const message = `Bonjour Yassine, j'ai configuré mon RubiX Bot en Mode Simple Assisté par l'IA.
+    const message = `Bonjour Yassine, j'ai configuré mon SynapX Bot en Mode Simple Assisté par l'IA.
  
 Voici mes paramètres de configuration :
 - Plan recommandé choisi : Plan ${modeText} (${isProp ? 'Prop Firm' : 'Capitale Perso'})

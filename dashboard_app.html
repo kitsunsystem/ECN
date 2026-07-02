@@ -255,6 +255,234 @@
             transition: left 0.1s ease-out, top 0.1s ease-out;
         }
 
+    
+        /* ══════════════════════════════════════
+           TOAST NOTIFICATION STYLES
+        ══════════════════════════════════════ */
+        .mitsu-toast-container {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+            width: 90%;
+            max-width: 400px;
+        }
+        .mitsu-toast {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 14px 18px;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 500;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: auto;
+        }
+        .mitsu-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .mitsu-toast.success {
+            border-color: rgba(16, 185, 129, 0.3);
+            background: rgba(6, 78, 59, 0.8);
+            color: #d1fae5;
+            box-shadow: 0 10px 30px -10px rgba(6, 78, 59, 0.4);
+        }
+        .mitsu-toast.error {
+            border-color: rgba(239, 68, 68, 0.3);
+            background: rgba(127, 29, 29, 0.8);
+            color: #fee2e2;
+            box-shadow: 0 10px 30px -10px rgba(127, 29, 29, 0.4);
+        }
+        .mitsu-toast.info {
+            border-color: rgba(245, 158, 11, 0.3);
+            background: rgba(120, 53, 4, 0.8);
+            color: #fef3c7;
+            box-shadow: 0 10px 30px -10px rgba(120, 53, 4, 0.4);
+        }
+        .mitsu-toast-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mitsu-toast-message {
+            flex-grow: 1;
+            line-height: 1.4;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            text-align: left;
+        }
+        .mitsu-toast-close {
+            background: none;
+            border: none;
+            color: currentColor;
+            opacity: 0.5;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0 2px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.2s;
+        }
+        .mitsu-toast-close:hover {
+            opacity: 0.9;
+        }
+
+        /* Timeframe active buttons */
+        .btn-tf.active {
+            color: #fbbf24 !important; /* text-amber-400 */
+            background-color: rgba(245, 158, 11, 0.1) !important; /* bg-amber-500/10 */
+        }
+        .btn-tf:not(.active) {
+            color: #94a3b8 !important; /* text-slate-400 */
+            background-color: transparent !important;
+        }
+
+        /* Auth tabs active highlights */
+        .auth-tab.active {
+            color: #fbbf24 !important; /* text-amber-400 */
+            background-color: rgba(245, 158, 11, 0.1) !important; /* bg-amber-500/10 */
+            font-weight: 700 !important;
+        }
+        .auth-tab:not(.active) {
+            color: #94a3b8 !important; /* text-slate-400 */
+            background-color: transparent !important;
+            font-weight: 600 !important;
+        }
+
+        /* ══════════════════════════════════════
+           LIGHT THEME PRESTIGE OVERRIDES
+        ══════════════════════════════════════ */
+        body.light-theme {
+            background-color: #f8fafc !important;
+            background-image: radial-gradient(ellipse at 50% 60%, rgba(212, 175, 55, 0.05) 0%, transparent 65%) !important;
+            color: #334155 !important;
+        }
+        body.light-theme .mitsu-toast {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(0, 0, 0, 0.06);
+            color: #1e293b;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+        }
+        body.light-theme .mitsu-toast.success {
+            background: rgba(209, 250, 229, 0.95);
+            border-color: rgba(16, 185, 129, 0.2);
+            color: #065f46;
+        }
+        body.light-theme .mitsu-toast.error {
+            background: rgba(254, 226, 226, 0.95);
+            border-color: rgba(239, 68, 68, 0.2);
+            color: #991b1b;
+        }
+        body.light-theme .mitsu-toast.info {
+            background: rgba(254, 243, 199, 0.95);
+            border-color: rgba(245, 158, 11, 0.2);
+            color: #92400e;
+        }
+        body.light-theme .text-white,
+        body.light-theme h1,
+        body.light-theme h2,
+        body.light-theme h3,
+        body.light-theme h4,
+        body.light-theme h5,
+        body.light-theme h6 {
+            color: #0f172a !important;
+        }
+        body.light-theme .text-slate-400 {
+            color: #64748b !important;
+        }
+        body.light-theme .text-slate-300 {
+            color: #475569 !important;
+        }
+        body.light-theme .glass,
+        body.light-theme .configurator-card,
+        body.light-theme .config-card,
+        body.light-theme .plan-card,
+        body.light-theme .bg-\[\#060a16\]\/50 {
+            background: rgba(255, 255, 255, 0.8) !important;
+            border-color: rgba(212, 175, 55, 0.18) !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+        }
+        body.light-theme #header-bar {
+            background: rgba(255, 255, 255, 0.8) !important;
+            border-color: rgba(0, 0, 0, 0.06) !important;
+        }
+        body.light-theme #bottomDock,
+        body.light-theme #desktopDock {
+            background: rgba(255, 255, 255, 0.85) !important;
+            border-color: rgba(0, 0, 0, 0.08) !important;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.12) !important;
+        }
+        body.light-theme #desktopDock button.text-slate-400:hover {
+            color: #0f172a !important;
+        }
+        body.light-theme th {
+            color: #475569 !important;
+            border-color: rgba(0, 0, 0, 0.06) !important;
+        }
+        body.light-theme td {
+            color: #334155 !important;
+            border-color: rgba(0, 0, 0, 0.04) !important;
+        }
+        body.light-theme tr:hover td {
+            background: rgba(0, 0, 0, 0.02) !important;
+        }
+        body.light-theme .input-field {
+            background: rgba(0, 0, 0, 0.03) !important;
+            border-color: rgba(212, 175, 55, 0.25) !important;
+            color: #0f172a !important;
+        }
+        body.light-theme .input-field:focus {
+            background: rgba(255, 255, 255, 1) !important;
+            border-color: #fbbf24 !important;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.15) !important;
+        }
+        body.light-theme .toggle-wrapper {
+            background: rgba(0, 0, 0, 0.02) !important;
+            border-color: rgba(0, 0, 0, 0.06) !important;
+        }
+        body.light-theme .toggle-title {
+            color: #1e293b !important;
+        }
+        body.light-theme .toggle-sub {
+            color: #64748b !important;
+        }
+        body.light-theme .slider {
+            background: rgba(0, 0, 0, 0.1) !important;
+        }
+        body.light-theme .slider:before {
+            background: #ffffff !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+        }
+        body.light-theme .modal-card,
+        body.light-theme #configLockMask,
+        body.light-theme #affiliationBlurOverlay {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border-color: rgba(212, 175, 55, 0.2) !important;
+        }
+        body.light-theme #configLockMask h4,
+        body.light-theme #affiliationBlurOverlay h2 {
+            color: #0f172a !important;
+        }
+        body.light-theme ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.15) !important;
+        }
+
     </style>
 </head>
 <body class="selection:bg-amber-400 selection:text-black">
@@ -300,10 +528,7 @@
                 </div>
                 <button class="btn-gold" onclick="handleLogin()">Se connecter</button>
                 
-                <!-- Quick Bypass Button for Offline Testing -->
-                <button class="w-full py-3.5 border border-amber-400/40 hover:bg-amber-400/10 text-amber-400 font-semibold text-[10px] uppercase tracking-widest rounded-xl transition duration-300" onclick="bypassLogin()">
-                     ✨ Lancer la Démo VIP (Hors-ligne)
-                </button>
+
             </div>
 
             <!-- Signup Form -->
@@ -317,7 +542,7 @@
                     <input type="text" id="signLast" class="input-field" placeholder="Nom">
                     <input type="email" id="signEmail" class="input-field" placeholder="Adresse email">
                     <input type="password" id="signPass" class="input-field" placeholder="Mot de passe">
-                    <input type="text" id="signRefCode" class="input-field" placeholder="Code de parrainage (optionnel)" style="text-transform: uppercase;">
+                    <input type="hidden" id="signRefCode" value="">
                 </div>
                 <button class="btn-gold" onclick="handleSignup()">Créer mon compte</button>
             </div>
@@ -402,7 +627,7 @@
                 <nav class="flex items-center space-x-1 bg-white/5 border border-white/10 rounded-full p-1" id="desktopDock">
                     <button class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-amber-400 bg-white/10 active" id="navDashboard" onclick="switchView('dashboard')">Tableau de Bord</button>
                     <button class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition" id="navBot" onclick="switchView('bot')">Bots</button>
-                    <button class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition" id="navAffiliation" onclick="switchView('affiliation')">Partenaire</button>
+                    <button class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition" id="navAffiliation" class="hidden" class="hidden" onclick="switchView('affiliation')">Partenaire</button>
                     <button class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition" id="navConfig" onclick="switchView('config')">Configuration</button>
                     <button class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition" id="navCommunity" onclick="switchView('community')">Communauté</button>
                 </nav>
@@ -434,7 +659,7 @@
             <button class="mob-nav-btn flex flex-col items-center justify-center text-slate-400 hover:text-white transition p-2 rounded-xl" id="navMobBot" onclick="switchView('bot')">
                 <i data-lucide="cpu" class="w-5 h-5"></i>
             </button>
-            <button class="mob-nav-btn flex flex-col items-center justify-center text-slate-400 hover:text-white transition p-2 rounded-xl" id="navMobAffiliation" onclick="switchView('affiliation')">
+            <button class="mob-nav-btn flex flex-col items-center justify-center text-slate-400 hover:text-white transition p-2 rounded-xl" id="navMobAffiliation" class="hidden" onclick="switchView('affiliation')">
                 <i data-lucide="users" class="w-5 h-5"></i>
             </button>
             <button class="mob-nav-btn flex flex-col items-center justify-center text-slate-400 hover:text-white transition p-2 rounded-xl" id="navMobConfig" onclick="switchView('config')">
@@ -602,13 +827,13 @@
                             <h3 class="bot-selection-header font-cinzel text-lg text-white">🤖 Robots Disponibles</h3>
                             
                             <div class="space-y-4" id="tutoBotList">
-                                <!-- RubiX Bot Card -->
+                                <!-- SynapX Card -->
                                 <div class="glass bot-selection-card p-6 relative overflow-hidden border border-white/10 hover:border-amber-500/30 cursor-pointer transition flex flex-col justify-between h-[320px] rounded-3xl" id="tutoSynapXCard" onclick="selectBot('rubix')">
                                     <div class="panda-glow absolute inset-0 bg-radial-gradient from-amber-500/5 to-transparent pointer-events-none"></div>
                                     <div class="bot-selection-layout flex items-center gap-6 relative z-10">
-                                        <img src="panda.webp" alt="RubiX Bot" class="bot-logo-img panda-logo w-16 h-16 object-contain" onerror="this.src='https://placehold.co/100x100/101015/d4af37?text=RubiX'">
+                                        <img src="icon.png" alt="SynapX" class="bot-logo-img w-16 h-16 rounded-xl object-contain w-16 h-16 object-contain" onerror="this.src='https://placehold.co/100x100/101015/d4af37?text=RubiX'">
                                         <div class="space-y-1 text-left">
-                                            <h3 class="font-cinzel text-lg font-medium text-white">RubiX Bot</h3>
+                                            <h3 class="font-cinzel text-lg font-medium text-white">SynapX</h3>
                                             <span class="active-badge inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Disponible</span>
                                             <p class="bot-desc text-xs text-slate-400 font-light leading-relaxed">
                                                 Algorithme phare combinant croissance stable, couverture adaptative et gestion risque optimisée.
@@ -616,21 +841,21 @@
                                         </div>
                                     </div>
                                     <div class="bot-selection-footer border-t border-white/5 pt-4 flex flex-col sm:flex-row justify-between items-center gap-4 relative z-10">
-                                        <span class="text-xs text-slate-400">Modes Low Cost, Normal & Extreme</span>
+                                        <span class="text-xs text-slate-400">Modes Conservateur, Équilibré & Débridé</span>
                                         <button class="bot-cta-btn btn-gold py-2.5 px-6 w-auto text-xs">Configurer ce Robot</button>
                                     </div>
                                 </div>
                                 
-                                <!-- RubiX Lion X Card -->
+                                <!-- SynapX Lion X Card -->
                                 <div class="glass bot-selection-card p-6 relative overflow-hidden border border-white/10 hover:border-rose-500/30 cursor-pointer transition flex flex-col justify-between h-[320px] rounded-3xl" id="tutoLionXCard" onclick="selectBot('lionx')">
                                     <div class="lion-glow absolute inset-0 bg-radial-gradient from-rose-500/5 to-transparent pointer-events-none"></div>
                                     <div class="bot-selection-layout flex items-center gap-6 relative z-10">
                                         <div class="lion-img-wrapper relative">
                                             <div class="lion-img-aura absolute inset-0 bg-rose-500/10 rounded-full blur-md animate-pulse"></div>
-                                            <img src="lion.webp" alt="RubiX Lion X" class="bot-logo-img lion-logo w-16 h-16 object-contain relative z-10" onerror="this.src='https://placehold.co/100x100/101015/f43f5e?text=Lion+X'">
+                                            <img src="lion.webp" alt="SynapX Lion X" class="bot-logo-img lion-logo w-16 h-16 object-contain relative z-10" onerror="this.src='https://placehold.co/100x100/101015/f43f5e?text=Lion+X'">
                                         </div>
                                         <div class="space-y-1 text-left">
-                                            <h3 class="font-cinzel text-lg font-medium text-white">RubiX Lion X</h3>
+                                            <h3 class="font-cinzel text-lg font-medium text-white">SynapX Lion X</h3>
                                             <span class="active-badge inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-rose-500/10 text-rose-400 border border-rose-500/20">Disponible</span>
                                             <p class="bot-desc text-xs text-slate-400 font-light leading-relaxed">
                                                 L'algorithme suprême sur l'Or (XAUUSD). Stratégie à fort potentiel de gains.
@@ -660,7 +885,7 @@
                     </div>
                 </div>
 
-                <!-- Stage B1: RubiX Bot Configurator -->
+                <!-- Stage B1: SynapX Configurator -->
                 <div id="rubixConfiguratorStage" class="space-y-6 hidden">
 
                             <!-- Hidden Accounts counts & recap stubs for Mitsu/SynapX Bot -->
@@ -678,7 +903,7 @@
                         <button class="px-5 py-2.5 border border-white/10 hover:bg-white/5 text-white text-xs uppercase tracking-widest font-semibold rounded-xl transition w-max" onclick="goBackToSelection()">
                             ← Retour aux Robots
                         </button>
-                        <h3 class="font-cinzel text-xl text-white">Configuration : RubiX Bot</h3>
+                        <h3 class="font-cinzel text-xl text-white">Configuration : SynapX</h3>
                     </div>
 
                     <div class="config-split grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -686,8 +911,8 @@
                         <div class="glass configurator-card p-6 lg:col-span-7 space-y-6">
                             <div class="flex justify-between items-center gap-4 flex-wrap">
                                 <h4 class="font-cinzel text-lg text-amber-400 font-medium">Options de licence</h4>
-                                <!-- Region Switcher -->
-                                <div class="flex bg-white/5 border border-white/10 rounded-lg p-1">
+                                <!-- Hidden Region Switcher to prevent script crash -->
+                                <div class="flex bg-white/5 border border-white/10 rounded-lg p-1" style="display: none !important;">
                                     <button id="btnRegionEU" onclick="setMitsuRegion('EU')" class="px-3 py-1.5 rounded text-[10px] font-bold text-amber-400 bg-amber-500/10">Europe (€)</button>
                                     <button id="btnRegionAF" onclick="setMitsuRegion('AF')" class="px-3 py-1.5 rounded text-[10px] font-bold text-slate-400 hover:text-white">Afrique ($)</button>
                                 </div>
@@ -707,15 +932,15 @@
                                 <span class="config-label text-[10px] uppercase tracking-widest text-slate-400 font-bold block">Choix du plan</span>
                                 <div class="grid grid-cols-3 gap-3">
                                     <div id="cardMitsuLow" class="glass plan-card p-4 rounded-xl cursor-pointer border border-amber-500 text-center bg-amber-500/5 active" onclick="selectMitsuPlan('low')">
-                                        <div class="text-[10px] font-bold text-amber-400 uppercase tracking-widest mb-1">Low Cost</div>
+                                        <div class="text-[10px] font-bold text-amber-400 uppercase tracking-widest mb-1">Conservateur</div>
                                         <div class="text-xl font-bold font-mono text-white" id="valMitsuLowPrice">300€</div><div class="text-[9px] text-slate-400 mt-1" id="valMitsuLowAdd"></div>
                                     </div>
                                     <div id="cardMitsuNormal" class="glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center" onclick="selectMitsuPlan('normal')">
-                                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Normal</div>
+                                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Équilibré</div>
                                         <div class="text-xl font-bold font-mono text-white" id="valMitsuNormalPrice">700€</div><div class="text-[9px] text-slate-400 mt-1" id="valMitsuNormalAdd"></div>
                                     </div>
                                     <div id="cardMitsuExtreme" class="glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center" onclick="selectMitsuPlan('extreme')">
-                                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Extreme</div>
+                                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Débridé</div>
                                         <div class="text-xl font-bold font-mono text-white" id="valMitsuExtremePrice">1000€</div><div class="text-[9px] text-slate-400 mt-1" id="valMitsuExtremeAdd"></div>
                                     </div>
                                 </div>
@@ -734,11 +959,11 @@
                                 </ul>
                             </div>
 
-                            <!-- Broker Partner selection -->
-                            <div class="space-y-2 text-left">
+                            <!-- Hidden Broker Partner selection to prevent script crash -->
+                            <div class="space-y-2 text-left" style="display: none !important;">
                                 <span class="config-label text-[10px] uppercase tracking-widest text-slate-400 font-bold block">Courtier de trading</span>
                                 <select id="mitsuBrokerChoice" class="select-field text-left" onchange="updateMitsuCalculator()">
-                                    <option value="partner_vantage">Vantage Markets (Partenaire)</option>
+                                    <option value="partner_vantage" selected>Vantage Markets (Partenaire)</option>
                                     <option value="partner_puprime">PU Prime (Partenaire)</option>
                                     <option value="nonpartner">Autre courtier (Non partenaire)</option>
                                 </select>
@@ -823,7 +1048,7 @@
                     </div>
                 </div>
 
-                <!-- Stage B2: RubiX Lion X Configurator -->
+                <!-- Stage B2: SynapX Lion X Configurator -->
                 <div id="lionxConfiguratorStage" class="space-y-6 hidden">
 
                             <!-- Hidden Accounts counts & recap stubs for Lion X Bot -->
@@ -840,7 +1065,7 @@
                         <button class="px-5 py-2.5 border border-white/10 hover:bg-white/5 text-white text-xs uppercase tracking-widest font-semibold rounded-xl transition w-max" onclick="goBackToSelection()">
                             ← Retour aux Robots
                         </button>
-                        <h3 class="font-cinzel text-xl text-white">Configuration : RubiX Lion X</h3>
+                        <h3 class="font-cinzel text-xl text-white">Configuration : SynapX Lion X</h3>
                     </div>
 
                     <div class="config-split grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -848,8 +1073,8 @@
                         <div class="glass configurator-card p-6 lg:col-span-7 space-y-6">
                             <div class="flex justify-between items-center gap-4 flex-wrap">
                                 <h4 class="font-cinzel text-lg text-rose-400 font-medium">Options de licence Lion X</h4>
-                                <!-- Region Switcher -->
-                                <div class="flex bg-white/5 border border-white/10 rounded-lg p-1">
+                                <!-- Hidden Region Switcher to prevent script crash -->
+                                <div class="flex bg-white/5 border border-white/10 rounded-lg p-1" style="display: none !important;">
                                     <button id="btnLionRegionEU" onclick="setMitsuRegion('EU')" class="px-3 py-1.5 rounded text-[10px] font-bold text-rose-400 bg-rose-500/10">Europe (€)</button>
                                     <button id="btnLionRegionAF" onclick="setMitsuRegion('AF')" class="px-3 py-1.5 rounded text-[10px] font-bold text-slate-400 hover:text-white">Afrique ($)</button>
                                 </div>
@@ -1024,7 +1249,7 @@
                             </div>
                         </div>
 
-                        <button class="btn-gold py-3.5" onclick="alert('Paramètres enregistrés localement avec succès !')">Appliquer les Paramètres</button>
+                        <button class="btn-gold py-3.5" onclick="saveConfig()">Appliquer les Paramètres</button>
                     </div>
 
                     <!-- Sécurité & Profil -->
@@ -1045,7 +1270,7 @@
                         </div>
 
                         <div class="flex flex-col gap-3">
-                            <button class="btn-gold py-3.5" onclick="alert('Mot de passe mis à jour !')">Valider le Changement</button>
+                            <button class="btn-gold py-3.5" onclick="changePassword()">Valider le Changement</button>
                         </div>
                     </div>
 
@@ -1081,7 +1306,7 @@
                     </div>
                 </div>
 
-                <div class="community-grid grid grid-cols-1 md:grid-cols-2 gap-6" id="tutoCommunityGrid">
+                <div class="community-grid grid grid-cols-1 max-w-md mx-auto gap-6" id="tutoCommunityGrid">
                     <!-- Telegram -->
                     <div class="glass community-card telegram p-6 md:p-8 flex flex-col justify-between space-y-6">
                         <div class="space-y-4 text-left">
@@ -1092,20 +1317,7 @@
                             <h3 class="cc-title font-cinzel text-lg text-white">Canal Annonces SynapX</h3>
                             <p class="cc-desc text-xs text-slate-400 font-light leading-relaxed">Les analyses de marché, notes du trader et suivis des opérations de l'algorithme.</p>
                         </div>
-                        <a href="#" class="cc-btn btn-gold py-3 text-center">Rejoindre Telegram</a>
-                    </div>
-
-                    <!-- Discord -->
-                    <div class="glass community-card discord p-6 md:p-8 flex flex-col justify-between space-y-6">
-                        <div class="space-y-4 text-left">
-                            <div class="cc-icon discord w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
-                                <i data-lucide="message-square" class="w-6 h-6"></i>
-                            </div>
-                            <span class="cc-tag discord inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Discord</span>
-                            <h3 class="cc-title font-cinzel text-lg text-white">Salon Échanges Privés</h3>
-                            <p class="cc-desc text-xs text-slate-400 font-light leading-relaxed">Discutez avec les membres actifs, partagez vos performances et échangez avec l'équipe.</p>
-                        </div>
-                        <a href="#" class="cc-btn btn-gold py-3 text-center" style="background: linear-gradient(135deg, #5865F2, #4752c4); color: white;">Rejoindre Discord</a>
+                        <a href="https://t.me/ysestp" target="_blank" class="cc-btn btn-gold py-3 text-center">Rejoindre Telegram</a>
                     </div>
                 </div>
             </div>
