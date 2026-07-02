@@ -2496,10 +2496,12 @@
             if (currentPersoTier === 'normal') pct = 0.45;
             else if (currentPersoTier === 'extreme') pct = 0.65;
 
-            document.getElementById('label-perso').innerText = cap.toLocaleString() + " €";
+            const labelPerso = document.getElementById('label-perso');
+            if (labelPerso) labelPerso.innerText = cap.toLocaleString() + " €";
             
             const calcCap = cap < 1000 ? 1000 : cap;
-            document.getElementById('res-perso').innerText = Math.round(calcCap * pct).toLocaleString() + " €";
+            const resPerso = document.getElementById('res-perso');
+            if (resPerso) resPerso.innerText = Math.round(calcCap * pct).toLocaleString() + " €";
 
             const res12m = document.getElementById('res-12m');
             if (res12m) {
@@ -2512,9 +2514,12 @@
             }
 
             const pctStr = Math.round(pct * 100) + "%";
-            document.getElementById('sim-info-text').innerText = simMode === 'neutre' 
-                ? `(+${pctStr} de gains / mois, retirés)` 
-                : `(Croissance exponentielle à ${pctStr}/mois avec réinvestissement)`;
+            const simInfoText = document.getElementById('sim-info-text');
+            if (simInfoText) {
+                simInfoText.innerText = simMode === 'neutre' 
+                    ? `(+${pctStr} de gains / mois, retirés)` 
+                    : `(Croissance exponentielle à ${pctStr}/mois avec réinvestissement)`;
+            }
         }
 
         function updatePropSim() {
@@ -2524,9 +2529,11 @@
 
             const pct = 0.05; // Cible fixe de 5% de gains par mois pour Prop Firm
 
-            document.getElementById('label-prop').innerText = cap.toLocaleString() + " €";
+            const labelProp = document.getElementById('label-prop');
+            if (labelProp) labelProp.innerText = cap.toLocaleString() + " €";
             
-            document.getElementById('res-prop').innerText = Math.round(cap * pct).toLocaleString() + " €";
+            const resProp = document.getElementById('res-prop');
+            if (resProp) resProp.innerText = Math.round(cap * pct).toLocaleString() + " €";
 
             const pctStr = Math.round(pct * 100) + "%";
             const propHelpText = document.getElementById('prop-help-text');
@@ -3890,12 +3897,14 @@
                     container.innerHTML = pages[pageId]();
 
                     if (pageId === 'home') {
+                        setTimeout(loadHomeProfitsPreview, 50);
+                    }
+
+                    if (pageId === 'about') {
                         activeSimBot = 'mitsu';
                         toggleActiveSim('mitsu');
                         updatePersonalSim();
-                        updatePropSim();
                         setSimMode('neutre');
-                        setTimeout(loadHomeProfitsPreview, 50);
                     }
 
                     if (pageId === 'rubix') {
