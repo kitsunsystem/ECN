@@ -24,7 +24,8 @@ const filesToCopy = [
     'tigre.webp',
     'icon.png',
     'mitsuyoshi_presentation.pdf',
-    'test.html'
+    'test.html',
+    'rubix_logo.jpg'
 ];
 
 // Copy files
