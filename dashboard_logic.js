@@ -3555,32 +3555,37 @@ function calculateInlineSim() {
         priceText = '500 € / an';
     }
     
-    // Calculate compound growth points for 12 months
+    // Generate 120 points for an ultra-smooth exponential curve rendering
     const points = [];
-    let cap = inlineCapital;
-    points.push({ x: 0, y: cap });
-    for (let i = 1; i <= 12; i++) {
-        cap = cap * (1 + perfRate);
-        points.push({ x: i, y: cap });
+    const steps = 120;
+    for (let i = 0; i <= steps; i++) {
+        const t = i / (steps / 12); // t represents the month as float from 0.0 to 12.0
+        const cap = inlineCapital * Math.pow(1 + perfRate, t);
+        points.push({ x: t, y: cap });
     }
     
-    const futureCapital = points[12].y;
+    const startCapital = inlineCapital;
+    const futureCapital = points[points.length - 1].y;
     
     // Draw SVG path
     const maxVal = futureCapital;
-    const minVal = inlineCapital;
     const svgWidth = 400;
     const svgHeight = 150;
-    const padding = 20;
+    const paddingBottom = 15;
+    const paddingTop = 25;
     
     let pathD = '';
     let gradD = '';
     
+    // We want the Y mapping range to go from (svgHeight - paddingBottom) to paddingTop
+    const mapY = (val) => {
+        const ratio = val / maxVal;
+        return svgHeight - paddingBottom - (ratio * (svgHeight - paddingBottom - paddingTop));
+    };
+    
     points.forEach((p, idx) => {
         const x = (p.x / 12) * svgWidth;
-        const normY = (p.y / maxVal);
-        // Map Y from 120 (bottom padding) to 20 (top padding)
-        const y = svgHeight - (normY * (svgHeight - padding * 2) + padding);
+        const y = mapY(p.y);
         
         if (idx === 0) {
             pathD += `M ${x} ${y}`;
@@ -3593,17 +3598,42 @@ function calculateInlineSim() {
     
     gradD += ` L ${svgWidth} ${svgHeight} Z`;
     
+    // Position target pulsing indicators at the end of the line
+    const endX = svgWidth;
+    const endY = mapY(futureCapital);
+    
     const pathEl = document.getElementById('inline-simulation-path');
     const gradEl = document.getElementById('inline-simulation-gradient');
+    const dotPulsing = document.getElementById('chart-pulsing-dot');
+    const dotSolid = document.getElementById('chart-solid-dot');
+    
     const futureDisplay = document.getElementById('inline-future-display');
     const priceDisplay = document.getElementById('inline-price-display');
     const perfDisplay = document.getElementById('inline-perf-display');
     
+    const startDisplay = document.getElementById('chart-start-cap');
+    const endDisplay = document.getElementById('chart-end-cap');
+    const capitalInputDisplay = document.getElementById('inline-capital-display');
+    
     if (pathEl) pathEl.setAttribute('d', pathD);
     if (gradEl) gradEl.setAttribute('d', gradD);
+    
+    if (dotPulsing) {
+        dotPulsing.setAttribute('cx', endX);
+        dotPulsing.setAttribute('cy', endY);
+    }
+    if (dotSolid) {
+        dotSolid.setAttribute('cx', endX);
+        dotSolid.setAttribute('cy', endY);
+    }
+    
     if (futureDisplay) futureDisplay.innerText = "Capital estimé : " + Math.round(futureCapital).toLocaleString('fr-FR') + ' $';
     if (priceDisplay) priceDisplay.innerText = priceText;
     if (perfDisplay) perfDisplay.innerText = perfText;
+    
+    if (startDisplay) startDisplay.innerText = '$' + Math.round(startCapital).toLocaleString('fr-FR');
+    if (endDisplay) endDisplay.innerText = '$' + Math.round(futureCapital).toLocaleString('fr-FR');
+    if (capitalInputDisplay) capitalInputDisplay.innerText = Math.round(startCapital).toLocaleString('fr-FR') + ' $';
 }
 
 function submitInlineOrder() {

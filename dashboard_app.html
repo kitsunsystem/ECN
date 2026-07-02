@@ -3451,6 +3451,36 @@
             color: #aa7c11 !important;
             border-color: rgba(212, 175, 55, 0.4) !important;
         }
+
+        /* ──────────────────────────────
+           CUSTOM RANGE SLIDER
+        ────────────────────────────── */
+        .custom-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 5px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .custom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #D4AF37;
+            border: 2px solid #fff;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+            transition: all 0.2s ease;
+        }
+        .custom-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.9);
+        }
     </style>
 </head>
 <body>
@@ -3734,110 +3764,178 @@
 
         <!-- ── VIEW: BOT ── -->
         <div id="viewBot" class="view">
-            <!-- Stage A: Selection of available Bots -->
-            <div id="botSelectionStage" style="max-w-4xl mx-auto py-4">
-                <h2 style="font-size: 28px; margin-bottom: 8px; text-align: center; font-family: 'Cinzel', serif; font-style: normal; font-weight: 800;">Nos Solutions <span style="color: var(--theme); text-transform: uppercase; font-style: normal; letter-spacing: 0.5px; display: inline-block;">Algorithmiques</span></h2>
-                <p style="color:var(--text-dim); font-size:12px; text-align:center; margin-bottom:32px; font-family:'Plus Jakarta Sans',sans-serif;">Sélectionnez notre algorithme d'exception pour configurer et activer votre licence de trading.</p>
+            <div class="max-w-6xl mx-auto py-2">
                 
-                <!-- SynapX Bot Card -->
-                <div class="glass bot-selection-card mitsu-card-theme hover:scale-[1.01] transition-all duration-300" id="tutoSynapXCard" onclick="selectBot('rubix')" style="cursor: pointer; padding: 24px; border: 1px solid var(--border); border-radius: 24px; position: relative; overflow: hidden; background: var(--panel); margin-bottom: 28px;">
-                    <div class="bot-selection-layout" style="display: flex; gap: 20px; align-items: center;">
-                        <div style="width: 72px; height: 72px; border-radius: 50%; border: 1.5px solid var(--theme); background: #030712; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 0 20px rgba(212, 175, 55, 0.25); flex-shrink: 0;">
-                            <img src="icon.png" alt="SynapX Bot" style="width: 100%; height: 100%; object-fit: cover;">
-                        </div>
-                        <div style="flex: 1; min-width: 0; text-align: left;">
-                            <h3 class="bot-title" style="font-size: 20px; margin-bottom: 4px; color: white; font-family: 'Cinzel', serif; font-style: normal; font-weight: 700;">SynapX Bot</h3>
-                            <span class="active-badge" style="position: static; display: inline-block; margin-bottom: 6px; font-size: 9px; padding: 2px 8px; border-radius: 4px; background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.25); color: var(--theme);">Disponible</span>
-                            <p class="bot-desc" style="font-size: 11.5px; color: var(--text-dim); line-height: 1.45; margin: 0; font-family: 'Plus Jakarta Sans', sans-serif;">
-                                Algorithme de trading sur Or (XAU/USD) d'exception, alliant croissance durable, couverture adaptative et drawdown contrôlé à environ 30%.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="bot-selection-footer" style="margin-top: 18px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 16px; text-align: center;">
-                        <span style="display: block; font-size: 10.5px; color: var(--theme); font-weight: 600; margin-bottom: 12px; letter-spacing: 1px; text-transform: uppercase;">Modes : Conservateur • Équilibré • Débridé</span>
-                        <button class="bot-cta-btn mitsu-btn glossy-gold-btn px-6 py-2 rounded-full font-bold uppercase tracking-widest text-[9px]">Configurer ce Robot</button>
-                    </div>
-                </div>
-
-                <!-- Inline Simulator & Configurator -->
-                <div id="inline-simulator-anchor" class="glass" style="padding: 28px; border: 1px solid var(--border); border-radius: 24px; background: var(--panel);">
-                    <h3 style="font-family: 'Cinzel', serif; font-size: 20px; color: #fff; font-weight: 700; margin-bottom: 6px; text-align: left; font-style: normal;">Simulateur & Configuration</h3>
-                    <p style="color: var(--text-dim); font-size: 11.5px; margin-bottom: 24px; text-align: left; font-family: 'Plus Jakarta Sans', sans-serif;">Configurez vos objectifs et visualisez la croissance estimée de votre capital sur 12 mois.</p>
+                <!-- Main Grid Layout: Left Column (Bot Profile Card) vs Right Column (Interactive Trading Station) -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Left side: Controls -->
-                        <div class="flex flex-col gap-5 text-left">
-                            <!-- Mode Selection -->
-                            <div>
-                                <label style="font-size: 10px; text-transform: uppercase; tracking-wider: 1px; color: #94a3b8; font-weight: 700; display: block; margin-bottom: 8px;">1. Mode de Performance :</label>
+                    <!-- LEFT COLUMN (4/12): SynapX Bot Premium ID Card -->
+                    <div class="lg:col-span-4 space-y-6">
+                        <div class="glass p-6 rounded-[28px] border border-theme/20 text-center relative overflow-hidden bg-panel">
+                            <!-- Background glow effects -->
+                            <div class="absolute -top-10 -left-10 w-24 h-24 bg-theme/10 rounded-full blur-xl pointer-events-none"></div>
+                            
+                            <div class="relative z-10 space-y-4">
+                                <div class="w-20 h-20 rounded-full border-2 border-theme bg-slate-950 flex items-center justify-center overflow-hidden shadow-[0_0_30px_rgba(212,175,55,0.25)] mx-auto">
+                                    <img src="icon.png" alt="SynapX Bot" class="w-full h-full object-cover">
+                                </div>
+                                
+                                <div>
+                                    <h3 class="font-cinzel text-xl font-bold tracking-widest text-white">SYNAPX BOT</h3>
+                                    <span class="inline-block mt-2 px-3 py-1 text-[9px] uppercase tracking-widest font-bold rounded-full bg-theme/10 border border-theme/35 text-theme">
+                                        Algorithme Actif XAU/USD
+                                    </span>
+                                </div>
+                                
+                                <p class="text-xs text-text-dim leading-relaxed font-light font-sans">
+                                    Système algorithmique de prestige opérant en temps réel sur le cours de l'or. Exploite la volatilité intra-journalière sous protection active de capital.
+                                </p>
+                                
+                                <!-- Core Specs list -->
+                                <div class="pt-4 border-t border-white/5 space-y-2.5 text-left text-xs font-sans">
+                                    <div class="flex justify-between">
+                                        <span class="text-text-dim">Drawdown Max Target :</span>
+                                        <span class="text-amber-400 font-bold">~ 30%</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-text-dim">Couverture API :</span>
+                                        <span class="text-emerald-400 font-bold">MT5 Sécurisée</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-text-dim">Actif principal :</span>
+                                        <span class="text-white font-bold">Gold (XAU/USD)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Mini Gold Ticker Widget -->
+                        <div class="glass p-5 rounded-2xl border border-white/5 bg-panel flex justify-between items-center">
+                            <div class="text-left">
+                                <span class="text-[9px] text-text-dim uppercase tracking-wider block">Cours Spot PAXG/USDT</span>
+                                <span class="font-serif text-lg text-white font-medium"><span class="gold-live-price">2384.50</span> $</span>
+                            </div>
+                            <span class="flex items-center gap-1.5 text-[9px] text-emerald-400 font-bold uppercase bg-emerald-500/10 border border-emerald-500/25 px-2.5 py-1 rounded-full">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Flux Direct
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- RIGHT COLUMN (8/12): Advanced Simulation & Execution Terminal -->
+                    <div class="lg:col-span-8 glass p-6 md:p-8 rounded-[28px] border border-theme/20 bg-panel text-left space-y-6">
+                        <div>
+                            <h3 class="font-cinzel text-xl font-bold tracking-wider text-white">DECK DE CONFIGURATION & SIMULATION</h3>
+                            <p class="text-xs text-text-dim mt-1">Simulez vos gains prévisionnels et choisissez votre mode de trading de prestige.</p>
+                        </div>
+                        
+                        <!-- Control Panel (Mode and Capital Side-by-Side) -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                            <!-- Mode selection -->
+                            <div class="space-y-3">
+                                <label class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">1. Profil de Risque & Rentabilité</label>
                                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
-                                    <button id="inline-mode-conservateur" onclick="setInlineMode('conservateur')" style="padding: 10px 0;" class="text-[9px] font-bold uppercase border rounded-lg transition-all bg-transparent border-slate-800 text-slate-400">
+                                    <button id="inline-mode-conservateur" onclick="setInlineMode('conservateur')" style="padding: 10px 0;" class="text-[9px] font-bold uppercase border rounded-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer">
                                         Conservateur
                                     </button>
-                                    <button id="inline-mode-equilibre" onclick="setInlineMode('equilibre')" style="padding: 10px 0;" class="text-[9px] font-bold uppercase border rounded-lg transition-all bg-transparent border-slate-800 text-slate-400">
+                                    <button id="inline-mode-equilibre" onclick="setInlineMode('equilibre')" style="padding: 10px 0;" class="text-[9px] font-bold uppercase border rounded-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer">
                                         Équilibré
                                     </button>
-                                    <button id="inline-mode-debride" onclick="setInlineMode('debride')" style="padding: 10px 0;" class="text-[9px] font-bold uppercase border rounded-lg transition-all bg-transparent border-slate-800 text-slate-400">
+                                    <button id="inline-mode-debride" onclick="setInlineMode('debride')" style="padding: 10px 0;" class="text-[9px] font-bold uppercase border rounded-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer">
                                         Débridé
                                     </button>
                                 </div>
                             </div>
                             
-                            <!-- Capital Range Slider -->
-                            <div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                                    <label style="font-size: 10px; text-transform: uppercase; tracking-wider: 1px; color: #94a3b8; font-weight: 700;">2. Capital de Départ :</label>
-                                    <span class="font-mono text-sm font-bold text-amber-400" id="inline-capital-display">15 000 $</span>
+                            <!-- Capital Input Slider -->
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <label class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">2. Capital de Départ</label>
+                                    <span class="font-mono text-sm font-bold text-theme" id="inline-capital-display">15 000 $</span>
                                 </div>
-                                <input id="inline-capital-range" type="range" min="1000" max="100000" step="1000" value="15000" oninput="updateInlineCapital(this.value)" style="width: 100%; height: 4px; background: #1e293b; border-radius: 8px; outline: none; cursor: pointer; accent-color: #D4AF37;">
-                            </div>
-                            
-                            <!-- Info Box -->
-                            <div style="padding: 14px; border-radius: 12px; background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(212, 175, 55, 0.15); display: flex; flex-direction: column; gap: 8px;">
-                                <div style="display: flex; justify-content: space-between; font-size: 11px;">
-                                    <span style="color: #94a3b8;">Prix de la Licence :</span>
-                                    <strong style="color: #fff;" id="inline-price-display">300 € / an</strong>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; font-size: 11px;">
-                                    <span style="color: #94a3b8;">Hébergement VPS :</span>
-                                    <strong style="color: #34d399;">Offert (Inclus) ✨</strong>
-                                </div>
-                                <div style="font-size: 9.5px; color: #94a3b8; line-height: 1.4; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 8px; margin-top: 4px;">
-                                    ℹ️ <strong>L'hébergement VPS à Londres est offert</strong> pour garantir l'exécution de l'algorithme H24 sans aucune coupure.
+                                <div class="flex items-center gap-4">
+                                    <input id="inline-capital-range" type="range" min="1000" max="100000" step="1000" value="15000" oninput="updateInlineCapital(this.value)" class="custom-slider">
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Right side: Simulator Graph & Details -->
-                        <div class="flex flex-col justify-between text-left">
-                            <!-- SVG Chart -->
-                            <div style="position: relative; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.03); border-radius: 16px; padding: 12px; overflow: hidden; height: 160px;">
-                                <div style="position: absolute; top: 8px; left: 12px; font-size: 9px; color: #64748b; text-transform: uppercase; tracking-wider: 1px;">Évolution du Capital (12 mois)</div>
-                                <div style="position: absolute; bottom: 8px; right: 12px; font-size: 9.5px; color: var(--theme); font-weight: 700;" id="inline-future-display">Projected: $34,980</div>
+                        <!-- Advanced Chart Terminal -->
+                        <div class="space-y-2">
+                            <label class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">3. Projection de Performance (Intérêts Composés sur 12 Mois)</label>
+                            
+                            <div class="relative bg-slate-950/80 border border-white/5 rounded-2xl p-4 overflow-hidden h-[240px]">
+                                <!-- Chart metadata overlay -->
+                                <div class="absolute top-3 left-4 flex gap-6 text-[9px] text-text-dim uppercase tracking-wider">
+                                    <div>Départ: <span class="text-white font-bold" id="chart-start-cap">$15k</span></div>
+                                    <div>Cible: <span class="text-theme font-bold" id="chart-end-cap">$34.9k</span></div>
+                                </div>
+                                <div class="absolute bottom-3 right-4 text-[10px] text-theme font-bold" id="inline-future-display">Projected: $34,980</div>
                                 
-                                <svg viewBox="0 0 400 150" style="width: 100%; height: 100%;" preserveAspectRatio="none">
+                                <svg viewBox="0 0 400 150" class="w-full h-full mt-2" preserveAspectRatio="none">
                                     <defs>
-                                        <linearGradient id="chart-glow-inline" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="0%" stop-color="var(--theme)" stop-opacity="0.25"/>
+                                        <linearGradient id="chart-glow-inline-v6" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stop-color="var(--theme)" stop-opacity="0.3"/>
                                             <stop offset="100%" stop-color="var(--theme)" stop-opacity="0.0"/>
                                         </linearGradient>
                                     </defs>
-                                    <line x1="0" y1="30" x2="400" y2="30" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-                                    <line x1="0" y1="75" x2="400" y2="75" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-                                    <line x1="0" y1="120" x2="400" y2="120" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-                                    <path id="inline-simulation-gradient" d="" fill="url(#chart-glow-inline)"/>
+                                    
+                                    <!-- Horizontal Grid Lines -->
+                                    <line x1="0" y1="20" x2="400" y2="20" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                                    <line x1="0" y1="55" x2="400" y2="55" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                                    <line x1="0" y1="90" x2="400" y2="90" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                                    <line x1="0" y1="125" x2="400" y2="125" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                                    
+                                    <!-- Vertical Grid Lines (Months 3, 6, 9) -->
+                                    <line x1="100" y1="0" x2="100" y2="150" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                                    <line x1="200" y1="0" x2="200" y2="150" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                                    <line x1="300" y1="0" x2="300" y2="150" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                                    
+                                    <!-- Filled Glow Area -->
+                                    <path id="inline-simulation-gradient" d="" fill="url(#chart-glow-inline-v6)"/>
+                                    
+                                    <!-- Smooth Line Path -->
                                     <path id="inline-simulation-path" d="" stroke="var(--theme)" stroke-width="3" fill="none" stroke-linecap="round"/>
+                                    
+                                    <!-- Pulsing points at the end of the chart -->
+                                    <circle id="chart-pulsing-dot" cx="400" cy="150" r="6" fill="var(--theme)" opacity="0.4" style="transform-origin: center;"></circle>
+                                    <circle id="chart-solid-dot" cx="400" cy="150" r="4" fill="#fff" stroke="var(--theme)" stroke-width="2"/>
                                 </svg>
+                                
+                                <!-- Month Labels -->
+                                <div class="absolute bottom-1 left-0 right-0 px-8 flex justify-between text-[8px] text-slate-500 font-bold uppercase">
+                                    <span>Mois 0</span>
+                                    <span>Mois 3</span>
+                                    <span>Mois 6</span>
+                                    <span>Mois 9</span>
+                                    <span>Mois 12</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Order & Summary Card (Prestige Styling) -->
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center pt-2 font-sans">
+                            <!-- Left: Detailed Summary & Inclusions -->
+                            <div class="md:col-span-7 p-4 rounded-2xl bg-white/5 border border-white/5 flex flex-col gap-2.5">
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-text-dim font-light">Formule d'Accès :</span>
+                                    <strong class="text-white" id="inline-price-display">300 € / an</strong>
+                                </div>
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-text-dim font-light">Hébergement VPS Cloud :</span>
+                                    <strong class="text-emerald-400 flex items-center gap-1.5">
+                                        Offert (0€) <span class="text-[9px] bg-emerald-500/10 border border-emerald-500/25 px-1.5 py-0.5 rounded font-bold uppercase">Inclus</span>
+                                    </strong>
+                                </div>
+                                <div class="flex justify-between text-xs pt-2 border-t border-white/5">
+                                    <span class="text-text-dim font-light">Objectif Mensuel Cible :</span>
+                                    <strong class="text-emerald-400" id="inline-perf-display">+30% / mois</strong>
+                                </div>
                             </div>
                             
-                            <!-- Simulation Summary & CTA -->
-                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 12px;">
-                                <div style="flex: 1;">
-                                    <div style="font-size: 9px; color: #64748b; text-transform: uppercase;">Performance estimée</div>
-                                    <div style="font-size: 15px; font-weight: 700; color: #34d399;" id="inline-perf-display">+30% / mois</div>
-                                </div>
-                                <button onclick="submitInlineOrder()" class="glossy-gold-btn px-6 py-3 rounded-xl font-bold uppercase tracking-widest text-[10px] flex items-center justify-center space-x-2" style="flex: 2; height: 46px;">
-                                    <span>Valider mon accès SynapX</span>
+                            <!-- Right: Validation Action Call -->
+                            <div class="md:col-span-5 w-full">
+                                <button onclick="submitInlineOrder()" class="w-full py-4 glossy-gold-btn rounded-2xl font-bold uppercase tracking-widest text-[10px] shadow-lg flex items-center justify-center space-x-2 transition-all duration-300 hover:scale-[1.03] cursor-pointer" style="height: 52px;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                                    <span>Activer l'Accès</span>
                                 </button>
                             </div>
                         </div>
