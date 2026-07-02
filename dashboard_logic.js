@@ -387,7 +387,7 @@ async function loadData() {
         
         // Append the "Ajouter un compte MT5" button to the end
         tabsHtml += `
-            <button class="btn-tab" onclick="requestAddMT5Account()" style="background: rgba(212,175,55,0.06); border-color: rgba(212,175,55,0.3); color: var(--theme); font-weight: 700; margin-left: 8px;">
+            <button class="btn-tab" onclick="requestAddMT5Account()" style="background: rgba(224,17,95,0.06); border-color: rgba(224,17,95,0.3); color: var(--theme); font-weight: 700; margin-left: 8px;">
                 ＋ Ajouter un compte MT5
             </button>`;
             
@@ -879,7 +879,7 @@ function renderChart(points) {
                 legend: { display: false },
                 tooltip: {
                     backgroundColor: 'rgba(10,10,15,0.9)',
-                    borderColor: 'rgba(212,175,55,0.3)',
+                    borderColor: 'rgba(224,17,95,0.3)',
                     borderWidth: 1,
                     titleColor: '#E0115F',
                     bodyColor: '#e4e4e7',
