@@ -94,7 +94,7 @@
         }
         .select-field:focus {
             border-color: var(--theme);
-            box-shadow: 0 0 10px rgba(224,17,95,0.15);
+            box-shadow: 0 0 10px rgba(212,175,55,0.15);
         }
 
         /* Custom Dropdown Styling */
@@ -248,7 +248,7 @@
 
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(224,17,95,0.2); border-radius: 2px; }
+        ::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.2); border-radius: 2px; }
 
         /* ──────────────────────────────
            AUTH SCREEN
@@ -256,12 +256,22 @@
         #authScreen {
             position: fixed; inset: 0;
             background: var(--bg);
-            background-image: radial-gradient(ellipse at 50% 60%, rgba(224,17,95,0.06) 0%, transparent 65%);
+            background-image: radial-gradient(ellipse at 50% 60%, rgba(212,175,55,0.06) 0%, transparent 65%);
             z-index: 3000;
             display: flex; align-items: center; justify-content: center;
         }
 
-        .auth-card { padding: 48px; width: 100%; max-width: 440px; }
+        .auth-card {
+            padding: 48px;
+            width: 100%;
+            max-width: 440px;
+            background: rgba(15, 23, 42, 0.45) !important;
+            backdrop-filter: blur(30px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+            border: 1px solid rgba(212, 175, 55, 0.2) !important;
+            border-radius: 28px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+        }
 
         .auth-logo {
             text-align: center;
@@ -327,7 +337,7 @@
         .input-field:focus {
             border-color: var(--theme);
             box-shadow: 0 0 0 3px var(--theme-glow);
-            background: rgba(224,17,95,0.03);
+            background: rgba(212,175,55,0.03);
         }
         .input-field::placeholder { color: var(--text-dim); }
 
@@ -345,7 +355,7 @@
             letter-spacing: 2.5px;
             font-size: 11px;
             font-family: inherit;
-            box-shadow: 0 4px 20px rgba(224,17,95,0.2);
+            box-shadow: 0 4px 20px rgba(212,175,55,0.2);
         }
         .btn-gold:hover {
             transform: translateY(-2px);
@@ -508,7 +518,7 @@
         .btn-tab.active {
             border-color: var(--theme);
             color: var(--theme);
-            background: rgba(224,17,95,0.06);
+            background: rgba(212,175,55,0.06);
         }
 
         /* VIEWS & TRANSITIONS */
@@ -655,7 +665,7 @@
         .btn-tf.active {
             border-color: var(--theme);
             color: var(--theme);
-            background: rgba(224,17,95,0.05);
+            background: rgba(212,175,55,0.05);
         }
 
         /* Status card */
@@ -690,8 +700,8 @@
             color: var(--info);
         }
         .status-badge.target-hit {
-            background: rgba(224,17,95,0.1);
-            border: 1px solid rgba(224,17,95,0.3);
+            background: rgba(212,175,55,0.1);
+            border: 1px solid rgba(212,175,55,0.3);
             color: var(--theme);
         }
         .status-badge.suspended {
@@ -774,7 +784,7 @@
             display: none;
             margin: 20px auto 0;
             background: transparent;
-            border: 1px solid rgba(224,17,95,0.25);
+            border: 1px solid rgba(212,175,55,0.25);
             color: var(--theme);
             padding: 10px 32px;
             border-radius: 8px;
@@ -786,7 +796,7 @@
             font-family: inherit;
             transition: 0.25s;
         }
-        .btn-load-more:hover { background: rgba(224,17,95,0.06); }
+        .btn-load-more:hover { background: rgba(212,175,55,0.06); }
 
         /* ──────────────────────────────
            VIEW: CONFIG
@@ -979,8 +989,8 @@
             display: inline-block;
             padding: 5px 16px;
             border-radius: 20px;
-            background: rgba(224,17,95,0.08);
-            border: 1px solid rgba(224,17,95,0.2);
+            background: rgba(212,175,55,0.08);
+            border: 1px solid rgba(212,175,55,0.2);
             color: var(--theme);
             font-size: 9px;
             text-transform: uppercase;
@@ -1014,8 +1024,8 @@
         .agent-avatar {
             width: 48px; height: 48px;
             border-radius: 50%;
-            background: rgba(224,17,95,0.1);
-            border: 2px solid rgba(224,17,95,0.3);
+            background: rgba(212,175,55,0.1);
+            border: 2px solid rgba(212,175,55,0.3);
             display: flex; align-items: center; justify-content: center;
             font-size: 20px; font-weight: 700; color: var(--theme);
         }
@@ -1035,7 +1045,7 @@
             letter-spacing: 2px;
             text-decoration: none;
             transition: all 0.25s;
-            box-shadow: 0 4px 20px rgba(224,17,95,0.25);
+            box-shadow: 0 4px 20px rgba(212,175,55,0.25);
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
         .btn-support:hover { transform: translateY(-2px); box-shadow: 0 8px 30px var(--theme-glow-intense); }
@@ -1066,12 +1076,12 @@
             height: 320px;
         }
         .bot-card:hover {
-            border-color: rgba(224,17,95,0.3);
+            border-color: rgba(212,175,55,0.3);
             transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(224,17,95,0.06);
+            box-shadow: 0 12px 30px rgba(212,175,55,0.06);
         }
         .bot-card.active {
-            border-color: rgba(224,17,95,0.25);
+            border-color: rgba(212,175,55,0.25);
             cursor: pointer;
         }
         .bot-card.active:hover {
@@ -1180,7 +1190,7 @@
             background: linear-gradient(135deg, #D4AF37 0%, #aa7c11 100%);
             color: black;
             border: none;
-            box-shadow: 0 4px 15px rgba(224,17,95,0.2);
+            box-shadow: 0 4px 15px rgba(212,175,55,0.2);
         }
         .bot-card.active:hover .bot-btn {
             transform: translateY(-1px);
@@ -1280,8 +1290,8 @@
         }
 
         .summary-box {
-            background: rgba(224,17,95,0.02);
-            border: 1px solid rgba(224,17,95,0.12);
+            background: rgba(212,175,55,0.02);
+            border: 1px solid rgba(212,175,55,0.12);
             border-radius: 12px;
             padding: 18px;
             margin-top: 20px;
@@ -1293,7 +1303,7 @@
             margin-bottom: 12px;
             text-transform: uppercase;
             letter-spacing: 2px;
-            border-bottom: 1px solid rgba(224,17,95,0.12);
+            border-bottom: 1px solid rgba(212,175,55,0.12);
             padding-bottom: 8px;
         }
         .summary-item {
@@ -1364,14 +1374,14 @@
             max-width: 480px;
             padding: 40px;
             text-align: center;
-            border: 1px solid rgba(224,17,95,0.18);
+            border: 1px solid rgba(212,175,55,0.18);
             box-shadow: 0 15px 40px rgba(0,0,0,0.6);
         }
         .lock-icon-container {
             width: 58px; height: 58px;
             border-radius: 50%;
-            background: rgba(224,17,95,0.06);
-            border: 2px solid rgba(224,17,95,0.25);
+            background: rgba(212,175,55,0.06);
+            border: 2px solid rgba(212,175,55,0.25);
             display: flex; align-items: center; justify-content: center;
             margin: 0 auto 20px;
             font-size: 24px;
@@ -1400,7 +1410,7 @@
             background: linear-gradient(135deg, #D4AF37 0%, #aa7c11 100%);
             color: black;
             border: none;
-            box-shadow: 0 4px 15px rgba(224,17,95,0.15);
+            box-shadow: 0 4px 15px rgba(212,175,55,0.15);
         }
         .lock-btn.primary:hover {
             transform: translateY(-2px);
@@ -1460,7 +1470,7 @@
             border-radius: 18px;
             width: 100%;
             max-width: 780px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(224,17,95,0.08);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(212,175,55,0.08);
             overflow: hidden;
             animation: tutoCardEntry 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
@@ -1551,7 +1561,7 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
         .tuto-video-cta:hover {
-            box-shadow: 0 0 20px rgba(224,17,95,0.4);
+            box-shadow: 0 0 20px rgba(212,175,55,0.4);
             transform: translateY(-1px);
         }
         @media (max-width: 600px) {
@@ -1994,7 +2004,7 @@
             max-width: 440px;
             padding: 40px;
             border: 1px solid var(--border);
-            box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 40px rgba(224,17,95,0.1);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 40px rgba(212,175,55,0.1);
             animation: scaleUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         @keyframes fadeIn {
@@ -2013,7 +2023,7 @@
             text-align: center;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 30px 70px rgba(0,0,0,0.85), 0 0 50px rgba(224,17,95,0.15) !important;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.85), 0 0 50px rgba(212,175,55,0.15) !important;
         }
 
         /* ── STAGE A REWORK: SIDE-BY-SIDE BOT CARDS & VIDEO ── */
@@ -2069,7 +2079,7 @@
         }
         .bot-cta-btn.mitsu-btn {
             background: linear-gradient(135deg, rgba(255, 183, 197, 0.15), rgba(255, 120, 150, 0.2));
-            color: #FFB7C5;
+            color: #FFF9E6;
             border: 1px solid rgba(255, 183, 197, 0.25);
         }
         .bot-cta-btn.mitsu-btn:hover {
@@ -2174,7 +2184,7 @@
         .progress-bar-fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, #D4AF37 0%, #FFB7C5 100%);
+            background: linear-gradient(90deg, #D4AF37 0%, #FFF9E6 100%);
             border-radius: 10px;
             transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
@@ -2262,7 +2272,7 @@
         }
         .glass-blob-2 {
             width: 550px; height: 550px;
-            background: #FFB7C5;
+            background: #FFF9E6;
             bottom: 20%; right: 10%;
             animation-duration: 38s;
             animation-delay: -7s;
@@ -3394,7 +3404,7 @@
 <div id="authScreen">
     <div class="glass auth-card">
         <div class="auth-logo">
-            <span class="auth-logo-title">RubiX</span>
+            <span class="auth-logo-title">SynapX</span>
             <span class="auth-logo-sub">Espace Client VIP</span>
         </div>
         <div class="auth-tabs">
@@ -3419,7 +3429,7 @@
             <input type="text" id="signLast" class="input-field" placeholder="Nom">
             <input type="email" id="signEmail" class="input-field" placeholder="Adresse email">
             <input type="password" id="signPass" class="input-field" placeholder="Mot de passe">
-            <input type="text" id="signRefCode" class="input-field" placeholder="Code de parrainage (optionnel)" style="text-transform: uppercase;">
+            <input type="text" id="signRefCode" class="input-field" placeholder="Code de parrainage (optionnel)" style="text-transform: uppercase; display: none;">
             <button class="btn-gold" onclick="handleSignup()">Créer mon compte</button>
         </div>
     </div>
@@ -3444,26 +3454,26 @@
 <div id="mitsuWelcomeModal" class="mitsu-modal-overlay" style="display: none;">
     <div class="glass mitsu-modal-card welcome-card">
         <!-- Glowing background visual effects -->
-        <div style="position: absolute; top: -50px; left: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(224,17,95,0.15) 0%, transparent 70%); pointer-events: none;"></div>
-        <div style="position: absolute; bottom: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(224,17,95,0.15) 0%, transparent 70%); pointer-events: none;"></div>
+        <div style="position: absolute; top: -50px; left: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(212,175,55,0.15) 0%, transparent 70%); pointer-events: none;"></div>
+        <div style="position: absolute; bottom: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(212,175,55,0.15) 0%, transparent 70%); pointer-events: none;"></div>
         
         <div class="welcome-logo" style="margin-bottom: 20px;">
-            <span style="font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; background: linear-gradient(135deg, #fff 30%, var(--theme) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: block;">RubiX</span>
+            <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 26px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; background: linear-gradient(135deg, #fff 30%, var(--theme) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: block;">SynapX</span>
             <span style="font-size: 9px; text-transform: uppercase; letter-spacing: 3px; color: var(--theme); font-weight: 600; display: block; margin-top: 4px;">Systems Premium</span>
         </div>
         
-        <div class="avatar-welcome" style="width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, rgba(224,17,95,0.2), rgba(224,17,95,0.02)); border: 1px solid var(--theme); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; box-shadow: 0 0 20px rgba(224,17,95,0.2);">
-            <span id="welcomeAvatar" style="font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 700; color: var(--theme);">C</span>
+        <div class="avatar-welcome" style="width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.02)); border: 1px solid var(--theme); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; box-shadow: 0 0 20px rgba(212,175,55,0.2);">
+            <span id="welcomeAvatar" style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 28px; font-weight: 700; color: var(--theme);">C</span>
         </div>
         
         <h3 style="font-size: 22px; color: #fff; margin-bottom: 14px; font-weight: 700; font-family: 'Cinzel', serif; font-style: normal;">Bonjour, <span id="welcomeUserName" style="color: var(--theme);">Client</span> !</h3>
         
         <p style="color: var(--text-dim); font-size: 13px; line-height: 1.6; margin-bottom: 28px; font-family: 'Plus Jakarta Sans', sans-serif; font-style: normal; font-weight: 400; padding: 0 10px; text-align: center;">
-            Toute l'équipe de <strong>RubiX Ecosystem</strong> est ravie de vous accueillir dans votre Espace VIP. Votre robot de trading haute performance et vos outils d'analyse exclusifs sont prêts à propulser vos ambitions financières.<br><br>
+            Toute l'équipe de <strong>SynapX Ecosystem</strong> est ravie de vous accueillir dans votre Espace VIP. Votre robot de trading haute performance et vos outils d'analyse exclusifs sont prêts à propulser vos ambitions financières.<br><br>
             <em>Bâtissons ensemble l'avenir de vos rendements.</em>
         </p>
         
-        <button class="btn-gold" onclick="closeWelcomeModal()" style="padding: 14px 40px; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; width: 100%; box-shadow: 0 4px 15px rgba(224,17,95,0.2); border-radius: 6px; font-family: inherit;">
+        <button class="btn-gold" onclick="closeWelcomeModal()" style="padding: 14px 40px; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; width: 100%; box-shadow: 0 4px 15px rgba(212,175,55,0.2); border-radius: 6px; font-family: inherit;">
             Entrer dans l'Espace VIP
         </button>
     </div>
@@ -3601,7 +3611,7 @@
                                 <span id="statusBadgeText">Synchronisation</span>
                             </div>
                             <div class="status-main-text" id="statusMain">Chargement...</div>
-                            <div class="status-desc-text" id="statusDesc">Connexion au serveur RubiX en cours.</div>
+                            <div class="status-desc-text" id="statusDesc">Connexion au serveur SynapX en cours.</div>
                         </div>
                         <div class="status-summary">
                             <div class="summary-row">
@@ -3664,7 +3674,7 @@
         <div id="viewBot" class="view">
             <!-- Stage A: Selection of available Bots + Video Section -->
             <div id="botSelectionStage">
-                <h2 style="font-size: 32px; margin-bottom: 12px; text-align: center; font-family: 'Cinzel', serif; font-style: normal; font-weight: 800;">Nos Solutions <span style="color: var(--theme); font-size: 40px; font-weight: 900; text-transform: uppercase; font-style: normal; letter-spacing: 0.5px; display: inline-block; text-shadow: 0 0 20px rgba(224,17,95,0.2);">Algorithmiques</span></h2>
+                <h2 style="font-size: 32px; margin-bottom: 12px; text-align: center; font-family: 'Cinzel', serif; font-style: normal; font-weight: 800;">Nos Solutions <span style="color: var(--theme); font-size: 40px; font-weight: 900; text-transform: uppercase; font-style: normal; letter-spacing: 0.5px; display: inline-block; text-shadow: 0 0 20px rgba(212,175,55,0.2);">Algorithmiques</span></h2>
                 <p style="color:var(--text-dim); font-size:13px; text-align:center; max-width: 600px; margin: 0 auto 36px;">Sélectionnez le robot de trading adapté à vos objectifs financiers pour accéder à sa configuration.</p>
                 
                 <div class="stage-a-grid">
@@ -3675,7 +3685,7 @@
                         
                         <div style="display: flex; flex-direction: column; gap: 20px;" id="tutoBotList">
                             <!-- SynapX Bot Card -->
-                            <div class="glass bot-selection-card mitsu-card-theme" id="tutoRubiXCard" onclick="selectBot('rubix')">
+                            <div class="glass bot-selection-card mitsu-card-theme" id="tutoSynapXCard" onclick="selectBot('rubix')">
                                 <div class="panda-glow"></div>
                                 <div class="bot-selection-layout" style="display: flex; gap: 20px; align-items: center; position: relative; z-index: 10;">
                                     <img src="panda.webp" alt="SynapX Bot" class="bot-logo-img panda-logo" style="width: 72px; height: 72px; margin: 0; flex-shrink: 0;">
@@ -3920,7 +3930,7 @@
                             </div>
                             
                             <!-- Premium Details Added Resource -->
-                            <div style="margin-top: 20px; padding: 12px; background: rgba(224,17,95,0.04); border: 1px solid rgba(224,17,95,0.1); border-radius: 8px; font-size: 12px; color: var(--text-dim); line-height: 1.5;">
+                            <div style="margin-top: 20px; padding: 12px; background: rgba(212,175,55,0.04); border: 1px solid rgba(212,175,55,0.1); border-radius: 8px; font-size: 12px; color: var(--text-dim); line-height: 1.5;">
                                 <span style="color: var(--theme); font-weight: 700; display: block; margin-bottom: 4px; font-family: 'Cinzel', serif; font-style: normal;">🛡️ Inclus dans votre Licence :</span>
                                 • Liaison API sécurisée & exécution ultra-rapide (< 2ms).<br>
                                 • Protection intégrée contre les sur-expositions (Drawdown limit).<br>
@@ -4105,12 +4115,12 @@
                             </div>
                             
                             <!-- Performance Advantage -->
-                            <div style="margin-top: 20px; padding: 12px; background: rgba(224,17,95,0.08); border: 1px solid rgba(224,17,95,0.25); border-radius: 8px; font-size: 12px; color: white; line-height: 1.5;">
+                            <div style="margin-top: 20px; padding: 12px; background: rgba(212,175,55,0.08); border: 1px solid rgba(212,175,55,0.25); border-radius: 8px; font-size: 12px; color: white; line-height: 1.5;">
                                 <strong style="color: #D4AF37;">🎯 Avantage :</strong> Conçu pour les investisseurs cherchant des performances de croissance rapides grâce aux intérêts composés maximisés.
                             </div>
 
                             <!-- Premium Details Added Resource -->
-                            <div style="margin-top: 16px; padding: 12px; background: rgba(224,17,95,0.04); border: 1px solid rgba(224,17,95,0.1); border-radius: 8px; font-size: 12px; color: var(--text-dim); line-height: 1.5;">
+                            <div style="margin-top: 16px; padding: 12px; background: rgba(212,175,55,0.04); border: 1px solid rgba(212,175,55,0.1); border-radius: 8px; font-size: 12px; color: var(--text-dim); line-height: 1.5;">
                                 <span style="color: #D4AF37; font-weight: 700; display: block; margin-bottom: 4px; font-family: 'Cinzel', serif; font-style: normal;">🛡️ Inclus dans votre Licence Lion X :</span>
                                 • Liaison API sécurisée & exécution ultra-rapide (&lt; 2ms).<br>
                                 • Protection intégrée contre les sur-expositions (Drawdown limit).<br>
@@ -4209,7 +4219,7 @@
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
                         <button class="btn-gold" style="padding: 12px;" onclick="changePassword()">Valider le Changement</button>
-                        <button class="btn-logout" onclick="restartTutorial()" style="background: rgba(224,17,95,0.04); border: 1px solid rgba(224,17,95,0.15); color: var(--theme); padding: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border-radius: 8px;">
+                        <button class="btn-logout" onclick="restartTutorial()" style="background: rgba(212,175,55,0.04); border: 1px solid rgba(212,175,55,0.15); color: var(--theme); padding: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border-radius: 8px;">
                             🎬 Revoir la vidéo de présentation
                         </button>
                     </div>
@@ -4247,10 +4257,10 @@
         <div id="viewCommunity" class="view">
             <div class="community-header">
                 <h2 style="font-size: 32px; margin-bottom: 12px; font-weight: 800; font-family: 'Cinzel', serif; font-style: normal;">
-                    Rejoignez la <span style="color: var(--theme); font-size: 40px; font-weight: 900; display: inline-block; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 0 20px rgba(224,17,95,0.2);">Communauté</span>
+                    Rejoignez la <span style="color: var(--theme); font-size: 40px; font-weight: 900; display: inline-block; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 0 20px rgba(212,175,55,0.2);">Communauté</span>
                 </h2>
                 <p style="color: var(--text-dim); font-size: 15px; max-width: 600px; margin: 16px auto 0 auto; font-family: 'Plus Jakarta Sans', sans-serif; font-style: normal; line-height: 1.6;">
-                    Suivez les performances RubiX en temps réel, partagez vos résultats et interagissez avec l'écosystème d'investisseurs.
+                    Suivez les performances SynapX en temps réel, partagez vos résultats et interagissez avec l'écosystème d'investisseurs.
                 </p>
             </div>
 
@@ -4324,7 +4334,7 @@
                     <div id="communityTotalGains" class="community-gains-value">
                         +$0.00
                     </div>
-                    <p style="color: var(--text-dim); font-size: 11.5px; margin: 4px 0 0 0; font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.5; max-width: 480px; opacity: 0.7;">Performance générée en temps réel par l'ensemble des robots RubiX connectés.</p>
+                    <p style="color: var(--text-dim); font-size: 11.5px; margin: 4px 0 0 0; font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.5; max-width: 480px; opacity: 0.7;">Performance générée en temps réel par l'ensemble des robots SynapX connectés.</p>
                 </div>
             </div>
 
@@ -4336,14 +4346,14 @@
                         <svg viewBox="0 0 24 24"><path d="M21.13 2.82a1.62 1.62 0 0 0-1.4.17L3 11.58a1.13 1.13 0 0 0-.17 2l3.59 1.69 11-7.14-8 8.07 9.61 4.53a1.12 1.12 0 0 0 1.5-.6l3.41-16a1.62 1.62 0 0 0-1.81-1.31z" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </div>
                     <span class="cc-tag telegram">Annonces & Analyses</span>
-                    <h3 class="cc-title">Telegram RubiX</h3>
+                    <h3 class="cc-title">Telegram SynapX</h3>
                     <p class="cc-desc">Consultez nos bilans hebdomadaires, retours sur performances et annonces algorithmiques officielles.</p>
                     <ul class="cc-features">
                         <li>✨ Bilans de performance en temps réel</li>
                         <li>📢 Annonces exclusives et mises à jour</li>
                         <li>📈 Analyses techniques poussées</li>
                     </ul>
-                    <a href="https://t.me/RubiXEA" target="_blank" class="cc-btn telegram">Accéder au Canal</a>
+                    <a href="https://t.me/SynapXEA" target="_blank" class="cc-btn telegram">Accéder au Canal</a>
                 </div>
 
                 <!-- Discord -->
@@ -4428,7 +4438,7 @@
             <div id="affiliationBlurOverlay" class="aff-blur-overlay">
                 <div class="glass aff-blur-card">
                     <span style="font-size: 40px; display: block; margin-bottom: 16px;">🤝</span>
-                    <h3 style="font-size: 24px; color: var(--theme); margin-bottom: 12px; font-style: italic;">Devenez Partenaire RubiX</h3>
+                    <h3 style="font-size: 24px; color: var(--theme); margin-bottom: 12px; font-style: italic;">Devenez Partenaire SynapX</h3>
                     <p style="color: var(--text-dim); font-size: 12px; line-height: 1.6; margin-bottom: 24px; font-family: 'Plus Jakarta Sans', sans-serif;">
                         Gagnez des commissions exceptionnelles en recommandant notre bot ! En tant que particulier, touchez <strong>23% de commission</strong> sur chaque vente. Pour les communautés à grande échelle, la commission s'élève à <strong>30%</strong>.
                     </p>
@@ -4671,7 +4681,7 @@
                             
                             <div style="text-align: center; padding: 32px 20px; background: rgba(255,255,255,0.01); border: 1px dashed rgba(255,255,255,0.1); border-radius: 16px;">
                                 <span style="font-size: 40px; display: block; margin-bottom: 12px; opacity: 0.8;">📦</span>
-                                <h5 style="font-size: 13px; color: white; font-weight: 700; margin-bottom: 4px;">Kit Média RubiX</h5>
+                                <h5 style="font-size: 13px; color: white; font-weight: 700; margin-bottom: 4px;">Kit Média SynapX</h5>
                                 <p style="color: var(--text-dim); font-size: 11px; line-height: 1.4; max-width: 280px; margin: 0 auto;">Les bannières, visuels pour réseaux, vidéos promotionnelles et guides de vente seront bientôt téléchargeables ici.</p>
                             </div>
                         </div>
@@ -4711,7 +4721,7 @@
 <div id="tutoVideoModal" class="tuto-video-overlay" onclick="if(event.target===this) closeTutoVideoModal()">
     <div class="tuto-video-card">
         <div class="tuto-video-card-header">
-            <h3><span>🎬</span> Présentation RubiX</h3>
+            <h3><span>🎬</span> Présentation SynapX</h3>
             <button class="tuto-video-close" onclick="closeTutoVideoModal()">&times;</button>
         </div>
         <div class="tuto-video-iframe-wrap">

@@ -1067,7 +1067,7 @@ function selectBot(botId) {
 }
 
 function activateFolder(bot) {
-    const cardMitsu = document.getElementById('tutoRubiXCard');
+    const cardMitsu = document.getElementById('tutoSynapXCard') || document.getElementById('tutoRubiXCard');
     const cardLion = document.getElementById('tutoLionXCard');
     if (!cardMitsu || !cardLion) return;
     
