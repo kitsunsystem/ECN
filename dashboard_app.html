@@ -3451,36 +3451,6 @@
             color: #aa7c11 !important;
             border-color: rgba(212, 175, 55, 0.4) !important;
         }
-
-        /* ──────────────────────────────
-           CUSTOM RANGE SLIDER
-        ────────────────────────────── */
-        .custom-slider {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 5px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            outline: none;
-            transition: all 0.3s ease;
-        }
-        .custom-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #D4AF37;
-            border: 2px solid #fff;
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
-            transition: all 0.2s ease;
-        }
-        .custom-slider::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.9);
-        }
     </style>
 </head>
 <body>
@@ -3764,185 +3734,414 @@
 
         <!-- ── VIEW: BOT ── -->
         <div id="viewBot" class="view">
-            <div class="max-w-6xl mx-auto py-2">
+            <!-- Stage A: Selection of available Bots -->
+            <div id="botSelectionStage" style="max-w-xl mx-auto py-8">
+                <h2 style="font-size: 28px; margin-bottom: 8px; text-align: center; font-family: 'Cinzel', serif; font-style: normal; font-weight: 800;">Nos Solutions <span style="color: var(--theme); text-transform: uppercase; font-style: normal; letter-spacing: 0.5px; display: inline-block;">Algorithmiques</span></h2>
+                <p style="color:var(--text-dim); font-size:12px; text-align:center; margin-bottom:32px; font-family:'Plus Jakarta Sans',sans-serif;">Sélectionnez notre algorithme d'exception pour configurer et activer votre licence de trading.</p>
                 
-                <!-- Main Grid Layout: Left Column (Bot Profile Card) vs Right Column (Interactive Trading Station) -->
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                    
-                    <!-- LEFT COLUMN (4/12): SynapX Bot Premium ID Card -->
-                    <div class="lg:col-span-4 space-y-6">
-                        <div class="glass p-6 rounded-[28px] border border-theme/20 text-center relative overflow-hidden bg-panel">
-                            <!-- Background glow effects -->
-                            <div class="absolute -top-10 -left-10 w-24 h-24 bg-theme/10 rounded-full blur-xl pointer-events-none"></div>
-                            
-                            <div class="relative z-10 space-y-4">
-                                <div class="w-20 h-20 rounded-full border-2 border-theme bg-slate-950 flex items-center justify-center overflow-hidden shadow-[0_0_30px_rgba(212,175,55,0.25)] mx-auto">
-                                    <img src="icon.png" alt="SynapX Bot" class="w-full h-full object-cover">
-                                </div>
-                                
-                                <div>
-                                    <h3 class="font-cinzel text-xl font-bold tracking-widest text-white">SYNAPX BOT</h3>
-                                    <span class="inline-block mt-2 px-3 py-1 text-[9px] uppercase tracking-widest font-bold rounded-full bg-theme/10 border border-theme/35 text-theme">
-                                        Algorithme Actif XAU/USD
-                                    </span>
-                                </div>
-                                
-                                <p class="text-xs text-text-dim leading-relaxed font-light font-sans">
-                                    Système algorithmique de prestige opérant en temps réel sur le cours de l'or. Exploite la volatilité intra-journalière sous protection active de capital.
-                                </p>
-                                
-                                <!-- Core Specs list -->
-                                <div class="pt-4 border-t border-white/5 space-y-2.5 text-left text-xs font-sans">
-                                    <div class="flex justify-between">
-                                        <span class="text-text-dim">Drawdown Max Target :</span>
-                                        <span class="text-amber-400 font-bold">~ 30%</span>
-                                    </div>
-                                    <div class="flex justify-between">
-                                        <span class="text-text-dim">Couverture API :</span>
-                                        <span class="text-emerald-400 font-bold">MT5 Sécurisée</span>
-                                    </div>
-                                    <div class="flex justify-between">
-                                        <span class="text-text-dim">Actif principal :</span>
-                                        <span class="text-white font-bold">Gold (XAU/USD)</span>
-                                    </div>
-                                </div>
-                            </div>
+                <!-- SynapX Bot Card -->
+                <div class="glass bot-selection-card mitsu-card-theme hover:scale-[1.02] transition-all duration-300" id="tutoSynapXCard" onclick="selectBot('rubix')" style="cursor: pointer; padding: 24px; border: 1px solid var(--border); border-radius: 24px; position: relative; overflow: hidden; background: var(--panel);">
+                    <div class="bot-selection-layout" style="display: flex; gap: 20px; align-items: center;">
+                        <div style="width: 72px; height: 72px; border-radius: 50%; border: 1.5px solid var(--theme); background: #030712; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 0 20px rgba(212, 175, 55, 0.25); flex-shrink: 0;">
+                            <img src="icon.png" alt="SynapX Bot" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
-                        
-                        <!-- Mini Gold Ticker Widget -->
-                        <div class="glass p-5 rounded-2xl border border-white/5 bg-panel flex justify-between items-center">
-                            <div class="text-left">
-                                <span class="text-[9px] text-text-dim uppercase tracking-wider block">Cours Spot PAXG/USDT</span>
-                                <span class="font-serif text-lg text-white font-medium"><span class="gold-live-price">2384.50</span> $</span>
-                            </div>
-                            <span class="flex items-center gap-1.5 text-[9px] text-emerald-400 font-bold uppercase bg-emerald-500/10 border border-emerald-500/25 px-2.5 py-1 rounded-full">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Flux Direct
-                            </span>
+                        <div style="flex: 1; min-width: 0; text-align: left;">
+                            <h3 class="bot-title" style="font-size: 20px; margin-bottom: 4px; color: white; font-family: 'Cinzel', serif; font-style: normal; font-weight: 700;">SynapX Bot</h3>
+                            <span class="active-badge" style="position: static; display: inline-block; margin-bottom: 6px; font-size: 9px; padding: 2px 8px; border-radius: 4px; background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.25); color: var(--theme);">Disponible</span>
+                            <p class="bot-desc" style="font-size: 11.5px; color: var(--text-dim); line-height: 1.45; margin: 0; font-family: 'Plus Jakarta Sans', sans-serif;">
+                                Algorithme de trading sur Or (XAU/USD) d'exception, alliant croissance durable, couverture adaptative et drawdown contrôlé à environ 30%.
+                            </p>
                         </div>
                     </div>
-                    
-                    <!-- RIGHT COLUMN (8/12): Advanced Simulation & Execution Terminal -->
-                    <div class="lg:col-span-8 glass p-6 md:p-8 rounded-[28px] border border-theme/20 bg-panel text-left space-y-6">
+                    <div class="bot-selection-footer" style="margin-top: 18px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 16px; text-align: center;">
+                        <span style="display: block; font-size: 10.5px; color: var(--theme); font-weight: 600; margin-bottom: 12px; letter-spacing: 1px; text-transform: uppercase;">Modes : Conservateur • Équilibré • Débridé</span>
+                        <button class="bot-cta-btn mitsu-btn glossy-gold-btn px-6 py-2 rounded-full font-bold uppercase tracking-widest text-[9px]">Configurer ce Robot</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Stage B1: SynapX Bot Configurator -->
+            <div id="rubixConfiguratorStage" style="display: none;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+                    <button class="btn-tab" onclick="goBackToSelection()" style="padding: 8px 16px;">
+                        ← Retour aux Robots
+                    </button>
+                    <h3 style="font-size: 24px; font-style: italic;">Configuration : SynapX Bot</h3>
+                </div>
+
+                <div class="config-split" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px;">
+                    <!-- Left: Form -->
+                    <div class="glass configurator-card" style="padding: 24px; align-self: start;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                            <h4 style="font-size: 18px; color: var(--theme); margin: 0;">Options de licence</h4>
+                            <!-- Region Switcher -->
+                            <div style="display: flex; gap: 4px; background: rgba(0,0,0,0.25); padding: 3px; border-radius: 8px; border: 1px solid var(--border);">
+                                <div id="btnRegionEU" onclick="setMitsuRegion('EU')" class="mode-tab active" style="font-size: 9px; padding: 4px 10px; border-radius: 6px; cursor: pointer; text-transform: uppercase; flex: none; line-height: 1; border: none; font-weight: 700;">Europe (€)</div>
+                                <div id="btnRegionAF" onclick="setMitsuRegion('AF')" class="mode-tab" style="font-size: 9px; padding: 4px 10px; border-radius: 6px; cursor: pointer; text-transform: uppercase; flex: none; line-height: 1; border: none; font-weight: 700;">Afrique ($)</div>
+                            </div>
+                        </div>
+
+                        <!-- Mode tabs: Perso / Propfirm -->
+                        <div style="margin-bottom: 20px;">
+                            <span class="config-label" style="display: block; margin-bottom: 8px; font-size: 11px; text-transform: uppercase; color: var(--text-dim);">Type de capital</span>
+                            <div class="mode-tabs" style="display: flex; gap: 10px; background: rgba(0,0,0,0.2); padding: 4px; border-radius: 10px; border: 1px solid var(--border);">
+                                <div id="tabMitsuPerso" class="mode-tab active" onclick="switchMitsuCapType('perso')" style="flex: 1; text-align: center; padding: 10px; cursor: pointer; border-radius: 8px; font-size: 11px; text-transform: uppercase;">Compte Personnel (Perso)</div>
+                                <div id="tabMitsuProp" class="mode-tab" onclick="switchMitsuCapType('propfirm')" style="flex: 1; text-align: center; padding: 10px; cursor: pointer; border-radius: 8px; font-size: 11px; text-transform: uppercase;">Compte Prop Firm</div>
+                            </div>
+                        </div>
+
+                        <!-- Plan cards: Low Cost, Normal, Extreme -->
+                        <div style="margin-bottom: 16px;">
+                            <span class="config-label" style="display: block; margin-bottom: 8px; font-size: 11px; text-transform: uppercase; color: var(--text-dim);">Choix du plan</span>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                                <div id="cardMitsuLow" class="glass plan-card active" onclick="selectMitsuPlan('low')" style="padding: 16px; border-radius: 12px; cursor: pointer; border: 1px solid var(--border); text-align: center; transition: all 0.3s ease;">
+                                    <div style="font-size: 11px; font-weight: 700; color: var(--theme); margin-bottom: 6px;">Low Cost</div>
+                                    <div style="font-size: 20px; font-weight: 800; color: white;" id="valMitsuLowPrice">300€</div>
+                                    <div style="font-size: 9px; color: var(--text-dim); margin-top: 6px; display: none;" id="valMitsuLowAdd"></div>
+                                </div>
+                                <div id="cardMitsuNormal" class="glass plan-card" onclick="selectMitsuPlan('normal')" style="padding: 16px; border-radius: 12px; cursor: pointer; border: 1px solid var(--border); text-align: center; transition: all 0.3s ease;">
+                                    <div style="font-size: 11px; font-weight: 700; color: var(--theme); margin-bottom: 6px;">Normal</div>
+                                    <div style="font-size: 20px; font-weight: 800; color: white;" id="valMitsuNormalPrice">700€</div>
+                                    <div style="font-size: 9px; color: var(--text-dim); margin-top: 6px; display: none;" id="valMitsuNormalAdd"></div>
+                                </div>
+                                <div id="cardMitsuExtreme" class="glass plan-card" onclick="selectMitsuPlan('extreme')" style="padding: 16px; border-radius: 12px; cursor: pointer; border: 1px solid var(--border); text-align: center; transition: all 0.3s ease;">
+                                    <div style="font-size: 11px; font-weight: 700; color: var(--theme); margin-bottom: 6px;">Extreme</div>
+                                    <div style="font-size: 20px; font-weight: 800; color: white;" id="valMitsuExtremePrice">1000€</div>
+                                    <div style="font-size: 9px; color: var(--text-dim); margin-top: 6px; display: none;" id="valMitsuExtremeAdd"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Plan Details Box (Highlights weekly & monthly target advantages) -->
+                        <div id="mitsuPlanDetailsBox" style="background: rgba(212, 175, 55, 0.04); border: 1px solid rgba(212, 175, 55, 0.15); padding: 12px 16px; border-radius: 12px; margin-bottom: 24px;">
+                            <div style="font-size: 12px; font-weight: 700; color: var(--theme); margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                                <span id="mitsuDetailIcon">🛡️</span> <span id="mitsuDetailTitle">Plan Low Cost (Perso)</span>
+                            </div>
+                            <ul id="mitsuDetailList" style="font-size: 11px; color: var(--text-dim); padding-left: 16px; list-style-type: disc; line-height: 1.6;">
+                                <li>Objectif de profit mensuel : <strong>~25.0%</strong> par mois</li>
+                                <li>Objectif de profit hebdomadaire : <strong>~5.7%</strong> par semaine</li>
+                                <li>Niveau de risque statistique : <strong>Prudent & Modéré</strong></li>
+                                <li>🎯 <strong>Avantage</strong> : Idéal pour sécuriser un capital régulier avec un drawdown minimal et un risque contrôlé.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Broker Partner selection for SynapX Bot -->
+                        <div style="margin-bottom: 24px;">
+                            <span class="config-label" style="display: block; margin-bottom: 8px; font-size: 11px; text-transform: uppercase; color: var(--text-dim);">Courtier de trading</span>
+                            <select id="mitsuBrokerChoice" class="select-field" style="width: 100%;" onchange="updateMitsuCalculator()">
+                                <option value="partner_vantage">Vantage Markets (Partenaire)</option>
+                                <option value="partner_puprime">PU Prime (Partenaire)</option>
+                                <option value="nonpartner">Autre courtier (Non partenaire)</option>
+                            </select>
+                            <div id="mitsuPartnerLinks" style="margin-top: 10px; display: flex; gap: 10px;">
+                                <button class="btn-tab" onclick="window.open('https://vigco.co/la-com-inv/7Wuw5Vy1', '_blank')" style="flex: 1; font-size: 9px; padding: 8px; text-align: center;">Ouvrir un compte Vantage</button>
+                                <button class="btn-tab" onclick="window.open('https://puvip.co/la-partners/fr/O4oaRWoe', '_blank')" style="flex: 1; font-size: 9px; padding: 8px; text-align: center;">Ouvrir un compte PU Prime</button>
+                            </div>
+                        </div>
+
+                        <!-- Number of linked accounts (Hidden) -->
+                        <div style="margin-bottom: 24px; display: none !important;">
+                            <span class="config-label" style="display: block; margin-bottom: 8px; font-size: 11px; text-transform: uppercase; color: var(--text-dim);">Comptes MT5 Liés</span>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div class="custom-stepper">
+                                    <button class="stepper-btn minus" onclick="stepDown('mitsuAccountsCount', 1, 20); return false;">−</button>
+                                    <input type="number" id="mitsuAccountsCount" class="input-field" min="1" max="20" value="1" oninput="updateMitsuCalculator()" style="margin: 0; border: none; background: transparent; text-align: center; font-size: 16px; font-weight: 700; width: 44px; padding: 0;">
+                                    <button class="stepper-btn plus" onclick="stepUp('mitsuAccountsCount', 1, 20); return false;">+</button>
+                                </div>
+                                <span style="font-size: 12px; color: var(--text-dim);" id="mitsuAccountsAddLabel">compte(s) lié(s)</span>
+                            </div>
+                        </div>
+
+                        <!-- Capital input for simulation -->
+                        <div style="margin-bottom: 24px;">
+                            <span id="mitsuSimLabelTitle" class="config-label" style="display: block; margin-bottom: 8px; font-size: 11px; text-transform: uppercase; color: var(--text-dim);">Capital initial (Broker) pour simulation</span>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div class="custom-stepper">
+                                    <button class="stepper-btn minus" onclick="stepDown('mitsuSimCapital', 500, 10000, 100); return false;">−</button>
+                                    <input type="number" id="mitsuSimCapital" class="input-field" min="500" max="2500" step="100" value="1000" oninput="updateMitsuCalculator()" style="margin: 0; border: none; background: transparent; text-align: center; font-size: 16px; font-weight: 700; width: 68px; padding: 0;">
+                                    <button class="stepper-btn plus" onclick="stepUp('mitsuSimCapital', 500, 10000, 100); return false;">+</button>
+                                </div>
+                                <span id="mitsuSimLabelDesc" style="font-size: 12px; color: var(--text-dim);">€/$ déposés chez votre broker</span>
+                            </div>
+                        </div>
+
+                        <!-- Summary box -->
+                        <div class="summary-box" style="background: rgba(0,0,0,0.2); border: 1px solid var(--border); padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+                            <h5 style="font-size: 12px; color: var(--theme); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Récapitulatif de l'offre</h5>
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px;">
+                                <span style="color: var(--text-dim);">Prix de la licence :</span>
+                                <span id="mitsuSummaryBasePrice" style="font-weight: 700; color: white;">300.00 €</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px; display: none !important;">
+                                <span style="color: var(--text-dim);">Comptes MT5 supplémentaires :</span>
+                                <span id="mitsuSummaryAccountsPrice" style="font-weight: 700; color: white;">0.00 €</span>
+                            </div>
+                            <div id="mitsuPropShareRow" style="display: none; justify-content: space-between; font-size: 12px; margin-bottom: 8px; border-top: 1px dashed rgba(255,255,255,0.05); padding-top: 8px;">
+                                <span style="color: var(--theme); font-weight: 600;">Profit Sharing (Partage des gains) :</span>
+                                <span style="font-weight: 700; color: var(--theme);">15% pour nous sur vos bénéfices</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 800; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; margin-top: 10px;">
+                                <span style="color: white;">PRIX UNIQUE :</span>
+                                <span id="mitsuSummaryTotalPrice" style="color: var(--theme); font-size: 18px;">300.00 €</span>
+                            </div>
+                        </div>
+
+                        <button class="btn-gold" onclick="sendCustomBotOrderTelegram('SynapX Bot')" style="padding: 16px; font-size: 12px; width: 100%;">
+                            Demander l'activation de ma licence
+                        </button>
+                    </div>
+
+                    <!-- Right: Simulation -->
+                    <div class="glass configurator-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
                         <div>
-                            <h3 class="font-cinzel text-xl font-bold tracking-wider text-white">DECK DE CONFIGURATION & SIMULATION</h3>
-                            <p class="text-xs text-text-dim mt-1">Simulez vos gains prévisionnels et choisissez votre mode de trading de prestige.</p>
-                        </div>
-                        
-                        <!-- Control Panel (Mode and Capital Side-by-Side) -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-                            <!-- Mode selection -->
-                            <div class="space-y-3">
-                                <label class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">1. Profil de Risque & Rentabilité</label>
-                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
-                                    <button id="inline-mode-conservateur" onclick="setInlineMode('conservateur')" style="padding: 10px 0;" class="text-[9px] font-bold uppercase border rounded-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer">
-                                        Conservateur
-                                    </button>
-                                    <button id="inline-mode-equilibre" onclick="setInlineMode('equilibre')" style="padding: 10px 0;" class="text-[9px] font-bold uppercase border rounded-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer">
-                                        Équilibré
-                                    </button>
-                                    <button id="inline-mode-debride" onclick="setInlineMode('debride')" style="padding: 10px 0;" class="text-[9px] font-bold uppercase border rounded-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer">
-                                        Débridé
-                                    </button>
-                                </div>
-                            </div>
+                            <h4 style="font-size: 18px; color: var(--theme); margin-bottom: 4px;">Simulation de rentabilité</h4>
+                            <p style="color:var(--text-dim); font-size:12px; margin-bottom: 20px;">Projection théorique sur 12 mois de votre capital (intérêts composés, hors retraits).</p>
                             
-                            <!-- Capital Input Slider -->
-                            <div class="space-y-3">
-                                <div class="flex justify-between items-center">
-                                    <label class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">2. Capital de Départ</label>
-                                    <span class="font-mono text-sm font-bold text-theme" id="inline-capital-display">15 000 $</span>
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <input id="inline-capital-range" type="range" min="1000" max="100000" step="1000" value="15000" oninput="updateInlineCapital(this.value)" class="custom-slider">
+                            <div class="sim-chart-container" style="height: 320px; position: relative;">
+                                <canvas id="mitsuSimulationChart"></canvas>
+                            </div>
+
+                            <div style="margin-top: 12px;">
+                                <div style="background: rgba(0,255,136,0.03); border: 1px solid rgba(0,255,136,0.15); padding: 14px 18px; border-radius: 8px; font-size: 13px; color: var(--success); text-align: center; font-weight: 600;">
+                                    📈 Capital final théorique à 12 mois : <strong id="mitsuSimFinalCapital" style="font-size: 16px; color: #fff;">1,240.50 €/$</strong>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Advanced Chart Terminal -->
-                        <div class="space-y-2">
-                            <label class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">3. Projection de Performance (Intérêts Composés sur 12 Mois)</label>
-                            
-                            <div class="relative bg-slate-950/80 border border-white/5 rounded-2xl p-4 overflow-hidden h-[240px]">
-                                <!-- Chart metadata overlay -->
-                                <div class="absolute top-3 left-4 flex gap-6 text-[9px] text-text-dim uppercase tracking-wider">
-                                    <div>Départ: <span class="text-white font-bold" id="chart-start-cap">$15k</span></div>
-                                    <div>Cible: <span class="text-theme font-bold" id="chart-end-cap">$34.9k</span></div>
+                        <!-- Recap Card (Large Premium dossier format) -->
+                        <div class="glass" style="margin-top: 24px; padding: 24px; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; background: rgba(0,0,0,0.15); flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <h5 style="font-size: 14px; color: var(--theme); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; font-weight: 700; font-family: 'Cinzel', serif; font-style: normal;">📋 Récapitulatif de Configuration</h5>
+                                <div style="display: flex; flex-direction: column; gap: 12px; font-size: 14px; color: var(--text-dim); line-height: 1.6;">
+                                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(255,255,255,0.08); padding-bottom: 6px;">
+                                        <span>Capital de Départ :</span>
+                                        <strong style="color: white; font-size: 15px;" id="recapMitsuCapital">-</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(255,255,255,0.08); padding-bottom: 6px;">
+                                        <span>Cible Mensuelle :</span>
+                                        <strong style="color: var(--success); font-size: 15px;" id="recapMitsuMonthlyGain">-</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(255,255,255,0.08); padding-bottom: 6px;">
+                                        <span>Licence d'Accès (Unique) :</span>
+                                        <strong style="color: white; font-size: 15px;" id="recapMitsuUniquePrice">-</strong>
+                                    </div>
+                                    <div style="display: none !important;">
+                                        <span>Frais Hébergement / Compte :</span>
+                                        <strong style="color: white; font-size: 15px;" id="recapMitsuMonthlyPrice">-</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(255,255,255,0.08); padding-bottom: 6px;">
+                                        <span>Type de Capital :</span>
+                                        <strong style="color: white; font-size: 15px;" id="recapMitsuCapType">-</strong>
+                                    </div>
+                                    <div style="display: none !important;">
+                                        <span>Comptes MetaTrader 5 Liés :</span>
+                                        <strong style="color: white; font-size: 15px;" id="recapMitsuAccounts">-</strong>
+                                    </div>
                                 </div>
-                                <div class="absolute bottom-3 right-4 text-[10px] text-theme font-bold" id="inline-future-display">Projected: $34,980</div>
-                                
-                                <svg viewBox="0 0 400 150" class="w-full h-full mt-2" preserveAspectRatio="none">
-                                    <defs>
-                                        <linearGradient id="chart-glow-inline-v6" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="0%" stop-color="var(--theme)" stop-opacity="0.3"/>
-                                            <stop offset="100%" stop-color="var(--theme)" stop-opacity="0.0"/>
-                                        </linearGradient>
-                                    </defs>
-                                    
-                                    <!-- Horizontal Grid Lines -->
-                                    <line x1="0" y1="20" x2="400" y2="20" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-                                    <line x1="0" y1="55" x2="400" y2="55" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-                                    <line x1="0" y1="90" x2="400" y2="90" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-                                    <line x1="0" y1="125" x2="400" y2="125" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-                                    
-                                    <!-- Vertical Grid Lines (Months 3, 6, 9) -->
-                                    <line x1="100" y1="0" x2="100" y2="150" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-                                    <line x1="200" y1="0" x2="200" y2="150" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-                                    <line x1="300" y1="0" x2="300" y2="150" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-                                    
-                                    <!-- Filled Glow Area -->
-                                    <path id="inline-simulation-gradient" d="" fill="url(#chart-glow-inline-v6)"/>
-                                    
-                                    <!-- Smooth Line Path -->
-                                    <path id="inline-simulation-path" d="" stroke="var(--theme)" stroke-width="3" fill="none" stroke-linecap="round"/>
-                                    
-                                    <!-- Pulsing points at the end of the chart -->
-                                    <circle id="chart-pulsing-dot" cx="400" cy="150" r="6" fill="var(--theme)" opacity="0.4" style="transform-origin: center;"></circle>
-                                    <circle id="chart-solid-dot" cx="400" cy="150" r="4" fill="#fff" stroke="var(--theme)" stroke-width="2"/>
-                                </svg>
-                                
-                                <!-- Month Labels -->
-                                <div class="absolute bottom-1 left-0 right-0 px-8 flex justify-between text-[8px] text-slate-500 font-bold uppercase">
-                                    <span>Mois 0</span>
-                                    <span>Mois 3</span>
-                                    <span>Mois 6</span>
-                                    <span>Mois 9</span>
-                                    <span>Mois 12</span>
+                            </div>
+                            
+                            <!-- Premium Details Added Resource -->
+                            <div style="margin-top: 20px; padding: 12px; background: rgba(212,175,55,0.04); border: 1px solid rgba(212,175,55,0.1); border-radius: 8px; font-size: 12px; color: var(--text-dim); line-height: 1.5;">
+                                <span style="color: var(--theme); font-weight: 700; display: block; margin-bottom: 4px; font-family: 'Cinzel', serif; font-style: normal;">🛡️ Inclus dans votre Licence :</span>
+                                • Liaison API sécurisée & exécution ultra-rapide (< 2ms).<br>
+                                • Protection intégrée contre les sur-expositions (Drawdown limit).<br>
+                                • Support technique prioritaire 7j/7 par nos ingénieurs.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage B2: SynapX Lion X Configurator -->
+            <div id="lionxConfiguratorStage" style="display: none;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+                    <button class="btn-tab" onclick="goBackToSelection()" style="padding: 8px 16px;">
+                        ← Retour aux Robots
+                    </button>
+                    <h3 style="font-size: 24px; font-style: italic; color: #D4AF37;">Configuration : SynapX Lion X</h3>
+                </div>
+
+                <div class="config-split" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px;">
+                    <!-- Left: Form -->
+                    <div class="glass configurator-card" style="padding: 24px; border-color: rgba(212, 175, 55, 0.15); align-self: start;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                            <h4 style="font-size: 18px; color: #D4AF37; margin: 0;">Options de licence Lion X</h4>
+                            <!-- Region Switcher -->
+                            <div style="display: flex; gap: 4px; background: rgba(0,0,0,0.25); padding: 3px; border-radius: 8px; border: 1px solid var(--border);">
+                                <div id="btnLionRegionEU" onclick="setMitsuRegion('EU')" class="mode-tab active" style="font-size: 9px; padding: 4px 10px; border-radius: 6px; cursor: pointer; text-transform: uppercase; flex: none; line-height: 1; border: none; font-weight: 700;">Europe (€)</div>
+                                <div id="btnLionRegionAF" onclick="setMitsuRegion('AF')" class="mode-tab" style="font-size: 9px; padding: 4px 10px; border-radius: 6px; cursor: pointer; text-transform: uppercase; flex: none; line-height: 1; border: none; font-weight: 700;">Afrique ($)</div>
+                            </div>
+                        </div>
+
+                        <!-- Partnership choice: Vantage / PU Prime vs Licence Payante -->
+                        <div style="margin-bottom: 20px;">
+                            <span class="config-label" style="display: block; margin-bottom: 8px; font-size: 11px; text-transform: uppercase; color: var(--text-dim);">Type de licence</span>
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <div id="optLionPartner" class="glass plan-card active" onclick="selectLionLicense('partner')" style="padding: 16px; border-radius: 12px; cursor: pointer; border: 1px solid var(--border); transition: all 0.3s ease; text-align: left;">
+                                    <div style="font-weight: 700; color: #D4AF37; font-size: 12px; display: flex; justify-content: space-between; align-items: center;">
+                                        <span>🤝 Partenariat Courtier</span>
+                                        <span style="background: rgba(0, 255, 136, 0.1); color: var(--success); font-size: 9px; padding: 2px 6px; border-radius: 4px;">GRATUIT</span>
+                                    </div>
+                                    <p style="font-size: 10px; color: var(--text-dim); margin-top: 4px; line-height: 1.4;">Bénéficiez du robot gratuitement en déposant sur votre compte chez nos brokers partenaires <strong>Vantage</strong> ou <strong>PU Prime</strong>.</p>
+                                </div>
+                                <div id="optLionPaid" class="glass plan-card" onclick="selectLionLicense('paid')" style="padding: 16px; border-radius: 12px; cursor: pointer; border: 1px solid var(--border); transition: all 0.3s ease; text-align: left;">
+                                    <div style="font-weight: 700; color: white; font-size: 12px; display: flex; justify-content: space-between; align-items: center;">
+                                        <span>💳 Licence Fixe (Hors partenariat)</span>
+                                        <span id="valLionPaidPrice">300€</span>
+                                    </div>
+                                    <p style="font-size: 10px; color: var(--text-dim); margin-top: 4px; line-height: 1.4;">Si vous ne souhaitez pas utiliser nos liens de partenariat. Prix fixe unique de <span id="valLionPaidPriceSub">300€</span>.</p>
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- Order & Summary Card (Prestige Styling) -->
-                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center pt-2 font-sans">
-                            <!-- Left: Detailed Summary & Inclusions -->
-                            <div class="md:col-span-7 p-4 rounded-2xl bg-white/5 border border-white/5 flex flex-col gap-2.5">
-                                <div class="flex justify-between text-xs">
-                                    <span class="text-text-dim font-light">Formule d'Accès :</span>
-                                    <strong class="text-white" id="inline-price-display">300 € / an</strong>
+
+                        <!-- Number of linked accounts (Hidden) -->
+                        <div style="margin-bottom: 24px; display: none !important;">
+                            <span class="config-label" style="display: block; margin-bottom: 8px; font-size: 11px; text-transform: uppercase; color: var(--text-dim);">Comptes MT5 Liés</span>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div class="custom-stepper">
+                                    <button class="stepper-btn minus" onclick="stepDown('lionxAccountsCount', 1, 20); return false;">−</button>
+                                    <input type="number" id="lionxAccountsCount" class="input-field" min="1" max="20" value="1" oninput="updateLionCalculator()" style="margin: 0; border: none; background: transparent; text-align: center; font-size: 16px; font-weight: 700; width: 44px; padding: 0;">
+                                    <button class="stepper-btn plus" onclick="stepUp('lionxAccountsCount', 1, 20); return false;">+</button>
                                 </div>
-                                <div class="flex justify-between text-xs">
-                                    <span class="text-text-dim font-light">Hébergement VPS Cloud :</span>
-                                    <strong class="text-emerald-400 flex items-center gap-1.5">
-                                        Offert (0€) <span class="text-[9px] bg-emerald-500/10 border border-emerald-500/25 px-1.5 py-0.5 rounded font-bold uppercase">Inclus</span>
-                                    </strong>
+                                <span style="font-size: 12px; color: var(--text-dim);" id="lionAccountsAddLabel">compte(s) lié(s)</span>
+                            </div>
+                        </div>
+
+                        <!-- Vantage / PU Prime Selection (shows if Partner selected) -->
+                        <div id="lionPartnerBrokerSelect" style="margin-bottom: 24px;">
+                            <span class="config-label" style="display: block; margin-bottom: 8px; font-size: 11px; text-transform: uppercase; color: var(--text-dim);">Choisissez votre broker partenaire</span>
+                            <select id="lionBrokerChoice" class="select-field" style="width: 100%;" onchange="updateLionCalculator()">
+                                <option value="vantage">Vantage Markets</option>
+                                <option value="puprime">PU Prime</option>
+                            </select>
+                            <div style="margin-top: 10px; display: flex; gap: 10px;">
+                                <button class="btn-tab" onclick="window.open('https://vigco.co/la-com-inv/7Wuw5Vy1', '_blank')" style="flex: 1; font-size: 9px; padding: 8px; text-align: center;">Ouvrir un compte Vantage</button>
+                                <button class="btn-tab" onclick="window.open('https://puvip.co/la-partners/fr/O4oaRWoe', '_blank')" style="flex: 1; font-size: 9px; padding: 8px; text-align: center;">Ouvrir un compte PU Prime</button>
+                            </div>
+                        </div>
+
+                        <!-- Capital input for simulation -->
+                        <div style="margin-bottom: 24px;">
+                            <span class="config-label" style="display: block; margin-bottom: 8px; font-size: 11px; text-transform: uppercase; color: var(--text-dim);">Capital initial (Broker) pour simulation</span>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div class="custom-stepper">
+                                    <button class="stepper-btn minus" onclick="stepDown('lionSimCapital', 100, 10000, 100); return false;">−</button>
+                                    <input type="number" id="lionSimCapital" class="input-field" min="100" max="10000" step="100" value="1000" oninput="updateLionCalculator()" style="margin: 0; border: none; background: transparent; text-align: center; font-size: 16px; font-weight: 700; width: 68px; padding: 0;">
+                                    <button class="stepper-btn plus" onclick="stepUp('lionSimCapital', 100, 10000, 100); return false;">+</button>
                                 </div>
-                                <div class="flex justify-between text-xs pt-2 border-t border-white/5">
-                                    <span class="text-text-dim font-light">Objectif Mensuel Cible :</span>
-                                    <strong class="text-emerald-400" id="inline-perf-display">+30% / mois</strong>
+                                <span style="font-size: 12px; color: var(--text-dim);">€/$ déposés chez votre broker</span>
+                            </div>
+                        </div>
+
+                        <!-- Summary box -->
+                        <div class="summary-box" style="background: rgba(0,0,0,0.2); border: 1px solid var(--border); padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+                            <h5 style="font-size: 12px; color: #D4AF37; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Récapitulatif de l'offre</h5>
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px;">
+                                <span style="color: var(--text-dim);">Prix de la licence :</span>
+                                <span id="lionSummaryBasePrice" style="font-weight: 700; color: white;">0.00 €</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px; display: none !important;">
+                                <span style="color: var(--text-dim);">Frais comptes MT5 supplémentaires :</span>
+                                <span id="lionSummaryAccountsPrice" style="font-weight: 700; color: white;">0.00 €</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 800; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; margin-top: 10px;">
+                                <span style="color: white;">PRIX UNIQUE :</span>
+                                <span id="lionSummaryTotalPrice" style="color: #D4AF37; font-size: 18px;">0.00 €</span>
+                            </div>
+                        </div>
+
+                        <button class="btn-gold" onclick="sendCustomBotOrderTelegram('SynapX Lion X')" style="padding: 16px; font-size: 12px; width: 100%; background: #D4AF37; color: black;">
+                            Demander l'activation de Lion X
+                        </button>
+                    </div>
+
+                    <!-- Right: Simulation -->
+                    <div class="glass configurator-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between; border-color: rgba(212, 175, 55, 0.15);">
+                        <div>
+                            <h4 style="font-size: 18px; color: #D4AF37; margin-bottom: 4px;">Simulation de rentabilité (Jusqu'à 50% / semaine)</h4>
+                            <div style="background: rgba(212, 175, 55, 0.06); border: 1px solid rgba(212, 175, 55, 0.2); padding: 16px; border-radius: 12px; color: #D4AF37; font-size: 11.5px; font-family: 'Plus Jakarta Sans', sans-serif; margin-bottom: 20px; line-height: 1.6; text-align: left;">
+                                <div style="display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px;">
+                                    <span>🛡️</span>
+                                    <span>Le <strong>Lion X</strong> utilise une gestion dynamique des positions basée sur les conditions réelles du marché et une exposition progressive du capital.</span>
+                                </div>
+                                <div style="display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px;">
+                                    <span>📊</span>
+                                    <span>Les positions sont ouvertes de manière contrôlée afin de rechercher un équilibre optimal entre performance et maîtrise du risque.</span>
+                                </div>
+                                <div style="display: flex; align-items: flex-start; gap: 8px;">
+                                    <span>💰</span>
+                                    <span>Pour renforcer la protection du capital, il sécurise régulièrement une partie des bénéfices réalisés.</span>
                                 </div>
                             </div>
                             
-                            <!-- Right: Validation Action Call -->
-                            <div class="md:col-span-5 w-full">
-                                <button onclick="submitInlineOrder()" class="w-full py-4 glossy-gold-btn rounded-2xl font-bold uppercase tracking-widest text-[10px] shadow-lg flex items-center justify-center space-x-2 transition-all duration-300 hover:scale-[1.03] cursor-pointer" style="height: 52px;">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-                                    <span>Activer l'Accès</span>
-                                </button>
+                            <div class="sim-chart-container" style="height: 320px; position: relative;">
+                                <canvas id="lionSimulationChart"></canvas>
+                            </div>
+
+                            <div style="margin-top: 12px;">
+                                <div style="background: rgba(212, 175, 55, 0.03); border: 1px solid rgba(212, 175, 55, 0.15); padding: 14px 18px; border-radius: 8px; font-size: 13px; color: #D4AF37; text-align: center; font-weight: 600;">
+                                    📈 Capital final théorique à 12 semaines : <strong id="lionSimFinalCapital" style="font-size: 16px; color: #fff;">129,746.34 €/$</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recap Card (Large Premium dossier format) -->
+                        <div class="glass" style="margin-top: 24px; padding: 24px; border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 16px; background: rgba(0,0,0,0.15); flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <h5 style="font-size: 14px; color: #D4AF37; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; font-weight: 700; font-family: 'Cinzel', serif; font-style: normal;">📋 Récapitulatif de Configuration</h5>
+                                <div style="display: flex; flex-direction: column; gap: 12px; font-size: 14px; color: var(--text-dim); line-height: 1.6;">
+                                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(212, 175, 55, 0.08); padding-bottom: 6px;">
+                                        <span>Capital de Départ :</span>
+                                        <strong style="color: white; font-size: 15px;" id="recapLionCapital">-</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(212, 175, 55, 0.08); padding-bottom: 6px;">
+                                        <span>Objectif Hebdomadaire :</span>
+                                        <strong style="color: #D4AF37; font-size: 15px;">~50.0%</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(212, 175, 55, 0.08); padding-bottom: 6px;">
+                                        <span>Objectif Mensuel :</span>
+                                        <strong style="color: #D4AF37; font-size: 15px;">~200.0%</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(212, 175, 55, 0.08); padding-bottom: 6px;">
+                                        <span>Risque Statistique :</span>
+                                        <strong style="color: #D4AF37; font-size: 15px;">Rendement Élevé & Dynamique</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(212, 175, 55, 0.08); padding-bottom: 6px;">
+                                        <span>Licence d'Accès (Unique) :</span>
+                                        <strong style="color: white; font-size: 15px;" id="recapLionUniquePrice">-</strong>
+                                    </div>
+                                    <div style="display: none !important;">
+                                        <span>Frais Hébergement / Compte :</span>
+                                        <strong style="color: white; font-size: 15px;" id="recapLionMonthlyPrice">-</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(212, 175, 55, 0.08); padding-bottom: 6px;">
+                                        <span>Formule Choisie :</span>
+                                        <strong style="color: white; font-size: 15px;" id="recapLionType">-</strong>
+                                    </div>
+                                    <div style="display: none !important;">
+                                        <span>Comptes MetaTrader 5 Liés :</span>
+                                        <strong style="color: white; font-size: 15px;" id="recapLionAccounts">-</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Performance Advantage -->
+                            <div style="margin-top: 20px; padding: 12px; background: rgba(212,175,55,0.08); border: 1px solid rgba(212,175,55,0.25); border-radius: 8px; font-size: 12px; color: white; line-height: 1.5;">
+                                <strong style="color: #D4AF37;">🎯 Avantage :</strong> Conçu pour les investisseurs cherchant des performances de croissance rapides grâce aux intérêts composés maximisés.
+                            </div>
+
+                            <!-- Premium Details Added Resource -->
+                            <div style="margin-top: 16px; padding: 12px; background: rgba(212,175,55,0.04); border: 1px solid rgba(212,175,55,0.1); border-radius: 8px; font-size: 12px; color: var(--text-dim); line-height: 1.5;">
+                                <span style="color: #D4AF37; font-weight: 700; display: block; margin-bottom: 4px; font-family: 'Cinzel', serif; font-style: normal;">🛡️ Inclus dans votre Licence Lion X :</span>
+                                • Liaison API sécurisée & exécution ultra-rapide (&lt; 2ms).<br>
+                                • Protection intégrée contre les sur-expositions (Drawdown limit).<br>
+                                • Support technique prioritaire 7j/7 par nos ingénieurs.
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <!-- ── VIEW: CONFIG ── -->
         <div id="viewConfig" class="view">
             <div class="config-tabs-mobile" id="configTabsMobile">
