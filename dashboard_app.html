@@ -224,8 +224,11 @@
         input:checked + .slider { background: var(--theme); }
 
         /* Dynamic view entrance */
+        .view {
+            display: none !important;
+        }
         .view.active {
-            display: block;
+            display: block !important;
             animation: viewEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         @keyframes viewEntrance {
@@ -1504,7 +1507,10 @@
             // Hide all views and remove active styles
             VIEW_IDS.forEach(id => {
                 const el = document.getElementById('view' + capitalize(id));
-                if (el) el.classList.add('hidden');
+                if (el) {
+                    el.classList.remove('active');
+                    el.classList.add('hidden');
+                }
 
                 const nav = document.getElementById('nav' + capitalize(id));
                 if (nav) {
@@ -1521,7 +1527,10 @@
 
             // Show target view
             const target = document.getElementById('view' + capitalize(name));
-            if (target) target.classList.remove('hidden');
+            if (target) {
+                target.classList.add('active');
+                target.classList.remove('hidden');
+            }
 
             const navBtn = document.getElementById('nav' + capitalize(name));
             if (navBtn) {
