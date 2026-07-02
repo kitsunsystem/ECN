@@ -2823,19 +2823,6 @@
                                     <div class="text-theme font-bold text-[9px] uppercase tracking-widest mt-8 flex items-center gap-2">
                                         Consulter l'engagement <div class="w-6 h-[1px] bg-theme/30 group-hover:w-10 transition-all"></div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            `,                  
-                            <div class="gsap-reveal flex flex-col sm:flex-row justify-center gap-4">
-                                <button onclick="navigateTo('community')" class="px-8 py-4 bg-theme text-black font-bold text-[10px] uppercase tracking-widest rounded shadow-[0_0_15px_var(--theme-glow)] hover:scale-105 transition-transform">Voir tous les résultats</button>
-                                <a href="https://t.me/RubiXEA" target="_blank" class="px-8 py-4 border border-white/20 text-white text-[10px] uppercase font-bold tracking-widest rounded hover:border-theme transition-colors">Rejoindre le Telegram</a>
-                            </div>
-                        </div>
-                    </section>
-
                 </div>
             `,
 
@@ -2868,7 +2855,16 @@
                     
                     <!-- Telegram Fallback Contact Card -->
                     <div id="faq-no-results" class="hidden mt-12 p-8 glass-card border border-theme/20 rounded-3xl text-center relative overflow-hidden">
-                        <div class="absolute -            catalog: () => `
+                        <div class="absolute -right-20 -bottom-20 w-40 h-40 bg-theme/5 rounded-full blur-2xl"></div>
+                        <h3 class="text-white font-serif text-xl italic mb-3">Vous n'avez pas trouvé votre réponse ?</h3>
+                        <p class="text-gray-400 text-xs uppercase tracking-widest leading-relaxed mb-6">Notre équipe est disponible sur Telegram pour répondre à toutes vos questions personnalisées.</p>
+                        <button onclick="contactTelegramFAQ()" class="px-8 py-4 bg-theme text-black text-[10px] font-bold uppercase tracking-[0.2em] rounded-xl hover:scale-105 transition-transform shadow-[0_0_20px_var(--theme-glow)]">
+                            Nous contacter sur Telegram
+                        </button>
+                    </div>
+                </div>
+            `,
+            catalog: () => `
                 <div id="page-wrapper" class="px-6 md:px-10 py-24 max-w-6xl mx-auto relative z-10">
                     <div class="gsap-reveal text-center mb-16">
                         <span class="inline-block px-5 py-1.5 border border-theme/40 rounded-full text-[9px] font-bold tracking-[0.4em] uppercase text-theme bg-theme/5 shadow-[0_0_20px_var(--theme-glow)] mb-5">
@@ -3228,17 +3224,6 @@
                         <div class="p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-center md:w-1/3 w-full shrink-0">
                             <span class="text-red-400 text-xs font-bold uppercase tracking-widest block mb-1">⚠️ AUCUN RENDEMENT GARANTI</span>
                             <p class="text-[9px] text-gray-400 uppercase tracking-widest leading-relaxed">Le trading comporte un risque de perte. Tradez uniquement le capital que vous pouvez vous permettre de perdre.</p>
-                        </div>
-                    </div>
-                </div>
-            `, transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
-                                </svg>
-                            </div>
-                            <h4 class="text-white font-serif italic text-lg mb-3">Accès Algorithmique</h4>
-                            <p class="text-gray-400 text-xs md:text-sm leading-relaxed">
-                                Intégration du robot RubiX Bot. Kitsun a déployé les configurations, le stress-testing des paramètres, et fournit les liaisons de trading algorithmique.
-                            </p>
                         </div>
                     </div>
                 </div>
