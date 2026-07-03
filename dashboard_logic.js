@@ -524,9 +524,6 @@ function updateUI() {
         }
     }
 
-    const acc = loadedAccounts[currentAccountId];
-    const cfg = acc.config || {};
-
     // ── Core Stats ──
     const balance     = parseFloat(acc.balance) || 0;
     const totalResult = parseFloat(acc.totalResult) || 0;
