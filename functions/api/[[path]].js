@@ -209,7 +209,7 @@ export async function onRequest(context) {
             // Auto-initialize daily profit target to max plan limit if not set or invalid
             const balanceVal = parseFloat(data.balance) || 0.0;
             const maxDailyProfitTargetPct = parseFloat(config.max_daily_profit_target_pct) || 2.25;
-            const isProp = (maxDailyProfitTargetPct <= 0.65);
+            const isProp = (config.is_propfirm === true) || (maxDailyProfitTargetPct <= 0.65);
             const calcBalance = isProp ? balanceVal : Math.max(1000, balanceVal);
             const maxAllowedDollars = Math.ceil(calcBalance * (maxDailyProfitTargetPct / 100) * 100) / 100;
             const minAllowedDollars = Math.round(calcBalance * (0.1 / 100) * 100) / 100;
@@ -1233,7 +1233,7 @@ export async function onRequest(context) {
                     headers: { ...corsHeaders, 'Content-Type': 'application/json' }
                 });
             }
-            const { email, is_affiliate_active, is_community_tier, affiliate_rank_override, account_prices, account_modes, account_max_targets, account_monthly_prices, account_bypasses, initialize_profit_targets } = reqData;
+            const { email, is_affiliate_active, is_community_tier, affiliate_rank_override, account_prices, account_modes, account_max_targets, account_monthly_prices, account_bypasses, account_propfirms, initialize_profit_targets } = reqData;
             
             // Check if user already has a referral code, generate one if active and missing
             const { data: user } = await supabase.from('users').select('referral_code, first_name').eq('email', email).maybeSingle();
@@ -1299,12 +1299,13 @@ export async function onRequest(context) {
                 }
             }
 
-            // 3. Update account modes, monthly prices, max target, and bypass in JSONB config if provided
+            // 3. Update account modes, monthly prices, max target, bypass and propfirm config if provided
             const allAccountIds = new Set([
                 ...Object.keys(account_modes || {}),
                 ...Object.keys(account_max_targets || {}),
                 ...Object.keys(account_monthly_prices || {}),
-                ...Object.keys(account_bypasses || {})
+                ...Object.keys(account_bypasses || {}),
+                ...Object.keys(account_propfirms || {})
             ]);
 
             for (const accountId of allAccountIds) {
@@ -1334,11 +1335,12 @@ export async function onRequest(context) {
                         ...(account_modes && account_modes[accountId] !== undefined ? { mode: account_modes[accountId] } : {}),
                         max_daily_profit_target_pct: maxTarget,
                         ...(account_monthly_prices && account_monthly_prices[accountId] !== undefined ? { monthly_price: parseFloat(account_monthly_prices[accountId]) || 0 } : {}),
-                        ...(account_bypasses && account_bypasses[accountId] !== undefined ? { bypass_payment: !!account_bypasses[accountId] } : {})
+                        ...(account_bypasses && account_bypasses[accountId] !== undefined ? { bypass_payment: !!account_bypasses[accountId] } : {}),
+                        ...(account_propfirms && account_propfirms[accountId] !== undefined ? { is_propfirm: !!account_propfirms[accountId] } : {})
                     };
 
                     if (initialize_profit_targets) {
-                        const isProp = (maxTarget <= 0.65);
+                        const isProp = (newConfig.is_propfirm === true) || (maxTarget <= 0.65);
                         const calcBalance = isProp ? balance : Math.max(1000, balance);
                         const maxAllowedDollars = Math.ceil(calcBalance * (maxTarget / 100) * 100) / 100;
                         newConfig.daily_profit_target = maxAllowedDollars;

@@ -937,7 +937,26 @@
                         <h3 class="font-cinzel text-xl text-white">Configuration : SynapX</h3>
                     </div>
 
-                    <div class="config-split grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Prop Firm contact block -->
+                    <div id="mitsuPropFirmContactBox" class="glass configurator-card p-8 text-center space-y-6 max-w-2xl mx-auto rounded-3xl" style="display: none;">
+                        <div class="w-16 h-16 rounded-full bg-amber-500/5 border border-amber-500/20 flex items-center justify-center mx-auto text-amber-400">
+                            <i data-lucide="shield-alert" class="w-8 h-8"></i>
+                        </div>
+                        <div class="space-y-2">
+                            <h4 class="font-cinzel text-xl text-white font-medium">Service Prop Firm Sur-Mesure</h4>
+                            <p class="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
+                                L'activation de notre algorithme SynapX sur un compte Prop Firm (Challenge ou Compte Validé) est entièrement personnalisée. Nos ingénieurs configurent votre robot sur-mesure pour respecter scrupuleusement les règles strictes de drawdowns quotidien et maximal imposées par votre Prop Firm.
+                            </p>
+                        </div>
+                        <div class="p-4 bg-amber-500/5 border border-amber-500/10 rounded-2xl max-w-md mx-auto text-xs text-slate-300">
+                            ⚙️ <strong>Accès Privé</strong> : Nous ajustons l'exposition, le lot size adaptatif et les protections au cas par cas après analyse de vos contraintes.
+                        </div>
+                        <button class="btn-gold py-3.5 px-8 w-auto text-xs uppercase tracking-widest font-bold mx-auto flex items-center gap-2" onclick="requestLicenseActivation('propfirm')">
+                            <i data-lucide="send" class="w-4 h-4"></i> Contacter notre Support VIP sur Telegram
+                        </button>
+                    </div>
+
+                    <div class="config-split grid grid-cols-1 lg:grid-cols-12 gap-6" id="mitsuConfigSplit">
                         <!-- Left: Form -->
                         <div class="glass configurator-card p-6 lg:col-span-7 space-y-6">
                             <div class="flex justify-between items-center gap-4 flex-wrap">
@@ -1029,7 +1048,7 @@
                                 </div>
                             </div>
 
-                            <button class="btn-gold" onclick="alert('Demande envoyée avec succès à notre équipe technique VIP !')">
+                            <button class="btn-gold" onclick="requestLicenseActivation()">
                                 Demander l'activation de ma licence
                             </button>
                         </div>
@@ -1111,13 +1130,13 @@
                     <!-- Lock Overlay for Trading Params -->
                     <div id="configLockMask" class="absolute inset-0 z-50 flex flex-col items-center justify-center p-6 text-center bg-[#030712]/90 backdrop-blur-md border border-amber-500/10 rounded-2xl" style="display: none;">
                         <div class="w-12 h-12 rounded-full bg-amber-500/5 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-4">
-                            <i data-lucide="key-round" class="w-6 h-6"></i>
+                            <i data-lucide="key-round" class="w-6 h-6" id="configLockIcon"></i>
                         </div>
-                        <h4 class="font-cinzel text-base text-amber-400 font-medium mb-2">Liaison MT5 Requise</h4>
-                        <p class="text-[11px] text-slate-400 max-w-[240px] leading-relaxed mb-4">
+                        <h4 class="font-cinzel text-base text-amber-400 font-medium mb-2" id="configLockTitle">Liaison MT5 Requise</h4>
+                        <p class="text-[11px] text-slate-400 max-w-[240px] leading-relaxed mb-4" id="configLockDesc">
                             Veuillez d'abord lier votre compte de trading MetaTrader 5 (MT5) pour pouvoir ajuster les paramètres de trading automatique.
                         </p>
-                        <button class="btn-gold py-2.5 px-6 w-auto text-xs font-semibold" onclick="switchView('bot')">Configurer mon Bot</button>
+                        <button class="btn-gold py-2.5 px-6 w-auto text-xs font-semibold" id="configLockButton" onclick="switchView('bot')">Configurer mon Bot</button>
                     </div>
 
                         <div class="space-y-4">

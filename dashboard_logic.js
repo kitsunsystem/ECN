@@ -428,7 +428,32 @@ function updateUI() {
             realContent.style.filter = 'blur(16px)';
             realContent.style.pointerEvents = 'none';
         }
-        if (configLockMask) configLockMask.style.display = 'flex';
+        
+        if (configLockMask) {
+            configLockMask.style.display = 'flex';
+            const lockIcon = document.getElementById('configLockIcon');
+            if (lockIcon) {
+                lockIcon.setAttribute('data-lucide', 'key-round');
+                lockIcon.className = "w-6 h-6 text-amber-400";
+            }
+            const lockTitle = document.getElementById('configLockTitle');
+            if (lockTitle) {
+                lockTitle.textContent = "Liaison MT5 Requise";
+                lockTitle.className = "font-cinzel text-base text-amber-400 font-medium mb-2";
+            }
+            const lockDesc = document.getElementById('configLockDesc');
+            if (lockDesc) {
+                lockDesc.textContent = "Veuillez d'abord lier votre compte de trading MetaTrader 5 (MT5) pour pouvoir ajuster les paramètres de trading automatique.";
+            }
+            const lockButton = document.getElementById('configLockButton');
+            if (lockButton) {
+                lockButton.style.display = 'block';
+                lockButton.textContent = "Configurer mon Bot";
+            }
+            if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                lucide.createIcons();
+            }
+        }
         
         // Reset dashboard values to empty placeholders
         document.getElementById('statBalance').textContent = '$0.00';
@@ -456,7 +481,48 @@ function updateUI() {
         realContent.style.filter = 'none';
         realContent.style.pointerEvents = 'auto';
     }
-    if (configLockMask) configLockMask.style.display = 'none';
+
+    const acc = loadedAccounts[currentAccountId];
+    const cfg = acc.config || {};
+
+    let maxDailyProfitTargetPct = 1.25;
+    if (cfg.max_daily_profit_target_pct !== undefined && cfg.max_daily_profit_target_pct !== null) {
+        const parsedPct = parseFloat(cfg.max_daily_profit_target_pct);
+        if (!isNaN(parsedPct)) {
+            maxDailyProfitTargetPct = parsedPct;
+        }
+    }
+    const isPropfirmAccount = (cfg.is_propfirm === true) || (maxDailyProfitTargetPct <= 0.65);
+
+    if (configLockMask) {
+        if (!isPropfirmAccount) {
+            configLockMask.style.display = 'flex';
+            
+            const lockIcon = document.getElementById('configLockIcon');
+            if (lockIcon) {
+                lockIcon.setAttribute('data-lucide', 'shield-check');
+                lockIcon.className = "w-6 h-6 text-emerald-400";
+            }
+            const lockTitle = document.getElementById('configLockTitle');
+            if (lockTitle) {
+                lockTitle.textContent = "Gestion Automatique Centralisée";
+                lockTitle.className = "font-cinzel text-base text-emerald-400 font-medium mb-2";
+            }
+            const lockDesc = document.getElementById('configLockDesc');
+            if (lockDesc) {
+                lockDesc.textContent = "Votre compte personnel est géré de façon centralisée par notre algorithme principal pour maximiser la sécurité de votre capital. Les modifications manuelles des paramètres de trading sont donc verrouillées. Seuls les comptes Prop Firm y ont accès.";
+            }
+            const lockButton = document.getElementById('configLockButton');
+            if (lockButton) {
+                lockButton.style.display = 'none';
+            }
+            if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                lucide.createIcons();
+            }
+        } else {
+            configLockMask.style.display = 'none';
+        }
+    }
 
     const acc = loadedAccounts[currentAccountId];
     const cfg = acc.config || {};
@@ -1192,9 +1258,38 @@ function switchMitsuCapType(type) {
         }
     }
     
+    const mitsuConfigSplit = document.getElementById('mitsuConfigSplit');
+    const mitsuPropFirmContactBox = document.getElementById('mitsuPropFirmContactBox');
+    if (type === 'propfirm') {
+        if (mitsuConfigSplit) mitsuConfigSplit.style.setProperty('display', 'none', 'important');
+        if (mitsuPropFirmContactBox) mitsuPropFirmContactBox.style.display = 'block';
+    } else {
+        if (mitsuConfigSplit) mitsuConfigSplit.style.display = 'grid';
+        if (mitsuPropFirmContactBox) mitsuPropFirmContactBox.style.display = 'none';
+    }
+    
     const propShareRow = document.getElementById('mitsuPropShareRow');
     if (propShareRow) propShareRow.style.display = (type === 'propfirm') ? 'flex' : 'none';
     updateMitsuCalculator();
+}
+
+function requestLicenseActivation(overrideType) {
+    const type = overrideType || mitsuCapType;
+    let message = "";
+    
+    if (type === 'propfirm') {
+        message = "Bonjour, je souhaite obtenir une licence SynapX sur-mesure pour mon compte Prop Firm.";
+    } else {
+        const capital = document.getElementById('mitsuSimCapital')?.value || "1000";
+        let planLabel = "Conservateur (15%)";
+        if (mitsuPlan === 'normal') planLabel = "Équilibré (45%)";
+        else if (mitsuPlan === 'extreme') planLabel = "Débridé (100%)";
+        
+        message = `Bonjour, je souhaite activer ma licence SynapX gratuite pour mon compte Personnel.\n\nConfiguration choisie :\n- Capital de départ : ${capital}$\n- Mode choisi : ${planLabel}\n- Partage de profits : 30% sur gains`;
+    }
+    
+    const telegramUrl = `https://t.me/ysestp?text=${encodeURIComponent(message)}`;
+    window.open(telegramUrl, '_blank');
 }
 
 function selectMitsuPlan(plan) {

@@ -1084,7 +1084,7 @@
                             </div>
                         </div>
 
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px;">
                             <div>
                                 <label style="font-size:9px; color:var(--text-dim); text-transform:uppercase; display:block; margin-bottom:6px;">Choix du Mode Algorithmique</label>
                                 <select class="select-field account-mode-select" data-acc-id="${acc.account_id}">
@@ -1098,7 +1098,15 @@
                                 <label style="font-size:9px; color:var(--text-dim); text-transform:uppercase; display:block; margin-bottom:6px;">Bypass Stripe / Paiement</label>
                                 <div style="display:flex; align-items:center; gap:8px; padding-top:8px;">
                                     <input type="checkbox" class="account-bypass-input" data-acc-id="${acc.account_id}" ${acc.config.bypass_payment !== false ? 'checked' : ''} style="width:16px; height:16px; cursor:pointer; accent-color:var(--theme);">
-                                    <span style="font-size:10px; color:var(--text-dim);">Dérogation active (Paiement non requis)</span>
+                                    <span style="font-size:10px; color:var(--text-dim);">Bypass actif</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label style="font-size:9px; color:var(--text-dim); text-transform:uppercase; display:block; margin-bottom:6px;">Type de Compte</label>
+                                <div style="display:flex; align-items:center; gap:8px; padding-top:8px;">
+                                    <input type="checkbox" class="account-propfirm-input" data-acc-id="${acc.account_id}" ${acc.config.is_propfirm === true ? 'checked' : ''} style="width:16px; height:16px; cursor:pointer; accent-color:var(--theme);">
+                                    <span style="font-size:10px; color:var(--text-dim);">Compte Prop Firm</span>
                                 </div>
                             </div>
                         </div>
@@ -1237,6 +1245,12 @@
                 const accId = input.getAttribute('data-acc-id');
                 accountBypasses[accId] = input.checked;
             });
+            // PropFirms
+            const accountPropfirms = {};
+            document.querySelectorAll('.account-propfirm-input').forEach(input => {
+                const accId = input.getAttribute('data-acc-id');
+                accountPropfirms[accId] = input.checked;
+            });
  
             try {
                 const res = await fetch('/api/admin/update-user-affiliate', {
@@ -1252,6 +1266,7 @@
                         account_max_targets: accountMaxTargets,
                         account_monthly_prices: accountMonthlyPrices,
                         account_bypasses: accountBypasses,
+                        account_propfirms: accountPropfirms,
                         initialize_profit_targets: initializeProfitTargets
                     })
                 });
