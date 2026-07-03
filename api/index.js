@@ -233,10 +233,16 @@ app.post('/api/stats', async (req, res) => {
 
     const targetVal = parseFloat(config.daily_profit_target) || 0.0;
     const targetStr = targetVal.toFixed(2);
+    const targetInt = Math.round(targetVal);
+    const targetIntStr = String(targetInt);
+    const targetPct = (balanceVal > 0) ? ((targetVal / balanceVal) * 100) : 0.0;
+    const targetPctStr = targetPct.toFixed(2);
 
     const returnConfig = {
         ...config,
         enabled: (config.enabled !== false) && (config.client_enabled !== false) && isPaidOrBypassed,
+        
+        // Snake Case (Float)
         daily_profit_target: targetVal,
         profit_target: targetVal,
         daily_profit_limit: targetVal,
@@ -244,17 +250,51 @@ app.post('/api/stats', async (req, res) => {
         take_profit: targetVal,
         daily_take_profit: targetVal,
         
+        // Camel Case (Float)
+        dailyProfitTarget: targetVal,
+        profitTarget: targetVal,
+        dailyProfitLimit: targetVal,
+        dailyLimit: targetVal,
+        takeProfit: targetVal,
+        dailyTakeProfit: targetVal,
+        
+        // Strings
         daily_profit_target_str: targetStr,
         profit_target_str: targetStr,
         daily_profit_limit_str: targetStr,
         daily_limit_str: targetStr,
         take_profit_str: targetStr,
-        daily_take_profit_str: targetStr
+        daily_take_profit_str: targetStr,
+        
+        dailyProfitTargetStr: targetStr,
+        profitTargetStr: targetStr,
+        dailyProfitLimitStr: targetStr,
+        dailyLimitStr: targetStr,
+        takeProfitStr: targetStr,
+        dailyTakeProfitStr: targetStr,
+        
+        // Cents & Integer
+        daily_profit_target_cents: targetInt * 100,
+        profit_target_cents: targetInt * 100,
+        daily_profit_target_int: targetInt,
+        profit_target_int: targetInt,
+        daily_profit_target_int_str: targetIntStr,
+        profit_target_int_str: targetIntStr,
+        
+        // Percentage
+        daily_profit_target_pct: targetPct,
+        profit_target_pct: targetPct,
+        daily_profit_target_pct_str: targetPctStr,
+        profit_target_pct_str: targetPctStr,
+        dailyProfitTargetPct: targetPct,
+        profitTargetPct: targetPct
     };
 
     res.status(200).json({ 
         status: 'success', 
         config: returnConfig,
+        
+        // Snake Case (Float)
         daily_profit_target: targetVal,
         profit_target: targetVal,
         daily_profit_limit: targetVal,
@@ -262,12 +302,44 @@ app.post('/api/stats', async (req, res) => {
         take_profit: targetVal,
         daily_take_profit: targetVal,
         
+        // Camel Case (Float)
+        dailyProfitTarget: targetVal,
+        profitTarget: targetVal,
+        dailyProfitLimit: targetVal,
+        dailyLimit: targetVal,
+        takeProfit: targetVal,
+        dailyTakeProfit: targetVal,
+        
+        // Strings
         daily_profit_target_str: targetStr,
         profit_target_str: targetStr,
         daily_profit_limit_str: targetStr,
         daily_limit_str: targetStr,
         take_profit_str: targetStr,
-        daily_take_profit_str: targetStr
+        daily_take_profit_str: targetStr,
+        
+        dailyProfitTargetStr: targetStr,
+        profitTargetStr: targetStr,
+        dailyProfitLimitStr: targetStr,
+        dailyLimitStr: targetStr,
+        takeProfitStr: targetStr,
+        dailyTakeProfitStr: targetStr,
+        
+        // Cents & Integer
+        daily_profit_target_cents: targetInt * 100,
+        profit_target_cents: targetInt * 100,
+        daily_profit_target_int: targetInt,
+        profit_target_int: targetInt,
+        daily_profit_target_int_str: targetIntStr,
+        profit_target_int_str: targetIntStr,
+        
+        // Percentage
+        daily_profit_target_pct: targetPct,
+        profit_target_pct: targetPct,
+        daily_profit_target_pct_str: targetPctStr,
+        profit_target_pct_str: targetPctStr,
+        dailyProfitTargetPct: targetPct,
+        profitTargetPct: targetPct
     });
 });
 
