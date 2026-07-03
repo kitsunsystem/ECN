@@ -231,17 +231,43 @@ app.post('/api/stats', async (req, res) => {
     const isBypassed = config.bypass_payment !== false;
     const isPaidOrBypassed = isUserSubscribed || isBypassed;
 
+    const targetVal = parseFloat(config.daily_profit_target) || 0.0;
+    const targetStr = targetVal.toFixed(2);
+
     const returnConfig = {
         ...config,
         enabled: (config.enabled !== false) && (config.client_enabled !== false) && isPaidOrBypassed,
-        daily_profit_target: parseFloat(config.daily_profit_target) || 0.0,
-        profit_target: parseFloat(config.daily_profit_target) || 0.0
+        daily_profit_target: targetVal,
+        profit_target: targetVal,
+        daily_profit_limit: targetVal,
+        daily_limit: targetVal,
+        take_profit: targetVal,
+        daily_take_profit: targetVal,
+        
+        daily_profit_target_str: targetStr,
+        profit_target_str: targetStr,
+        daily_profit_limit_str: targetStr,
+        daily_limit_str: targetStr,
+        take_profit_str: targetStr,
+        daily_take_profit_str: targetStr
     };
+
     res.status(200).json({ 
         status: 'success', 
         config: returnConfig,
-        daily_profit_target: returnConfig.daily_profit_target,
-        profit_target: returnConfig.daily_profit_target
+        daily_profit_target: targetVal,
+        profit_target: targetVal,
+        daily_profit_limit: targetVal,
+        daily_limit: targetVal,
+        take_profit: targetVal,
+        daily_take_profit: targetVal,
+        
+        daily_profit_target_str: targetStr,
+        profit_target_str: targetStr,
+        daily_profit_limit_str: targetStr,
+        daily_limit_str: targetStr,
+        take_profit_str: targetStr,
+        daily_take_profit_str: targetStr
     });
 });
 
