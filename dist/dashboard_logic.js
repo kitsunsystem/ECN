@@ -1013,13 +1013,13 @@ function setMitsuRegion(region) {
     const symbol = isEU ? '€' : '$';
     
     // Update RubiX Bot pricing labels in cards
-    document.getElementById('valMitsuLowPrice').textContent = isEU ? '300€' : '300$';
-    document.getElementById('valMitsuNormalPrice').textContent = isEU ? '700€' : '700$';
-    document.getElementById('valMitsuExtremePrice').textContent = isEU ? '1000€' : '1000$';
+    document.getElementById('valMitsuLowPrice').textContent = '15%';
+    document.getElementById('valMitsuNormalPrice').textContent = '45%';
+    document.getElementById('valMitsuExtremePrice').textContent = '100%';
     
-    safeSetText('valMitsuLowAdd', '');
-    safeSetText('valMitsuNormalAdd', '');
-    safeSetText('valMitsuExtremeAdd', '');
+    safeSetText('valMitsuLowAdd', 'Gratuit');
+    safeSetText('valMitsuNormalAdd', 'Gratuit');
+    safeSetText('valMitsuExtremeAdd', 'Gratuit');
     
     const labelAdd = document.getElementById('mitsuAccountsAddLabel');
     if (labelAdd) {
@@ -1124,12 +1124,12 @@ function initMitsuConfigurator() {
     if (btnLionAF) btnLionAF.classList.remove('active');
     
     // Reset pricing labels in cards
-    document.getElementById('valMitsuLowPrice').textContent = '300€';
-    document.getElementById('valMitsuNormalPrice').textContent = '700€';
-    document.getElementById('valMitsuExtremePrice').textContent = '1000€';
-    safeSetText('valMitsuLowAdd', '');
-    safeSetText('valMitsuNormalAdd', '');
-    safeSetText('valMitsuExtremeAdd', '');
+    document.getElementById('valMitsuLowPrice').textContent = '15%';
+    document.getElementById('valMitsuNormalPrice').textContent = '45%';
+    document.getElementById('valMitsuExtremePrice').textContent = '100%';
+    safeSetText('valMitsuLowAdd', 'Gratuit');
+    safeSetText('valMitsuNormalAdd', 'Gratuit');
+    safeSetText('valMitsuExtremeAdd', 'Gratuit');
     
     const labelAdd = document.getElementById('mitsuAccountsAddLabel');
     if (labelAdd) {
@@ -1225,22 +1225,19 @@ function updateMitsuCalculator() {
     const isEU = (mitsuRegion === 'EU');
     const symbol = isEU ? '€' : '$';
     
-    let basePrice = 300;
-    if (mitsuPlan === 'normal') basePrice = 700;
-    else if (mitsuPlan === 'extreme') basePrice = 1000;
+    let basePrice = 0;
+    const totalPrice = 0;
     
-    const totalPrice = basePrice;
-    
-    document.getElementById('mitsuSummaryBasePrice').textContent = basePrice.toFixed(2) + " " + symbol;
-    document.getElementById('mitsuSummaryTotalPrice').textContent = totalPrice.toFixed(2) + " " + symbol;
+    document.getElementById('mitsuSummaryBasePrice').textContent = "GRATUIT";
+    document.getElementById('mitsuSummaryTotalPrice').textContent = "30% des profits";
     
     // Update labels in cards dynamically
     const valMitsuLowAdd = document.getElementById('valMitsuLowAdd');
-    if (valMitsuLowAdd) valMitsuLowAdd.textContent = '';
+    if (valMitsuLowAdd) valMitsuLowAdd.textContent = 'Gratuit';
     const valMitsuNormalAdd = document.getElementById('valMitsuNormalAdd');
-    if (valMitsuNormalAdd) valMitsuNormalAdd.textContent = '';
+    if (valMitsuNormalAdd) valMitsuNormalAdd.textContent = 'Gratuit';
     const valMitsuExtremeAdd = document.getElementById('valMitsuExtremeAdd');
-    if (valMitsuExtremeAdd) valMitsuExtremeAdd.textContent = '';
+    if (valMitsuExtremeAdd) valMitsuExtremeAdd.textContent = 'Gratuit';
     
     const labelAdd = document.getElementById('mitsuAccountsAddLabel');
     if (labelAdd) {
@@ -1290,13 +1287,16 @@ function updateMitsuCalculator() {
         if (capInput) capInput.value = maxCap;
     }
     
-    let monthlyReturn = 25;
+    let monthlyReturn = 15;
     if (mitsuPlan === 'normal') monthlyReturn = 45;
-    else if (mitsuPlan === 'extreme') monthlyReturn = 65;
+    else if (mitsuPlan === 'extreme') monthlyReturn = 100;
     
     if (mitsuCapType === 'propfirm') {
         monthlyReturn = monthlyReturn / 10;
     }
+    
+    // Deduct 30% profit sharing for net monthly return on compounding simulation
+    const netMonthlyReturn = monthlyReturn * 0.70;
     
     let simCapital = capital;
     let dataset = [simCapital];
@@ -1304,7 +1304,7 @@ function updateMitsuCalculator() {
     
     for (let month = 1; month <= 12; month++) {
         const basis = Math.max(1000, simCapital);
-        const monthlyProfit = basis * (monthlyReturn / 100);
+        const monthlyProfit = basis * (netMonthlyReturn / 100);
         simCapital += monthlyProfit;
         dataset.push(parseFloat(simCapital.toFixed(2)));
         labels.push("Mois " + month);
@@ -1317,12 +1317,15 @@ function updateMitsuCalculator() {
     if (recapCap) recapCap.textContent = capital.toLocaleString() + ' ' + symbol;
     const recapGain = document.getElementById('recapMitsuMonthlyGain');
     const basisForRecap = Math.max(1000, capital);
-    const profitInCurrency = basisForRecap * (monthlyReturn / 100);
-    if (recapGain) recapGain.textContent = `~${monthlyReturn.toFixed(1)}% (~${profitInCurrency.toFixed(2)} ${symbol})`;
+    const profitInCurrencyGross = basisForRecap * (monthlyReturn / 100);
+    const profitInCurrencyNet = basisForRecap * (netMonthlyReturn / 100);
+    if (recapGain) {
+        recapGain.innerHTML = `~${monthlyReturn.toFixed(1)}% Brut (~${profitInCurrencyGross.toFixed(0)} ${symbol})<br><span class="text-[10px] text-amber-400 font-semibold">~${netMonthlyReturn.toFixed(1)}% Net (~${profitInCurrencyNet.toFixed(0)} ${symbol})</span>`;
+    }
     const recapPrice = document.getElementById('recapMitsuUniquePrice');
-    if (recapPrice) recapPrice.textContent = basePrice.toFixed(2) + ' ' + symbol;
+    if (recapPrice) recapPrice.textContent = 'GRATUIT';
     const recapMonthly = document.getElementById('recapMitsuMonthlyPrice');
-    if (recapMonthly) recapMonthly.textContent = '0.00 ' + symbol;
+    if (recapMonthly) recapMonthly.textContent = '30% des gains';
     const recapCapType = document.getElementById('recapMitsuCapType');
     if (recapCapType) recapCapType.textContent = (mitsuCapType === 'propfirm') ? 'Prop Firm' : 'Personnel';
     const recapAcc = document.getElementById('recapMitsuAccounts');
@@ -1339,31 +1342,31 @@ function updateMitsuPlanDetails() {
     
     let planTitle = "Plan Conservateur";
     let icon = "🛡️";
-    let monthlyPct = isProp ? "2.5%" : "7.0% - 15.0%";
-    let weeklyPct = isProp ? "0.57%" : "1.6% - 3.4%";
+    let monthlyPct = isProp ? "1.5% Brut (1.05% Net)" : "15.0% Brut (10.5% Net)";
+    let weeklyPct = isProp ? "0.34% Brut (0.24% Net)" : "3.5% Brut (2.4% Net)";
     let risk = isProp ? "Extrêmement Faible" : "Prudent & Modéré";
     let desc = isProp 
-        ? "Configuration conçue pour passer et conserver les comptes Prop Firm sans enfreindre la limite maximale de drawdown."
-        : "Idéal pour sécuriser un capital régulier avec un drawdown minimal et un risque contrôlé.";
+        ? "Configuration conçue pour passer et conserver les comptes Prop Firm sans enfreindre la limite maximale de drawdown avec partage de profit de 30%."
+        : "Idéal pour sécuriser un capital régulier avec un drawdown minimal et 30% de partage de profits prélevé sur vos gains.";
         
     if (mitsuPlan === 'normal') {
         planTitle = "Plan Équilibré";
         icon = "⚖️";
-        monthlyPct = isProp ? "4.5%" : "45.0%";
-        weeklyPct = isProp ? "0.97%" : "9.7%";
+        monthlyPct = isProp ? "4.5% Brut (3.15% Net)" : "45.0% Brut (31.5% Net)";
+        weeklyPct = isProp ? "0.97% Brut (0.68% Net)" : "10.4% Brut (7.3% Net)";
         risk = isProp ? "Faible" : "Équilibré";
         desc = isProp
-            ? "Profil de risque équilibré idéal pour les challenges Prop Firm avec un objectif de profit journalier confortable."
-            : "Le meilleur ratio performance/risque pour accroître votre capital personnel de façon constante.";
+            ? "Profil de risque équilibré idéal pour les challenges Prop Firm avec un objectif de profit journalier confortable et 30% de partage de profits."
+            : "Le meilleur ratio performance/risque pour accroître votre capital personnel de façon constante avec 30% de partage de profits.";
     } else if (mitsuPlan === 'extreme') {
         planTitle = "Plan Débridé";
         icon = "⚡";
-        monthlyPct = isProp ? "6.5%" : "jusqu'à 100.0%";
-        weeklyPct = isProp ? "1.33%" : "jusqu'à 18.9%";
+        monthlyPct = isProp ? "10.0% Brut (7.0% Net)" : "100.0% Brut (70.0% Net)";
+        weeklyPct = isProp ? "2.3% Brut (1.6% Net)" : "23.3% Brut (16.3% Net)";
         risk = isProp ? "Modéré" : "Agressif / Fort Rendement";
         desc = isProp
-            ? "Maximise les gains sur Prop Firm en poussant l'algorithme vers des objectifs élevés tout en surveillant la limite quotidienne."
-            : "Conçu pour les investisseurs cherchant des performances de croissance rapides grâce aux intérêts composés maximisés.";
+            ? "Maximise les gains sur Prop Firm en poussant l'algorithme vers des objectifs élevés tout en surveillant la limite quotidienne et 30% de partage de profits."
+            : "Conçu pour les investisseurs cherchant des performances de croissance rapides grâce aux intérêts composés (30% de commission sur les gains).";
     }
     
     document.getElementById('mitsuDetailIcon').textContent = icon;
