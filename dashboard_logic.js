@@ -372,20 +372,13 @@ async function loadData() {
 
         // Render account tabs
         const tabContainer = document.getElementById('accountTabs');
-        let tabsHtml = "";
-        if (accounts.length > 1) {
-            tabsHtml = accounts.map(acc => `
-                <button class="btn-tab ${acc.account_id === currentAccountId ? 'active' : ''}"
-                        onclick="switchAccount('${acc.account_id}')">
-                    MT5 #${acc.account_id}
-                </button>
-            `).join('');
-        } else {
-            tabsHtml = `
-                <span style="font-size:10px; color:var(--theme); font-weight:700; text-transform:uppercase; letter-spacing:2px; display:inline-flex; align-items:center; margin-right:10px;">
-                    Terminal Actif : #${accounts[0].account_id}
-                </span>`;
-        }
+        let tabsHtml = accounts.map(acc => `
+            <button class="btn-tab ${acc.account_id === currentAccountId ? 'active' : ''}"
+                    onclick="switchAccount('${acc.account_id}')">
+                <span style="width: 6px; height: 6px; border-radius: 50%; background: #10b981; display: inline-block; box-shadow: 0 0 6px #10b981;"></span>
+                MT5 #${acc.account_id}
+            </button>
+        `).join('');
         
         // Append the "Ajouter un compte MT5" button to the end
         tabsHtml += `
@@ -1344,18 +1337,9 @@ function updateMitsuCalculator() {
     }
     
     // Simulation
-    let minCap = 500;
-    let maxCap = 2500;
-    let stepCap = 100;
-
-    if (mitsuCapType === 'propfirm') {
-        minCap = 10000;
-        maxCap = 400000;
-        stepCap = 5000;
-    } else {
-        if (mitsuPlan === 'normal') maxCap = 5000;
-        else if (mitsuPlan === 'extreme') maxCap = 10000;
-    }
+    let minCap = (mitsuCapType === 'propfirm') ? 10000 : 500;
+    let maxCap = 4000000; // Limited to 4 million in all cases
+    let stepCap = (mitsuCapType === 'propfirm') ? 5000 : 100;
 
     const capInput = document.getElementById('mitsuSimCapital');
     if (capInput) {

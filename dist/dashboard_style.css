@@ -328,3 +328,49 @@ body {
         display: block !important;
     }
 }
+
+/* --- Plan Card Centering and Padding Fixes --- */
+.plan-card {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+    padding: 12px 6px !important;
+}
+@media (min-width: 640px) {
+    .plan-card {
+        padding: 16px 12px !important;
+    }
+}
+
+/* --- MT5 Account Switcher Tabs --- */
+.btn-tab {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(224, 17, 95, 0.15); /* var(--border) color */
+    color: #a69ba0; /* var(--text-secondary) */
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-tab:hover {
+    background: rgba(224, 17, 95, 0.08);
+    border-color: rgba(224, 17, 95, 0.4);
+    color: #fff;
+}
+
+.btn-tab.active {
+    background: rgba(224, 17, 95, 0.15);
+    border-color: var(--accent) !important;
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 0 15px rgba(224, 17, 95, 0.25);
+}
