@@ -560,15 +560,7 @@ function updateUI() {
     const clientOn   = cfg.client_enabled !== false;   
     const monthlyPrice = parseFloat(cfg.monthly_price) || 0.0;
 
-    let maxDailyProfitTargetPct = 1.25;
-    if (cfg.max_daily_profit_target_pct !== undefined && cfg.max_daily_profit_target_pct !== null) {
-        const parsedPct = parseFloat(cfg.max_daily_profit_target_pct);
-        if (!isNaN(parsedPct)) {
-            maxDailyProfitTargetPct = parsedPct;
-        }
-    }
-
-    const isProp = (maxDailyProfitTargetPct <= 0.65);
+    const isProp = isPropfirmAccount;
     currentCapitalType = isProp ? 'propfirm' : 'perso';
     
     // Automatically toggle active capital type tab in client UI
