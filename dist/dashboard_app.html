@@ -1469,13 +1469,13 @@
             if (tab === 'trading') {
                 grid.classList.add('show-trading');
                 grid.classList.remove('show-security');
-                if (btnTrading) btnTrading.classList.add('active');
-                if (btnSecurity) btnSecurity.classList.remove('active');
+                if (btnTrading) btnTrading.className = "config-tab-btn flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wider text-amber-400 bg-amber-500/10 active font-bold";
+                if (btnSecurity) btnSecurity.className = "config-tab-btn flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wider text-slate-400 hover:text-white";
             } else {
                 grid.classList.add('show-security');
                 grid.classList.remove('show-trading');
-                if (btnTrading) btnTrading.classList.remove('active');
-                if (btnSecurity) btnSecurity.classList.add('active');
+                if (btnTrading) btnTrading.className = "config-tab-btn flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wider text-slate-400 hover:text-white";
+                if (btnSecurity) btnSecurity.className = "config-tab-btn flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wider text-amber-400 bg-amber-500/10 active font-bold";
             }
         }
 

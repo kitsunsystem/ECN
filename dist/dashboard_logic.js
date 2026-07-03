@@ -1179,17 +1179,45 @@ function initLionConfigurator() {
 
 function switchMitsuCapType(type) {
     mitsuCapType = type;
-    document.getElementById('tabMitsuPerso').classList.toggle('active', type === 'perso');
-    document.getElementById('tabMitsuProp').classList.toggle('active', type === 'propfirm');
-    document.getElementById('mitsuPropShareRow').style.display = (type === 'propfirm') ? 'flex' : 'none';
+    const tabPerso = document.getElementById('tabMitsuPerso');
+    const tabProp = document.getElementById('tabMitsuProp');
+    
+    if (tabPerso && tabProp) {
+        if (type === 'perso') {
+            tabPerso.className = "flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wider text-amber-400 bg-amber-500/10 font-bold active";
+            tabProp.className = "flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wider text-slate-400 hover:text-white";
+        } else {
+            tabPerso.className = "flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wider text-slate-400 hover:text-white";
+            tabProp.className = "flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wider text-amber-400 bg-amber-500/10 font-bold active";
+        }
+    }
+    
+    const propShareRow = document.getElementById('mitsuPropShareRow');
+    if (propShareRow) propShareRow.style.display = (type === 'propfirm') ? 'flex' : 'none';
     updateMitsuCalculator();
 }
 
 function selectMitsuPlan(plan) {
     mitsuPlan = plan;
-    document.getElementById('cardMitsuLow').classList.toggle('active', plan === 'low');
-    document.getElementById('cardMitsuNormal').classList.toggle('active', plan === 'normal');
-    document.getElementById('cardMitsuExtreme').classList.toggle('active', plan === 'extreme');
+    const cardLow = document.getElementById('cardMitsuLow');
+    const cardNormal = document.getElementById('cardMitsuNormal');
+    const cardExtreme = document.getElementById('cardMitsuExtreme');
+    
+    if (cardLow && cardNormal && cardExtreme) {
+        if (plan === 'low') {
+            cardLow.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-amber-500 text-center bg-amber-500/5 active";
+            cardNormal.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center";
+            cardExtreme.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center";
+        } else if (plan === 'normal') {
+            cardLow.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center";
+            cardNormal.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-amber-500 text-center bg-amber-500/5 active";
+            cardExtreme.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center";
+        } else if (plan === 'extreme') {
+            cardLow.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center";
+            cardNormal.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center";
+            cardExtreme.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-amber-500 text-center bg-amber-500/5 active";
+        }
+    }
     updateMitsuCalculator();
 }
 
