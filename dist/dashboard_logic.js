@@ -1068,9 +1068,9 @@ function setMitsuRegion(region) {
     const symbol = isEU ? '€' : '$';
     
     // Update RubiX Bot pricing labels in cards
-    document.getElementById('valMitsuLowPrice').textContent = '15%';
-    document.getElementById('valMitsuNormalPrice').textContent = '45%';
-    document.getElementById('valMitsuExtremePrice').textContent = '100%';
+    document.getElementById('valMitsuLowPrice').textContent = 'Jusqu\'à 15%';
+    document.getElementById('valMitsuNormalPrice').textContent = 'Jusqu\'à 45%';
+    document.getElementById('valMitsuExtremePrice').textContent = 'Jusqu\'à 100%';
     
     safeSetText('valMitsuLowAdd', 'Gratuit');
     safeSetText('valMitsuNormalAdd', 'Gratuit');
@@ -1179,9 +1179,9 @@ function initMitsuConfigurator() {
     if (btnLionAF) btnLionAF.classList.remove('active');
     
     // Reset pricing labels in cards
-    document.getElementById('valMitsuLowPrice').textContent = '15%';
-    document.getElementById('valMitsuNormalPrice').textContent = '45%';
-    document.getElementById('valMitsuExtremePrice').textContent = '100%';
+    document.getElementById('valMitsuLowPrice').textContent = 'Jusqu\'à 15%';
+    document.getElementById('valMitsuNormalPrice').textContent = 'Jusqu\'à 45%';
+    document.getElementById('valMitsuExtremePrice').textContent = 'Jusqu\'à 100%';
     safeSetText('valMitsuLowAdd', 'Gratuit');
     safeSetText('valMitsuNormalAdd', 'Gratuit');
     safeSetText('valMitsuExtremeAdd', 'Gratuit');
@@ -1288,18 +1288,33 @@ function selectMitsuPlan(plan) {
     const cardExtreme = document.getElementById('cardMitsuExtreme');
     
     if (cardLow && cardNormal && cardExtreme) {
+        // Reset Low Cost (Prudent - Green)
+        cardLow.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center";
+        cardLow.children[0].className = "text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1";
+        cardLow.children[2].className = "text-[9px] text-slate-400 mt-1";
+        
+        // Reset Normal (Equilibre - Yellow/Amber)
+        cardNormal.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center";
+        cardNormal.children[0].className = "text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1";
+        cardNormal.children[2].className = "text-[9px] text-slate-400 mt-1";
+        
+        // Reset Extreme (Debride - Red/Rose)
+        cardExtreme.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center";
+        cardExtreme.children[0].className = "text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1";
+        cardExtreme.children[2].className = "text-[9px] text-slate-400 mt-1";
+
         if (plan === 'low') {
-            cardLow.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-amber-500 text-center bg-amber-500/5 active";
-            cardNormal.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center";
-            cardExtreme.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center";
+            cardLow.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-emerald-500 text-center bg-emerald-500/5 active";
+            cardLow.children[0].className = "text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-1";
+            cardLow.children[2].className = "text-[9px] text-emerald-400 font-semibold mt-1";
         } else if (plan === 'normal') {
-            cardLow.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center";
             cardNormal.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-amber-500 text-center bg-amber-500/5 active";
-            cardExtreme.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center";
+            cardNormal.children[0].className = "text-[10px] font-bold text-amber-400 uppercase tracking-widest mb-1";
+            cardNormal.children[2].className = "text-[9px] text-amber-400 font-semibold mt-1";
         } else if (plan === 'extreme') {
-            cardLow.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center";
-            cardNormal.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center";
-            cardExtreme.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-amber-500 text-center bg-amber-500/5 active";
+            cardExtreme.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-rose-500 text-center bg-rose-500/5 active";
+            cardExtreme.children[0].className = "text-[10px] font-bold text-rose-400 uppercase tracking-widest mb-1";
+            cardExtreme.children[2].className = "text-[9px] text-rose-400 font-semibold mt-1";
         }
     }
     updateMitsuCalculator();

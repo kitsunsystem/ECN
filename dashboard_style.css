@@ -270,4 +270,61 @@ body {
 @media (max-width: 768px) {
     .main-content { padding: 20px; }
     .stats-grid { grid-template-columns: 1fr 1fr; }
+    
+    /* Config view centering and proportioning on mobile */
+    #viewConfig {
+        text-align: center !important;
+    }
+    #viewConfig .config-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
+    }
+    #viewConfig .config-card {
+        padding: 24px 16px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+    }
+    #viewConfig .space-y-4, #viewConfig .space-y-6 {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        width: 100% !important;
+    }
+    #viewConfig .toggle-wrapper {
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+        max-width: 320px !important;
+        margin: 0 auto !important;
+        padding: 12px 16px !important;
+    }
+    #viewConfig .toggle-wrapper .flex-col {
+        align-items: flex-start !important;
+        text-align: left !important;
+    }
+    #viewConfig .space-y-1 {
+        width: 100% !important;
+        max-width: 320px !important;
+        margin: 0 auto !important;
+        text-align: center !important;
+    }
+    #viewConfig input.input-field {
+        text-align: center !important;
+        width: 100% !important;
+        max-width: 320px !important;
+        margin: 0 auto !important;
+    }
+    #viewConfig button.btn-gold {
+        width: 100% !important;
+        max-width: 320px !important;
+        margin: 0 auto !important;
+    }
+    #viewConfig .config-section-title, #viewConfig .config-section-sub, #viewConfig .config-label {
+        text-align: center !important;
+        width: 100% !important;
+        display: block !important;
+    }
 }
