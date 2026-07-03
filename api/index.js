@@ -181,10 +181,14 @@ app.post('/api/stats', async (req, res) => {
     const maxAllowedDollars = Math.ceil(calcBalance * (maxDailyProfitTargetPct / 100) * 100) / 100;
     const minAllowedDollars = Math.round(calcBalance * (0.1 / 100) * 100) / 100;
 
-    let dailyProfitTarget = parseFloat(config.daily_profit_target);
+    let dailyProfitTarget = parseFloat(config.daily_profit_target) || parseFloat(config.profit_target);
     if (isNaN(dailyProfitTarget) || dailyProfitTarget === 0 || dailyProfitTarget < minAllowedDollars) {
         dailyProfitTarget = maxAllowedDollars;
         config.daily_profit_target = dailyProfitTarget;
+        config.profit_target = dailyProfitTarget;
+    } else {
+        config.daily_profit_target = dailyProfitTarget;
+        config.profit_target = dailyProfitTarget;
     }
 
     // Upsert Account (Safely initialize price to 0.00 for new accounts, but preserve existing price for others)
@@ -230,9 +234,15 @@ app.post('/api/stats', async (req, res) => {
     const returnConfig = {
         ...config,
         enabled: (config.enabled !== false) && (config.client_enabled !== false) && isPaidOrBypassed,
-        daily_profit_target: parseFloat(config.daily_profit_target) || 0.0
+        daily_profit_target: parseFloat(config.daily_profit_target) || 0.0,
+        profit_target: parseFloat(config.daily_profit_target) || 0.0
     };
-    res.status(200).json({ status: 'success', config: returnConfig });
+    res.status(200).json({ 
+        status: 'success', 
+        config: returnConfig,
+        daily_profit_target: returnConfig.daily_profit_target,
+        profit_target: returnConfig.daily_profit_target
+    });
 });
 
 // --- ADMIN 2FA UTILITIES ---

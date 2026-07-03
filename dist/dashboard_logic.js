@@ -957,7 +957,8 @@ async function saveConfig() {
         config: {
             lot_multiplier,
             client_enabled,
-            daily_profit_target
+            daily_profit_target,
+            profit_target: daily_profit_target
         }
     };
 
@@ -1698,6 +1699,7 @@ function switchBotMode(mode) {
     const tabNM = document.getElementById('tabBotNormal');
     const tabEX = document.getElementById('tabBotExtreme');
     const sliderProfit = document.getElementById('inputBotProfitTarget');
+    if (!sliderProfit) return;
     const sliderPrice  = document.getElementById('inputBotInitialPrice');
     const labelProfit  = document.getElementById('profitTargetLabel');
     const capHelp = document.getElementById('capitalLimitHelp');
