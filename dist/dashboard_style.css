@@ -338,6 +338,10 @@ body {
     text-align: center !important;
     padding: 12px 6px !important;
 }
+.plan-card > * {
+    text-align: center !important;
+    width: 100% !important;
+}
 @media (min-width: 640px) {
     .plan-card {
         padding: 16px 12px !important;

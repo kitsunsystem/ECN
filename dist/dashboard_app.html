@@ -618,8 +618,10 @@
     <div id="dashContent" class="min-h-screen relative z-10 flex flex-col">
 
         <!-- MOBILE TOPBAR (iOS style Glass) -->
-        <div class="mobile-topbar fixed top-0 left-0 right-0 h-14 bg-[#030712]/80 backdrop-blur-xl border-b border-white/10 flex items-center justify-between px-6 z-[1900] md:hidden">
-            <div class="w-6"></div>
+        <div class="mobile-topbar fixed top-0 left-0 right-0 h-14 bg-[#030712]/80 backdrop-blur-xl border-b border-white/10 flex items-center justify-between px-5 z-[1900] md:hidden">
+            <button onclick="toggleTheme()" class="p-2 border border-white/10 hover:border-amber-400/60 text-amber-400 hover:bg-white/5 rounded-full transition">
+                <i data-lucide="sun" class="w-4 h-4" id="theme-toggle-mob-icon"></i>
+            </button>
             <span class="font-cinzel text-lg tracking-widest text-white">SYNAP<span class="text-amber-400 font-bold">X</span></span>
             <button class="mobile-logout-btn text-slate-400 hover:text-white transition" onclick="logout()">
                 <i data-lucide="log-out" class="w-5 h-5"></i>
@@ -684,7 +686,7 @@
         </nav>
 
         <!-- MAIN WORKSPACE -->
-        <main class="workspace flex-1 max-w-6xl w-full mx-auto px-4 md:px-8 pt-12 md:pt-32 pb-24 md:pb-20 space-y-8">
+        <main class="workspace flex-1 max-w-6xl w-full mx-auto px-4 md:px-8 pt-20 md:pt-32 pb-24 md:pb-20 space-y-8">
 
             <!-- PAGE HEADER -->
             <div class="page-header pb-6 border-b border-amber-500/10 space-y-2">
@@ -1519,6 +1521,7 @@
             const html = document.documentElement;
             const body = document.body;
             const themeBtn = document.getElementById('theme-toggle-btn');
+            const mobIcon = document.getElementById('theme-toggle-mob-icon');
             
             if (html.classList.contains('dark')) {
                 html.classList.remove('dark');
@@ -1526,13 +1529,16 @@
                 body.classList.add('light-theme');
                 localStorage.setItem('dashboard-theme', 'light');
                 if (themeBtn) themeBtn.innerHTML = '<i data-lucide="moon" class="w-4 h-4"></i>';
+                if (mobIcon) { mobIcon.setAttribute('data-lucide', 'moon'); }
             } else {
                 html.classList.remove('light');
                 html.classList.add('dark');
                 body.classList.remove('light-theme');
                 localStorage.setItem('dashboard-theme', 'dark');
                 if (themeBtn) themeBtn.innerHTML = '<i data-lucide="sun" class="w-4 h-4"></i>';
+                if (mobIcon) { mobIcon.setAttribute('data-lucide', 'sun'); }
             }
+            if (typeof lucide !== 'undefined') lucide.createIcons();
             
             // Sync checkbox toggle
             const toggle = document.getElementById('themeModeToggle');
