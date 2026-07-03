@@ -762,10 +762,10 @@ function renderHistory(history) {
         ? items.map(h => {
             const isPos = h.isPositive;
             return `
-                <div class="grid grid-cols-6 gap-2 py-3.5 text-xs text-slate-300 border-b border-white/5 hover:bg-white/[0.02] transition items-center px-2">
-                    <span class="font-mono text-amber-400 font-semibold">#${h.id}</span>
-                    <span class="text-slate-400 font-light">${h.date}</span>
-                    <span class="text-slate-400 font-light font-mono">${h.duration}</span>
+                <div class="grid grid-cols-4 sm:grid-cols-6 gap-2 py-3.5 text-xs text-slate-300 border-b border-white/5 hover:bg-white/[0.02] transition items-center px-2">
+                    <span class="font-mono text-amber-400 font-semibold hidden sm:block">#${h.id}</span>
+                    <span class="text-slate-400 font-light truncate">${h.date}</span>
+                    <span class="text-slate-400 font-light font-mono hidden sm:block">${h.duration}</span>
                     <span class="${h.type === 'BUY' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' : 'text-rose-400 bg-rose-500/10 border-rose-500/20'} font-bold text-[10px] tracking-wider border px-2 py-0.5 rounded-md w-max text-center">${h.type}</span>
                     <span class="font-semibold text-white font-mono">${h.symbol}</span>
                     <b class="${isPos ? 'profit-pos' : 'profit-neg'} text-right font-mono font-bold">${h.resultStr}</b>

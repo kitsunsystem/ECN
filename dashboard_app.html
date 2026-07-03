@@ -490,6 +490,16 @@
             background: rgba(0, 0, 0, 0.15) !important;
         }
 
+        /* Responsive Mobile Configuration Tabs styling */
+        @media (max-width: 767px) {
+            .config-grid.show-trading #tutoSecurityCard {
+                display: none !important;
+            }
+            .config-grid.show-security #tutoConfigCard {
+                display: none !important;
+            }
+        }
+
     </style>
 </head>
 <body class="selection:bg-amber-400 selection:text-black">
@@ -779,11 +789,11 @@
                         <div class="glass history-card p-6 lg:col-span-8 space-y-4" id="tutoHistoryCard">
                             <h3 class="font-cinzel text-lg text-white">Historique des Transactions</h3>
                             <div class="table-wrap overflow-x-auto">
-                                <div class="table-inner min-w-[640px]">
-                                    <div class="table-head grid grid-cols-6 gap-2 py-3 text-[10px] uppercase tracking-widest text-slate-400 font-bold border-b border-white/10 px-2">
-                                        <span>Ticket</span>
+                                <div class="table-inner w-full">
+                                    <div class="table-head grid grid-cols-4 sm:grid-cols-6 gap-2 py-3 text-[10px] uppercase tracking-widest text-slate-400 font-bold border-b border-white/10 px-2">
+                                        <span class="hidden sm:block">Ticket</span>
                                         <span>Date Clôture</span>
-                                        <span>Durée</span>
+                                        <span class="hidden sm:block">Durée</span>
                                         <span>Type</span>
                                         <span>Symbole</span>
                                         <span class="text-right">Profit</span>
@@ -836,12 +846,12 @@
                             
                             <div class="space-y-4" id="tutoBotList">
                                 <!-- SynapX Card -->
-                                <div class="glass bot-selection-card p-8 relative overflow-hidden border border-white/10 hover:border-amber-500/30 cursor-pointer transition flex flex-col justify-between h-[320px] rounded-3xl" id="tutoSynapXCard" onclick="selectBot('rubix')">
+                                <div class="glass bot-selection-card p-6 md:p-8 relative overflow-hidden border border-white/10 hover:border-amber-500/30 cursor-pointer transition flex flex-col justify-between h-auto md:h-[320px] rounded-3xl" id="tutoSynapXCard" onclick="selectBot('rubix')">
                                     <div class="panda-glow absolute inset-0 bg-radial-gradient from-amber-500/5 to-transparent pointer-events-none"></div>
                                     
-                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center h-full z-10 relative">
+                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center md:h-full z-10 relative">
                                         <!-- Left Side: Large visual icon/graphic (col-span-4) -->
-                                        <div class="md:col-span-4 flex flex-col items-center justify-center text-center border-b md:border-b-0 md:border-r border-white/10 pb-6 md:pb-0 md:pr-8 h-full">
+                                        <div class="md:col-span-4 flex flex-col items-center justify-center text-center border-b md:border-b-0 md:border-r border-white/10 pb-6 md:pb-0 md:pr-8 md:h-full">
                                             <div class="relative mb-3 group">
                                                 <div class="absolute -inset-2 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 opacity-20 blur-lg group-hover:opacity-40 transition duration-500"></div>
                                                 <img src="icon.png" alt="SynapX" class="bot-logo-img w-24 h-24 rounded-3xl object-contain border border-white/15 bg-[#0a0f1d] p-4 shadow-xl relative z-10 transition-transform duration-300 group-hover:scale-105" onerror="this.src='https://placehold.co/150x150/101015/d4af37?text=SynapX'">
@@ -851,7 +861,7 @@
                                         </div>
                                         
                                         <!-- Right Side: Detailed Features & Action (col-span-8) -->
-                                        <div class="md:col-span-8 flex flex-col justify-between h-full pl-0 md:pl-2 text-left">
+                                        <div class="md:col-span-8 flex flex-col justify-between md:h-full pl-0 md:pl-2 text-left">
                                             <div class="space-y-4">
                                                 <p class="bot-desc text-xs text-slate-300 font-light leading-relaxed">
                                                     Algorithme phare de l'écosystème Mitsuyoshi. Il combine une croissance stable de l'équité, une couverture adaptative dynamique et une gestion de risque ultra-précise pour sécuriser vos gains.
