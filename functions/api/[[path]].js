@@ -190,7 +190,7 @@ export async function onRequest(context) {
             const winRate = (wins + losses > 0) ? (wins / (wins + losses) * 100).toFixed(1) : 0;
             const profitFactor = (grossLoss > 0) ? (grossProfit / grossLoss).toFixed(2) : grossProfit.toFixed(2);
 
-            const formattedHistory = [...history].reverse().slice(0, 100).map(h => ({
+            const formattedHistory = [...history].reverse().slice(0, 1000).map(h => ({
                 id: h.id, date: h.date, duration: h.duration, type: h.type,
                 symbol: h.symbol, size: h.size, isPositive: Number(h.profit) >= 0,
                 resultStr: (Number(h.profit) >= 0 ? "+" : "") + "$" + Number(h.profit).toFixed(2)
