@@ -836,21 +836,49 @@
                             
                             <div class="space-y-4" id="tutoBotList">
                                 <!-- SynapX Card -->
-                                <div class="glass bot-selection-card p-6 relative overflow-hidden border border-white/10 hover:border-amber-500/30 cursor-pointer transition flex flex-col justify-between h-[320px] rounded-3xl" id="tutoSynapXCard" onclick="selectBot('rubix')">
+                                <div class="glass bot-selection-card p-8 relative overflow-hidden border border-white/10 hover:border-amber-500/30 cursor-pointer transition flex flex-col justify-between min-h-[340px] rounded-3xl" id="tutoSynapXCard" onclick="selectBot('rubix')">
                                     <div class="panda-glow absolute inset-0 bg-radial-gradient from-amber-500/5 to-transparent pointer-events-none"></div>
-                                    <div class="bot-selection-layout flex items-center gap-6 relative z-10">
-                                        <img src="icon.png" alt="SynapX" class="bot-logo-img w-16 h-16 rounded-xl object-contain w-16 h-16 object-contain" onerror="this.src='https://placehold.co/100x100/101015/d4af37?text=RubiX'">
-                                        <div class="space-y-1 text-left">
-                                            <h3 class="font-cinzel text-lg font-medium text-white">SynapX</h3>
-                                            <span class="active-badge inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Disponible</span>
-                                            <p class="bot-desc text-xs text-slate-400 font-light leading-relaxed">
-                                                Algorithme phare combinant croissance stable, couverture adaptative et gestion risque optimisée.
+                                    <div class="bot-selection-layout flex flex-col md:flex-row items-start md:items-center gap-8 relative z-10">
+                                        <!-- Logo -->
+                                        <div class="relative flex-shrink-0 mx-auto md:mx-0">
+                                            <div class="absolute -inset-1 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-300 opacity-20 blur-md"></div>
+                                            <img src="icon.png" alt="SynapX" class="bot-logo-img w-28 h-28 rounded-2xl object-contain border border-white/10 bg-black/60 p-3 relative z-10" onerror="this.src='https://placehold.co/150x150/101015/d4af37?text=SynapX'">
+                                        </div>
+                                        
+                                        <!-- Text & Features -->
+                                        <div class="space-y-4 text-left flex-grow w-full">
+                                            <div class="flex items-center gap-3">
+                                                <h3 class="font-cinzel text-2xl font-semibold tracking-wider text-white">SynapX</h3>
+                                                <span class="active-badge inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Disponible</span>
+                                            </div>
+                                            <p class="bot-desc text-xs text-slate-300 font-light leading-relaxed max-w-xl">
+                                                Algorithme phare de l'écosystème Mitsuyoshi. Il combine une croissance stable de l'équité, une couverture adaptative dynamique et une gestion de risque ultra-précise pour sécuriser vos gains quotidiens.
                                             </p>
+                                            
+                                            <!-- Feature Badges -->
+                                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
+                                                <div class="bg-white/5 border border-white/10 rounded-xl p-2.5 text-left">
+                                                    <span class="block text-[9px] text-slate-500 uppercase font-bold tracking-wider">Performance</span>
+                                                    <span class="text-xs font-semibold text-amber-400 font-mono">+10% à +100% / mois</span>
+                                                </div>
+                                                <div class="bg-white/5 border border-white/10 rounded-xl p-2.5 text-left">
+                                                    <span class="block text-[9px] text-slate-500 uppercase font-bold tracking-wider">Drawdown</span>
+                                                    <span class="text-xs font-semibold text-white font-mono">1% à 30% max</span>
+                                                </div>
+                                                <div class="bg-white/5 border border-white/10 rounded-xl p-2.5 text-left">
+                                                    <span class="block text-[9px] text-slate-500 uppercase font-bold tracking-wider">Stratégie</span>
+                                                    <span class="text-xs font-semibold text-white">Grid & Hedging</span>
+                                                </div>
+                                                <div class="bg-white/5 border border-white/10 rounded-xl p-2.5 text-left">
+                                                    <span class="block text-[9px] text-slate-500 uppercase font-bold tracking-wider">Sécurité</span>
+                                                    <span class="text-xs font-semibold text-emerald-400">Protection active</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="bot-selection-footer border-t border-white/5 pt-4 flex flex-col sm:flex-row justify-between items-center gap-4 relative z-10">
-                                        <span class="text-xs text-slate-400">Modes Conservateur, Équilibré & Débridé</span>
-                                        <button class="bot-cta-btn btn-gold py-2.5 px-6 w-auto text-xs">Configurer ce Robot</button>
+                                    <div class="bot-selection-footer border-t border-white/5 pt-4 mt-6 flex flex-col sm:flex-row justify-between items-center gap-4 relative z-10">
+                                        <span class="text-xs text-slate-400 font-light">Modes configurables : Conservateur, Équilibré & Débridé</span>
+                                        <button class="bot-cta-btn btn-gold py-2.5 px-6 w-auto text-xs font-semibold tracking-wider">Configurer ce Robot</button>
                                     </div>
                                 </div>
                                 
