@@ -762,13 +762,13 @@ function renderHistory(history) {
         ? items.map(h => {
             const isPos = h.isPositive;
             return `
-                <div class="table-row">
-                    <span style="color:var(--theme); font-weight:700;">#${h.id}</span>
-                    <span>${h.date}</span>
-                    <span style="color:var(--text-dim);">${h.duration}</span>
-                    <span style="color:${h.type === 'BUY' ? 'var(--success)' : 'var(--danger)'}; font-weight:700;">${h.type}</span>
-                    <span style="font-weight:600;">${h.symbol}</span>
-                    <b class="${isPos ? 'profit-pos' : 'profit-neg'}">${h.resultStr}</b>
+                <div class="grid grid-cols-6 gap-2 py-3.5 text-xs text-slate-300 border-b border-white/5 hover:bg-white/[0.02] transition items-center px-2">
+                    <span class="font-mono text-amber-400 font-semibold">#${h.id}</span>
+                    <span class="text-slate-400 font-light">${h.date}</span>
+                    <span class="text-slate-400 font-light font-mono">${h.duration}</span>
+                    <span class="${h.type === 'BUY' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' : 'text-rose-400 bg-rose-500/10 border-rose-500/20'} font-bold text-[10px] tracking-wider border px-2 py-0.5 rounded-md w-max text-center">${h.type}</span>
+                    <span class="font-semibold text-white font-mono">${h.symbol}</span>
+                    <b class="${isPos ? 'profit-pos' : 'profit-neg'} text-right font-mono font-bold">${h.resultStr}</b>
                 </div>
             `;
         }).join('')
@@ -1047,8 +1047,10 @@ function selectBot(botId) {
     document.getElementById('botSelectionStage').style.display = 'none';
     
     if (botId === 'rubix') {
-        document.getElementById('rubixConfiguratorStage').style.display = 'block';
-        document.getElementById('lionxConfiguratorStage').style.display = 'none';
+        const rubixStage = document.getElementById('rubixConfiguratorStage');
+        if (rubixStage) rubixStage.style.display = 'block';
+        const lionxStage = document.getElementById('lionxConfiguratorStage');
+        if (lionxStage) lionxStage.style.display = 'none';
         setTimeout(() => {
             initMitsuConfigurator();
             if (typeof initCustomSelects === 'function') {
@@ -1056,8 +1058,10 @@ function selectBot(botId) {
             }
         }, 50);
     } else if (botId === 'lionx') {
-        document.getElementById('rubixConfiguratorStage').style.display = 'none';
-        document.getElementById('lionxConfiguratorStage').style.display = 'block';
+        const rubixStage = document.getElementById('rubixConfiguratorStage');
+        if (rubixStage) rubixStage.style.display = 'none';
+        const lionxStage = document.getElementById('lionxConfiguratorStage');
+        if (lionxStage) lionxStage.style.display = 'block';
         setTimeout(() => {
             initLionConfigurator();
             if (typeof initCustomSelects === 'function') {
@@ -1089,9 +1093,12 @@ function activateFolder(bot) {
 
 function goBackToSelection() {
     selectedBotId = null;
-    document.getElementById('rubixConfiguratorStage').style.display = 'none';
-    document.getElementById('lionxConfiguratorStage').style.display = 'none';
-    document.getElementById('botSelectionStage').style.display = 'block';
+    const rubixStage = document.getElementById('rubixConfiguratorStage');
+    if (rubixStage) rubixStage.style.display = 'none';
+    const lionxStage = document.getElementById('lionxConfiguratorStage');
+    if (lionxStage) lionxStage.style.display = 'none';
+    const selectionStage = document.getElementById('botSelectionStage');
+    if (selectionStage) selectionStage.style.display = 'block';
 }
 
 function initMitsuConfigurator() {
@@ -1143,6 +1150,7 @@ function initMitsuConfigurator() {
 }
 
 function initLionConfigurator() {
+    if (!document.getElementById('lionxAccountsCount')) return;
     lionLicenseType = 'partner';
     document.getElementById('lionxAccountsCount').value = 1;
     document.getElementById('lionSimCapital').value = 1000;
@@ -1398,6 +1406,7 @@ function selectLionLicense(type) {
 }
 
 function updateLionCalculator() {
+    if (!document.getElementById('lionSummaryBasePrice')) return;
     const isEU = (mitsuRegion === 'EU');
     const symbol = isEU ? '€' : '$';
     const isPartner = (lionLicenseType === 'partner');
@@ -3387,7 +3396,7 @@ document.addEventListener('click', (e) => {
 }, { passive: true });
 
 // ─────────────────────────────────────────
-// 14 DAYS DAILY HISTORY TABLE POPULATION
+// 30 DAYS DAILY HISTORY TABLE POPULATION
 // ─────────────────────────────────────────
 function renderDailyHistory(history, finalBalance) {
     const tableBody = document.getElementById('dailyHistoryTableBody');
@@ -3396,7 +3405,7 @@ function renderDailyHistory(history, finalBalance) {
     if (!history || history.length === 0) {
         let emptyHtml = '';
         const today = new Date();
-        for (let i = 0; i < 14; i++) {
+        for (let i = 0; i < 30; i++) {
             const d = new Date(today);
             d.setDate(today.getDate() - i);
             const displayDate = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
@@ -3425,10 +3434,10 @@ function renderDailyHistory(history, finalBalance) {
     let rowsHtml = '';
     let currentBalance = finalBalance;
 
-    // Create a list of the last 14 dates (including today)
+    // Create a list of the last 30 dates (including today)
     let datesList = [];
     const today = new Date();
-    for (let i = 0; i < 14; i++) {
+    for (let i = 0; i < 30; i++) {
         const d = new Date(today);
         d.setDate(today.getDate() - i);
         const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;

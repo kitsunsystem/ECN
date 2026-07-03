@@ -41,7 +41,7 @@
             --panel: rgba(6, 10, 22, 0.65);
             --text: #f8fafc;
             --text-dim: #94a3b8;
-            --success: #10b981;
+            --success: #fbbf24;
             --danger: #f43f5e;
             --info: #38bdf8;
             --border: rgba(212, 175, 55, 0.15);
@@ -253,6 +253,13 @@
         /* Ambient mouse glow base setup */
         #ambient-glow {
             transition: left 0.1s ease-out, top 0.1s ease-out;
+        }
+
+        .profit-pos {
+            color: #fbbf24 !important;
+        }
+        .profit-neg {
+            color: #f43f5e !important;
         }
 
     
@@ -627,7 +634,6 @@
                 <nav class="flex items-center space-x-1 bg-white/5 border border-white/10 rounded-full p-1" id="desktopDock">
                     <button class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-amber-400 bg-white/10 active" id="navDashboard" onclick="switchView('dashboard')">Tableau de Bord</button>
                     <button class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition" id="navBot" onclick="switchView('bot')">Bots</button>
-                    <button class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition" id="navAffiliation" class="hidden" class="hidden" onclick="switchView('affiliation')">Partenaire</button>
                     <button class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition" id="navConfig" onclick="switchView('config')">Configuration</button>
                     <button class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition" id="navCommunity" onclick="switchView('community')">Communauté</button>
                 </nav>
@@ -658,9 +664,6 @@
             </button>
             <button class="mob-nav-btn flex flex-col items-center justify-center text-slate-400 hover:text-white transition p-2 rounded-xl" id="navMobBot" onclick="switchView('bot')">
                 <i data-lucide="cpu" class="w-5 h-5"></i>
-            </button>
-            <button class="mob-nav-btn flex flex-col items-center justify-center text-slate-400 hover:text-white transition p-2 rounded-xl" id="navMobAffiliation" class="hidden" onclick="switchView('affiliation')">
-                <i data-lucide="users" class="w-5 h-5"></i>
             </button>
             <button class="mob-nav-btn flex flex-col items-center justify-center text-slate-400 hover:text-white transition p-2 rounded-xl" id="navMobConfig" onclick="switchView('config')">
                 <i data-lucide="sliders" class="w-5 h-5"></i>
@@ -712,7 +715,7 @@
                         </div>
                         <div class="glass stat-card p-6 text-center space-y-1" id="tutoStatProfit">
                             <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Profit Total Net</span>
-                            <div class="stat-val text-xl sm:text-2xl font-bold font-mono text-emerald-400" id="statProfit">+$7,452.12</div>
+                            <div class="stat-val text-xl sm:text-2xl font-bold font-mono text-amber-400" id="statProfit">+$7,452.12</div>
                         </div>
                         <div class="glass stat-card p-6 text-center space-y-1" id="tutoStatWin">
                             <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Taux de Gain</span>
@@ -764,7 +767,7 @@
                                 </div>
                                 <div class="summary-row flex justify-between text-xs">
                                     <span class="summary-key text-slate-400">Gain Aujourd'hui</span>
-                                    <span class="summary-val font-semibold text-emerald-400 font-mono" id="summaryToday">$342.10</span>
+                                    <span class="summary-val font-semibold text-amber-400 font-mono" id="summaryToday">$342.10</span>
                                 </div>
                             </div>
                         </div>
@@ -776,8 +779,8 @@
                         <div class="glass history-card p-6 lg:col-span-8 space-y-4" id="tutoHistoryCard">
                             <h3 class="font-cinzel text-lg text-white">Historique des Transactions</h3>
                             <div class="table-wrap overflow-x-auto">
-                                <div class="table-inner min-w-[640px] divide-y divide-white/5">
-                                    <div class="table-head grid grid-cols-6 gap-2 py-3 text-[9px] uppercase tracking-widest text-slate-400">
+                                <div class="table-inner min-w-[640px]">
+                                    <div class="table-head grid grid-cols-6 gap-2 py-3 text-[10px] uppercase tracking-widest text-slate-400 font-bold border-b border-white/10 px-2">
                                         <span>Ticket</span>
                                         <span>Date Clôture</span>
                                         <span>Durée</span>
@@ -790,11 +793,16 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="flex justify-center pt-2">
+                                <button id="btnLoadMore" class="btn-gold py-2 px-6 w-auto text-[10px] font-semibold uppercase tracking-wider rounded-xl transition" onclick="loadMore()" style="display: none;">
+                                    Charger plus de trades
+                                </button>
+                            </div>
                         </div>
                         
                         <!-- Right: 14 Days Daily Performance -->
                         <div class="glass history-card p-6 lg:col-span-4 space-y-4">
-                            <h3 class="font-cinzel text-lg text-white">📊 14 Derniers Jours</h3>
+                            <h3 class="font-cinzel text-lg text-white">📊 30 Derniers Jours</h3>
                             <p class="text-xs text-slate-400 font-light leading-relaxed">Gains nets et performances consolidées.</p>
                             <div class="table-wrap">
                                 <div class="table-inner divide-y divide-white/5">
@@ -846,27 +854,7 @@
                                     </div>
                                 </div>
                                 
-                                <!-- SynapX Lion X Card -->
-                                <div class="glass bot-selection-card p-6 relative overflow-hidden border border-white/10 hover:border-rose-500/30 cursor-pointer transition flex flex-col justify-between h-[320px] rounded-3xl" id="tutoLionXCard" onclick="selectBot('lionx')">
-                                    <div class="lion-glow absolute inset-0 bg-radial-gradient from-rose-500/5 to-transparent pointer-events-none"></div>
-                                    <div class="bot-selection-layout flex items-center gap-6 relative z-10">
-                                        <div class="lion-img-wrapper relative">
-                                            <div class="lion-img-aura absolute inset-0 bg-rose-500/10 rounded-full blur-md animate-pulse"></div>
-                                            <img src="lion.webp" alt="SynapX Lion X" class="bot-logo-img lion-logo w-16 h-16 object-contain relative z-10" onerror="this.src='https://placehold.co/100x100/101015/f43f5e?text=Lion+X'">
-                                        </div>
-                                        <div class="space-y-1 text-left">
-                                            <h3 class="font-cinzel text-lg font-medium text-white">SynapX Lion X</h3>
-                                            <span class="active-badge inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-rose-500/10 text-rose-400 border border-rose-500/20">Disponible</span>
-                                            <p class="bot-desc text-xs text-slate-400 font-light leading-relaxed">
-                                                L'algorithme suprême sur l'Or (XAUUSD). Stratégie à fort potentiel de gains.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="bot-selection-footer border-t border-white/5 pt-4 flex flex-col sm:flex-row justify-between items-center gap-4 relative z-10">
-                                        <span class="text-xs text-slate-400">Licence Partenaire & Payante</span>
-                                        <button class="bot-cta-btn px-6 py-2.5 bg-rose-500 hover:bg-rose-400 text-black font-semibold text-xs rounded-xl uppercase tracking-widest transition">Configurer ce Robot</button>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
 
@@ -1048,144 +1036,7 @@
                     </div>
                 </div>
 
-                <!-- Stage B2: SynapX Lion X Configurator -->
-                <div id="lionxConfiguratorStage" class="space-y-6 hidden">
 
-                            <!-- Hidden Accounts counts & recap stubs for Lion X Bot -->
-                            <div style="display: none !important;">
-                                <input type="number" id="lionxAccountsCount" value="1">
-                                <span id="lionAccountsAddLabel"></span>
-                                <span id="lionSummaryAccountsPrice"></span>
-                                <strong id="recapLionAccounts">-</strong>
-                                <strong id="recapLionMonthlyPrice">-</strong>
-                                <strong id="recapLionType">-</strong>
-                            </div>
-
-                    <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4">
-                        <button class="px-5 py-2.5 border border-white/10 hover:bg-white/5 text-white text-xs uppercase tracking-widest font-semibold rounded-xl transition w-max" onclick="goBackToSelection()">
-                            ← Retour aux Robots
-                        </button>
-                        <h3 class="font-cinzel text-xl text-white">Configuration : SynapX Lion X</h3>
-                    </div>
-
-                    <div class="config-split grid grid-cols-1 lg:grid-cols-12 gap-6">
-                        <!-- Left: Form -->
-                        <div class="glass configurator-card p-6 lg:col-span-7 space-y-6">
-                            <div class="flex justify-between items-center gap-4 flex-wrap">
-                                <h4 class="font-cinzel text-lg text-rose-400 font-medium">Options de licence Lion X</h4>
-                                <!-- Hidden Region Switcher to prevent script crash -->
-                                <div class="flex bg-white/5 border border-white/10 rounded-lg p-1" style="display: none !important;">
-                                    <button id="btnLionRegionEU" onclick="setMitsuRegion('EU')" class="px-3 py-1.5 rounded text-[10px] font-bold text-rose-400 bg-rose-500/10">Europe (€)</button>
-                                    <button id="btnLionRegionAF" onclick="setMitsuRegion('AF')" class="px-3 py-1.5 rounded text-[10px] font-bold text-slate-400 hover:text-white">Afrique ($)</button>
-                                </div>
-                            </div>
-
-                            <!-- Partnership choice: Vantage / PU Prime vs Licence Payante -->
-                            <div class="space-y-3">
-                                <span class="config-label text-[10px] uppercase tracking-widest text-slate-400 font-bold block">Type de licence</span>
-                                <div class="space-y-3">
-                                    <div id="optLionPartner" class="glass plan-card p-4 rounded-xl cursor-pointer border border-rose-500 text-left bg-rose-500/5" onclick="selectLionLicense('partner')">
-                                        <div class="font-cinzel font-medium text-rose-400 text-xs flex justify-between items-center">
-                                            <span>🤝 Partenariat Courtier</span>
-                                            <span class="bg-emerald-500/10 text-emerald-400 text-[9px] px-2 py-0.5 rounded-full border border-emerald-500/20 font-bold">GRATUIT</span>
-                                        </div>
-                                        <p class="text-[11px] text-slate-400 leading-relaxed font-light mt-2">Bénéficiez du robot gratuitement en déposant sur votre compte chez nos brokers partenaires <strong>Vantage</strong> ou <strong>PU Prime</strong>.</p>
-                                    </div>
-                                    <div id="optLionPaid" class="glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-left" onclick="selectLionLicense('paid')">
-                                        <div class="font-cinzel font-medium text-white text-xs flex justify-between items-center">
-                                            <span>💳 Licence Fixe (Hors partenariat)</span>
-                                            <span id="valLionPaidPrice" class="font-mono text-rose-400">300€</span>
-                                        </div>
-                                        <p class="text-[11px] text-slate-400 leading-relaxed font-light mt-2">Si vous ne souhaitez pas utiliser nos liens de partenariat. Prix fixe unique de <span id="valLionPaidPriceSub" class="font-mono">300€</span>.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Vantage / PU Prime Selection -->
-                            <div id="lionPartnerBrokerSelect" class="space-y-2 text-left">
-                                <span class="config-label text-[10px] uppercase tracking-widest text-slate-400 font-bold block">Choisissez votre broker partenaire</span>
-                                <select id="lionBrokerChoice" class="select-field text-left" onchange="updateLionCalculator()">
-                                    <option value="vantage">Vantage Markets</option>
-                                    <option value="puprime">PU Prime</option>
-                                </select>
-                            </div>
-
-                            <!-- Capital input for simulation -->
-                            <div class="space-y-2 text-left">
-                                <span class="config-label text-[10px] uppercase tracking-widest text-slate-400 font-bold block">Capital initial (Broker) pour simulation</span>
-                                <div class="flex items-center gap-4">
-                                    <div class="custom-stepper">
-                                        <button class="stepper-btn minus" onclick="stepDown('lionSimCapital', 100, 10000, 100); return false;">−</button>
-                                        <input type="number" id="lionSimCapital" class="w-16 border-none bg-transparent text-center font-bold font-mono text-white" value="1000" min="100" max="10000" step="100" oninput="updateLionCalculator()">
-                                        <button class="stepper-btn plus" onclick="stepUp('lionSimCapital', 100, 10000, 100); return false;">+</button>
-                                    </div>
-                                    <span class="text-xs text-slate-400 font-light">€/$ déposés chez votre broker</span>
-                                </div>
-                            </div>
-
-                            <!-- Summary box -->
-                            <div class="summary-box p-4 rounded-xl bg-white/5 border border-white/10 space-y-2 text-left">
-                                <h5 class="text-xs font-cinzel text-rose-400">Récapitulatif de l'offre</h5>
-                                <div class="flex justify-between text-xs">
-                                    <span class="text-slate-400">Prix de la licence :</span>
-                                    <span id="lionSummaryBasePrice" class="font-bold text-white font-mono">0.00 €</span>
-                                </div>
-                                <div class="flex justify-between text-sm font-bold border-t border-white/10 pt-3">
-                                    <span>PRIX UNIQUE :</span>
-                                    <span id="lionSummaryTotalPrice" class="text-rose-400 font-mono text-lg">0.00 €</span>
-                                </div>
-                            </div>
-
-                            <button class="btn-gold" onclick="alert('Demande d\'activation envoyée ! Nous la validerons rapidement.')" style="background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%); color: white;">
-                                Demander l'activation de Lion X
-                            </button>
-                        </div>
-
-                        <!-- Right: Simulation -->
-                        <div class="glass configurator-card p-6 lg:col-span-5 flex flex-col justify-between space-y-6">
-                            <div class="space-y-4 text-left">
-                                <h4 class="font-cinzel text-lg text-rose-400 font-medium">Simulation de rentabilité (Jusqu'à 50% / semaine)</h4>
-                                <div class="p-4 rounded-2xl bg-rose-500/5 border border-rose-500/20 text-xs text-slate-400 leading-relaxed space-y-2">
-                                    <div class="flex items-start gap-2">
-                                        <span>🛡️</span>
-                                        <span>Le <strong>Lion X</strong> utilise une gestion dynamique des positions basée sur les conditions réelles du marché.</span>
-                                    </div>
-                                    <div class="flex items-start gap-2">
-                                        <span>📊</span>
-                                        <span>Les positions sont ouvertes de manière contrôlée afin de rechercher un équilibre optimal.</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="h-[240px] relative">
-                                    <canvas id="lionSimulationChart"></canvas>
-                                </div>
-
-                                <div class="p-4 rounded-xl bg-rose-500/5 border border-rose-500/20 text-center font-semibold text-xs text-rose-400">
-                                    📈 Capital final théorique à 12 semaines : <strong id="lionSimFinalCapital" class="text-white text-sm font-mono font-bold">129,746.34 €/$</strong>
-                                </div>
-                            </div>
-
-                            <!-- Recap Card -->
-                            <div class="glass p-6 rounded-2xl border border-white/10 bg-[#060a16]/50 flex flex-col justify-between space-y-4 text-left">
-                                <h5 class="font-cinzel text-xs text-rose-400">📋 Récapitulatif de Configuration</h5>
-                                <div class="space-y-2 text-xs divide-y divide-white/5">
-                                    <div class="flex justify-between py-2">
-                                        <span class="text-slate-400">Capital de Départ :</span>
-                                        <strong class="text-white font-mono" id="recapLionCapital">1,000.00 €</strong>
-                                    </div>
-                                    <div class="flex justify-between py-2">
-                                        <span class="text-slate-400">Objectif Hebdomadaire :</span>
-                                        <strong class="text-rose-400 font-mono">~50.0%</strong>
-                                    </div>
-                                    <div class="flex justify-between py-2">
-                                        <span class="text-slate-400">Licence d'Accès (Unique) :</span>
-                                        <strong class="text-white font-mono" id="recapLionUniquePrice">Gratuit (Partenaire)</strong>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- ── VIEW: CONFIG ── -->
@@ -1302,7 +1153,7 @@
                             <span class="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Live · Temps Réel</span>
                         </div>
                         <h3 class="font-cinzel text-base text-white">Bénéfice Cumulé Communauté</h3>
-                        <div id="communityTotalGains" class="text-3xl sm:text-4xl font-bold font-mono text-emerald-400 font-prestige">+$1,484,103.20</div>
+                        <div id="communityTotalGains" class="text-3xl sm:text-4xl font-bold font-mono text-amber-400 font-prestige">+$1,484,103.20</div>
                     </div>
                 </div>
 
@@ -1322,222 +1173,7 @@
                 </div>
             </div>
 
-            <!-- ── VIEW: AFFILIATION ── -->
-            <div id="viewAffiliation" class="view hidden relative min-h-[500px]">
 
-                <!-- Blur Overlay for Activation -->
-                <div id="affiliationBlurOverlay" class="absolute inset-0 z-50 flex items-center justify-center p-4 bg-[#030712]/85 backdrop-blur-xl rounded-3xl border border-amber-500/10" style="display: none;">
-                    <div class="glass max-w-[480px] w-full p-8 text-center space-y-6 border border-amber-500/20 shadow-2xl">
-                        <div class="w-16 h-16 rounded-full bg-amber-500/5 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-400">
-                            <i data-lucide="users" class="w-8 h-8"></i>
-                        </div>
-                        <h2 class="font-cinzel text-2xl text-white">Devenez Partenaire <span class="gold-luxury-text font-medium">SynapX</span></h2>
-                        <p class="text-xs text-slate-400 leading-relaxed font-light">
-                            Gagnez des commissions exceptionnelles en recommandant notre bot ! En tant que particulier, touchez <strong>23% de commission</strong> sur chaque vente. Pour les communautés à grande échelle, la commission s'élève à <strong>30%</strong>.
-                        </p>
-                        <button class="btn-gold py-3.5" onclick="openCustomCodeModal()">
-                            Activer mon espace partenaire
-                        </button>
-                    </div>
-                </div>
-
-
-                <!-- Real Affiliate Dashboard -->
-                <div id="affiliationRealContent" class="space-y-8">
-                    
-                    <!-- Evolution Timeline Frise -->
-                    <div class="glass timeline-section p-6 border border-white/10 rounded-3xl space-y-6">
-                        <div class="space-y-1 text-left">
-                            <h4 class="font-cinzel text-lg text-white">🥉 Frise d'Évolution d'Ambassadeur</h4>
-                            <p class="text-xs text-slate-400 font-light leading-relaxed">Suivez en direct votre parcours de parrainage et débloquez les grades supérieurs en accumulant les ventes actives.</p>
-                        </div>
-                        
-                        <div class="timeline-container relative max-w-3xl mx-auto flex justify-between items-center py-6">
-                            <div class="timeline-line-bg absolute top-10 left-10 right-10 h-1 bg-white/10 rounded-full z-0"></div>
-                            <div class="timeline-line-fill absolute top-10 left-10 h-1 bg-gradient-to-r from-amber-500 to-emerald-500 rounded-full z-0 transition-all w-[35%]" id="timelineProgressFill"></div>
-                            
-                            <!-- Steps -->
-                            <div class="timeline-step relative z-10 flex flex-col items-center cursor-pointer group" id="stepBronze" onclick="showTierBenefits('bronze')">
-                                <div class="timeline-step-badge w-12 h-12 rounded-full bg-slate-900 border border-white/15 flex items-center justify-center text-xl shadow-lg group-hover:scale-105 transition">🥉</div>
-                                <span class="timeline-step-title text-xs font-bold text-slate-300 mt-2">Bronze</span>
-                                <span class="timeline-step-subtitle text-[10px] text-slate-500 mt-1">23% com</span>
-                            </div>
-                            
-                            <div class="timeline-step relative z-10 flex flex-col items-center cursor-pointer group" id="stepArgent" onclick="showTierBenefits('argent')">
-                                <div class="timeline-step-badge w-12 h-12 rounded-full bg-slate-900 border border-white/15 flex items-center justify-center text-xl shadow-lg group-hover:scale-105 transition">🥈</div>
-                                <span class="timeline-step-title text-xs font-bold text-slate-300 mt-2">Argent</span>
-                                <span class="timeline-step-subtitle text-[10px] text-slate-500 mt-1">30% com</span>
-                            </div>
-                            
-                            <div class="timeline-step relative z-10 flex flex-col items-center cursor-pointer group" id="stepOr" onclick="showTierBenefits('or')">
-                                <div class="timeline-step-badge w-12 h-12 rounded-full bg-slate-900 border border-white/15 flex items-center justify-center text-xl shadow-lg group-hover:scale-105 transition">🥇</div>
-                                <span class="timeline-step-title text-xs font-bold text-slate-300 mt-2">Or</span>
-                                <span class="timeline-step-subtitle text-[10px] text-slate-500 mt-1">35% com</span>
-                            </div>
-                            
-                            <div class="timeline-step relative z-10 flex flex-col items-center cursor-pointer group" id="stepDiamant" onclick="showTierBenefits('diamant')">
-                                <div class="timeline-step-badge w-12 h-12 rounded-full bg-slate-900 border border-white/15 flex items-center justify-center text-xl shadow-lg group-hover:scale-105 transition">👑</div>
-                                <span class="timeline-step-title text-xs font-bold text-slate-300 mt-2">Diamant</span>
-                                <span class="timeline-step-subtitle text-[10px] text-slate-500 mt-1">40% com</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Header Info Box -->
-                    <div class="glass aff-header-box p-6 rounded-3xl border border-white/10 flex flex-col sm:flex-row justify-between items-center gap-6">
-                        <div class="aff-link-wrapper flex-1 space-y-2 text-left">
-                            <span class="text-[10px] uppercase tracking-widest text-slate-400 font-bold block">Votre lien de parrainage</span>
-                            <div class="aff-link-input-group flex items-center gap-2">
-                                <input type="text" id="affReferralLinkInput" class="input-field" readonly style="margin: 0; font-family: monospace; font-size: 13px;" value="https://synapx.com/ref/PRESTIGE">
-                                <button class="btn-gold py-3 px-6 w-auto" onclick="copyReferralLink()">Copier</button>
-                            </div>
-                        </div>
-                        
-                        <div class="aff-tier-wrapper text-center sm:text-right">
-                            <span class="text-[10px] uppercase tracking-widest text-slate-400 font-bold block">Formule Active</span>
-                            <div id="affActiveTierLabel" class="font-cinzel text-xl font-bold text-white mt-1">Bronze (23%)</div>
-                        </div>
-                    </div>
-
-                    <!-- Stats Grid -->
-                    <div class="aff-stats-grid grid grid-cols-2 lg:grid-cols-5 gap-4">
-                        <div class="glass mini-stat p-6 flex flex-col justify-between h-[120px] rounded-2xl text-left">
-                            <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Inscrits</span>
-                            <div class="stat-value text-2xl font-bold font-mono text-white" id="affStatInscrits">14</div>
-                            <span class="text-[10px] text-slate-500 font-light">Prospects</span>
-                        </div>
-                        
-                        <div class="glass mini-stat p-6 flex flex-col justify-between h-[120px] rounded-2xl text-left">
-                            <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Clients Actifs</span>
-                            <div class="stat-value text-2xl font-bold font-mono text-amber-400" id="affStatActifs">6</div>
-                            <span class="text-[10px] text-slate-500 font-light">Comptes liés</span>
-                        </div>
-
-                        <div class="glass mini-stat p-6 flex flex-col justify-between h-[120px] rounded-2xl text-left">
-                            <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">CA Généré</span>
-                            <div class="stat-value text-2xl font-bold font-mono text-white" id="affStatCA">4,200.00 €</div>
-                            <span class="text-[10px] text-slate-500 font-light">Cumulé</span>
-                        </div>
-
-                        <div class="glass mini-stat p-6 flex flex-col justify-between h-[120px] rounded-2xl text-left">
-                            <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Commissions Brut</span>
-                            <div class="stat-value text-2xl font-bold font-mono text-amber-500" id="affStatCommBrut">966.00 €</div>
-                            <span class="text-[10px] text-slate-500 font-light">Généré</span>
-                        </div>
-
-                        <div class="glass mini-stat p-6 flex flex-col justify-between h-[140px] border border-emerald-500/30 bg-emerald-500/5 rounded-2xl col-span-2 lg:col-span-1 text-left">
-                            <div class="space-y-1">
-                                <span class="stat-label text-[9px] uppercase tracking-widest text-emerald-400 font-bold">Solde Retirable</span>
-                                <div class="stat-value text-2xl font-bold font-mono text-emerald-400" id="affStatCommNet">966.00 €</div>
-                            </div>
-                            <button id="btnWithdrawCommissions" class="btn-gold py-2 text-[10px]" onclick="alert('Demande de retrait de commissions de 966.00€ envoyée !')">Retirer</button>
-                        </div>
-                    </div>
-
-                    <!-- Split Grid -->
-                    <div class="config-split grid grid-cols-1 lg:grid-cols-12 gap-6">
-                        <!-- Chart Panel -->
-                        <div class="glass configurator-card p-6 lg:col-span-8 space-y-4 text-left">
-                            <h4 class="font-cinzel text-lg text-white">Évolution de votre parrainage</h4>
-                            <p class="text-xs text-slate-400 font-light">CA généré, commissions acquises et retraits.</p>
-                            <div class="h-[250px] relative">
-                                <canvas id="affiliationPerformanceChart"></canvas>
-                            </div>
-                        </div>
-
-                        <!-- Rank Progression Card -->
-                        <div class="glass configurator-card p-6 lg:col-span-4 flex flex-col justify-between space-y-6 text-left">
-                            <div class="space-y-4">
-                                <div class="rank-card-header flex items-center gap-4">
-                                    <div class="rank-badge-lg w-16 h-16 bg-slate-900 border border-white/10 rounded-2xl flex items-center justify-center text-3xl shadow-lg" id="affCurrentRankBadge">🥉</div>
-                                    <div>
-                                        <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block">Mon Grade</span>
-                                        <h4 class="font-cinzel text-base text-white leading-tight font-bold" id="affCurrentRankTitle">Ambassadeur Bronze</h4>
-                                        <span class="text-[10px] text-amber-400 font-bold font-mono" id="affCurrentCommRate">23% de commission</span>
-                                    </div>
-                                </div>
-
-                                <!-- Progress bar -->
-                                <div class="space-y-1.5">
-                                    <div class="flex justify-between text-xs text-slate-400">
-                                        <span id="affProgressLabel">Ventes : 6 / 10</span>
-                                        <span id="affNextRankLabel">Suivant : Argent</span>
-                                    </div>
-                                    <div class="progress-bar-container w-full h-2 bg-white/5 border border-white/10 rounded-full overflow-hidden">
-                                        <div class="progress-bar-fill h-full bg-gradient-to-r from-amber-500 to-emerald-500 rounded-full transition-all" id="affProgressBarFill" style="width: 60%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Levels detail -->
-                            <div class="p-4 rounded-xl bg-white/5 border border-white/10 space-y-2 text-xs text-left">
-                                <span class="font-cinzel text-amber-400 text-xs block font-bold">👑 Paliers d'Ambassadeurs :</span>
-                                <div class="space-y-1">
-                                    <div class="flex justify-between"><span>🥉 Bronze</span> <span class="font-mono">23%</span></div>
-                                    <div class="flex justify-between"><span>🥈 Argent (10+ v.)</span> <span class="font-mono">30%</span></div>
-                                    <div class="flex justify-between"><span>🥇 Or (25+ v.)</span> <span class="font-mono">35%</span></div>
-                                    <div class="flex justify-between"><span>👑 Diamant (50+ v.)</span> <span class="font-mono">40%</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Gains Projection Simulator Card -->
-                    <div class="glass configurator-card p-6 md:p-8 rounded-3xl border border-white/10 space-y-6 text-left">
-                        <div class="space-y-1">
-                            <h4 class="font-cinzel text-lg text-white">📊 Simulateur de Projection (Gains Futurs)</h4>
-                            <p class="text-xs text-slate-400 font-light leading-relaxed">Estimez précisément vos commissions sur vos prochaines recommandations.</p>
-                        </div>
-
-                        <div class="sim-grid grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                            <!-- Sliders column -->
-                            <div class="md:col-span-7 space-y-6">
-                                <div class="space-y-2">
-                                    <div class="flex justify-between items-center text-xs text-slate-400">
-                                        <span>Nombre de ventes à projeter :</span>
-                                        <span class="text-amber-400 font-mono text-sm font-bold" id="simSalesCountLabel">5 ventes</span>
-                                    </div>
-                                    <input type="range" min="1" max="50" value="5" class="ios-slider w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-amber-500" id="simSalesSlider" oninput="runAffSim()">
-                                    <div class="flex justify-between text-[9px] text-slate-500">
-                                        <span>1 vente</span>
-                                        <span>25 ventes</span>
-                                        <span>50 ventes</span>
-                                    </div>
-                                </div>
-
-                                <div class="space-y-1">
-                                    <span class="config-label text-[10px] uppercase tracking-widest text-slate-400 font-bold block">Configuration moyenne vendue</span>
-                                    <select id="simPlanChoice" class="select-field" onchange="runAffSim()">
-                                        <option value="low">Low Cost (300€)</option>
-                                        <option value="normal" selected>Normal (700€)</option>
-                                        <option value="extreme">Extreme (1000€)</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Calculations box -->
-                            <div class="sim-calc-box md:col-span-5 p-6 rounded-2xl bg-slate-950/60 border border-white/10 text-center space-y-4">
-                                <div class="space-y-1">
-                                    <div class="text-[9px] text-slate-500 uppercase tracking-widest block font-bold">Chiffre d'Affaires Généré</div>
-                                    <div class="text-2xl font-bold font-mono text-white" id="simCAValue">3,500.00 €</div>
-                                </div>
-                                
-                                <div class="flex justify-around border-t border-white/5 pt-4">
-                                    <div>
-                                        <span class="text-[9px] text-slate-500 uppercase block font-bold">Commission</span>
-                                        <div class="text-base font-bold text-amber-500" id="simRateValue">23%</div>
-                                    </div>
-                                    <div>
-                                        <span class="text-[9px] text-slate-500 uppercase block font-bold">Mes Gains Estimés</span>
-                                        <div class="text-lg font-bold text-emerald-400 font-mono" id="simEarningsValue">805.00 €</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
 
         </main>
     </div>
@@ -1707,11 +1343,10 @@
         const VIEW_META = {
             dashboard: { title: 'Tableau de <span class="gold-luxury-text font-medium">Bord</span>', sub: 'Moniteur de performance en temps réel' },
             bot: { title: 'Espace <span class="gold-luxury-text font-medium">Bots</span>', sub: 'Gérez et configurez vos robots algorithmiques' },
-            affiliation: { title: 'Espace <span class="gold-luxury-text font-medium">Partenaire</span>', sub: 'Pilotez votre activité de parrainage et vos commissions' },
             config: { title: 'Configuration <span class="gold-luxury-text font-medium">Robot</span>', sub: 'Ajustez vos paramètres et objectifs' },
             community: { title: 'Communauté <span class="gold-luxury-text font-medium">SynapX</span>', sub: 'Rejoignez nos cercles officiels' }
         };
-        const VIEW_IDS = ['dashboard', 'config', 'community', 'bot', 'affiliation'];
+        const VIEW_IDS = ['dashboard', 'config', 'community', 'bot'];
 
         function switchView(name) {
             if (name === 'support') name = 'community';
@@ -1765,10 +1400,6 @@
 
             closeSidebar();
 
-            // Hook for loading affiliation data dynamically when tab is selected
-            if (name === 'affiliation' && typeof loadAffiliationData === 'function') {
-                loadAffiliationData();
-            }
             if (name === 'community' && typeof loadCommunityData === 'function') {
                 loadCommunityData();
             }
