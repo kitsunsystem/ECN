@@ -2301,21 +2301,15 @@ function toggleAccordion(accId) {
 // ─────────────────────────────────────────
 function openTutoVideoModal() {
     const modal = document.getElementById('tutoVideoModal');
-    const iframe = document.getElementById('tutoVideoIframe');
-    if (modal && iframe) {
-        iframe.src = "https://www.youtube.com/embed/Fxs1wmeQWiI?rel=0&modestbranding=1&color=white&autoplay=1";
+    if (modal) {
         modal.style.display = 'flex';
     }
 }
 
 function closeTutoVideoModal() {
     const modal = document.getElementById('tutoVideoModal');
-    const iframe = document.getElementById('tutoVideoIframe');
     if (modal) {
         modal.style.display = 'none';
-    }
-    if (iframe) {
-        iframe.src = ""; // Stop video playback
     }
     
     if (currentUser && currentUser.email) {

@@ -908,11 +908,11 @@
                             <h3 class="bot-selection-header font-cinzel text-lg text-white">🎬 Présentation</h3>
                             <div class="glass p-6 text-center space-y-4 rounded-3xl">
                                 <div class="w-16 h-16 rounded-full bg-amber-500/5 border border-amber-500/20 flex items-center justify-center mx-auto text-amber-400">
-                                    <i data-lucide="play" class="w-8 h-8"></i>
+                                    <i data-lucide="hammer" class="w-8 h-8"></i>
                                 </div>
                                 <h4 class="font-cinzel text-base text-white">Académie SynapX</h4>
-                                <p class="text-xs text-slate-400 font-light leading-relaxed">Visionnez notre guide explicatif d'exception pour maximiser votre capital avec nos outils algorithmiques.</p>
-                                <button class="btn-gold py-3" onclick="openTutoVideoModal('https://www.youtube.com/embed/Fxs1wmeQWiI')">Lancer la Vidéo</button>
+                                <p class="text-xs text-slate-400 font-light leading-relaxed">Le guide explicatif en vidéo du robot SynapX est actuellement en cours de préparation.</p>
+                                <span class="inline-block px-4 py-2 border border-amber-500/20 bg-amber-500/5 text-amber-400 rounded-full font-cinzel text-[10px] uppercase tracking-wider font-semibold">En cours de construction</span>
                             </div>
                         </div>
                     </div>
@@ -1251,17 +1251,20 @@
 
     <!-- TUTORIAL VIDEO POPUP -->
     <div id="tutoVideoModal" class="tuto-video-overlay fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md hidden justify-center items-center p-4">
-        <div class="tuto-video-card glass max-w-3xl w-full rounded-3xl overflow-hidden border border-amber-500/20 shadow-2xl">
+        <div class="tuto-video-card glass max-w-md w-full rounded-3xl overflow-hidden border border-amber-500/20 shadow-2xl">
             <div class="tuto-video-card-header p-6 border-b border-white/10 flex justify-between items-center">
                 <h3 class="text-white font-cinzel text-lg flex items-center gap-2"><span class="text-amber-400">🎬</span> Présentation SynapX</h3>
                 <button class="tuto-video-close text-slate-400 hover:text-white text-2xl" onclick="closeTutoVideoModal()">&times;</button>
             </div>
-            <div class="tuto-video-iframe-wrap relative w-full aspect-video bg-black">
-                <iframe id="tutoVideoIframe" class="absolute inset-0 w-full h-full border-none" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <div class="relative w-full bg-[#030712] flex flex-col items-center justify-center space-y-4 p-8 border-b border-white/5">
+                <div class="w-16 h-16 rounded-full bg-amber-500/5 border border-amber-500/20 flex items-center justify-center text-amber-400">
+                    <i data-lucide="hammer" class="w-8 h-8"></i>
+                </div>
+                <span class="font-cinzel text-sm text-white tracking-[0.2em] uppercase text-center">En cours de construction</span>
+                <p class="text-[11px] text-slate-500 max-w-xs text-center leading-relaxed">Cette vidéo de présentation de la plateforme de trading d'exception SynapX est actuellement en cours de finalisation par nos équipes.</p>
             </div>
-            <div class="tuto-video-card-footer p-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-xs text-slate-400 font-light max-w-md">Découvrez votre espace client de prestige, la configuration de vos bots et toutes les fonctionnalités de la plateforme.</p>
-                <button class="tuto-video-cta px-6 py-2.5 bg-amber-500 text-black font-semibold text-xs rounded-full uppercase tracking-widest hover:bg-amber-400 transition" onclick="closeTutoVideoModal()">C'est compris ✓</button>
+            <div class="tuto-video-card-footer p-6 border-t border-white/10 flex justify-center items-center">
+                <button class="tuto-video-cta w-full py-3 bg-amber-500 text-black font-semibold text-xs rounded-full uppercase tracking-widest hover:bg-amber-400 transition text-center" onclick="closeTutoVideoModal()">Accéder au Dashboard</button>
             </div>
         </div>
     </div>
@@ -1553,13 +1556,6 @@
 
         // VIDEO PRESENTATION MODALS
         function openTutoVideoModal(url) {
-            // If url is not a string, fallback to default tutorial video from APP
-            let videoUrl = "https://www.youtube.com/embed/Fxs1wmeQWiI?start=51&rel=0&modestbranding=1&color=white";
-            if (typeof url === 'string') {
-                videoUrl = url;
-            }
-            const iframe = document.getElementById('tutoVideoIframe');
-            if (iframe) iframe.src = videoUrl;
             const modal = document.getElementById('tutoVideoModal');
             if (modal) {
                 modal.classList.remove('hidden');
@@ -1572,8 +1568,6 @@
                 modal.classList.add('hidden');
                 modal.style.display = 'none';
             }
-            const iframe = document.getElementById('tutoVideoIframe');
-            if (iframe) iframe.src = '';
             
             // If they closed the tutorial video, save that it has been completed
             if (typeof currentUser !== 'undefined' && currentUser && currentUser.email) {
