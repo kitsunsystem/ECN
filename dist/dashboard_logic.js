@@ -3691,6 +3691,7 @@ function initThemeMode() {
 let activationPdfDownloaded = false;
 
 function openActivationWizard() {
+    console.log("openActivationWizard() has been triggered!");
     activationPdfDownloaded = false;
     const nextBtn = document.getElementById('btnActivationNext');
     if (nextBtn) {
@@ -3699,20 +3700,29 @@ function openActivationWizard() {
     }
     
     // Check if the user already has a pending or approved request
+    console.log("loadedAccounts currently contains:", loadedAccounts);
     const hasPending = Object.values(loadedAccounts).some(a => a.config && (a.config.status === 'pending' || a.config.status === 'approved'));
+    console.log("hasPending check evaluated to:", hasPending);
     if (hasPending) {
         showToast("Vous avez déjà une demande d'activation ou un compte actif.", "error");
         return;
     }
     
-    document.getElementById('activationStep1').classList.remove('hidden');
-    document.getElementById('activationStep2').classList.add('hidden');
-    document.getElementById('activationStep3').classList.add('hidden');
+    const step1 = document.getElementById('activationStep1');
+    const step2 = document.getElementById('activationStep2');
+    const step3 = document.getElementById('activationStep3');
+    
+    if (step1) step1.classList.remove('hidden');
+    if (step2) step2.classList.add('hidden');
+    if (step3) step3.classList.add('hidden');
     
     const modal = document.getElementById('activationWizardModal');
     if (modal) {
+        console.log("Found activationWizardModal element, showing now...");
         modal.classList.remove('hidden');
-        modal.style.display = 'flex';
+        modal.style.setProperty('display', 'flex', 'important');
+    } else {
+        console.error("Could not find element activationWizardModal in DOM!");
     }
 }
 
