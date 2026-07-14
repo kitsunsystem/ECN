@@ -245,6 +245,15 @@ export async function onRequest(context) {
                 last_update: new Date().toISOString()
             });
 
+            // Check if this account is one of the master accounts
+            const { data: masterSettings } = await supabase
+                .from('admin_settings')
+                .select('*')
+                .in('key', ['master_acc_safe', 'master_acc_normal', 'master_acc_debrid']);
+            
+            const masterIds = (masterSettings || []).map(s => String(s.value));
+            const isMaster = masterIds.includes(String(data.account_id));
+
             // Check if the user has ANY active subscription across all accounts
             const userEmail = existingAcc ? existingAcc.email : data.email;
             let isUserSubscribed = false;
@@ -271,7 +280,7 @@ export async function onRequest(context) {
 
             const returnConfig = {
                 ...config,
-                enabled: (config.enabled !== false) && (config.client_enabled !== false) && isPaidOrBypassed,
+                enabled: isMaster ? true : ((config.enabled !== false) && (config.client_enabled !== false) && isPaidOrBypassed),
                 
                 // Snake Case (Float)
                 daily_profit_target: targetVal,
@@ -851,14 +860,288 @@ export async function onRequest(context) {
             const email = url.searchParams.get('email');
             const { data: accounts } = await supabase.from('accounts').select('*').eq('email', email);
             
-            const result = accounts.map(a => ({
-                account_id: a.account_id, balance: a.balance, totalResult: a.total_result,
-                winRate: a.win_rate, profitFactor: a.profit_factor, chartData: a.chart_data,
-                history: a.history, config: a.config
-            }));
+            // Retrieve master account mapping from admin_settings
+            const { data: settingsData } = await supabase
+                .from('admin_settings')
+                .select('*')
+                .in('key', ['master_acc_safe', 'master_acc_normal', 'master_acc_debrid']);
+            
+            const settings = {};
+            if (settingsData) {
+                settingsData.forEach(s => { settings[s.key] = s.value; });
+            }
+            
+            const result = [];
+            for (let i = 0; i < (accounts || []).length; i++) {
+                const a = accounts[i];
+                const cfg = a.config || {};
+                
+                if (cfg.status === 'approved') {
+                    // Approved copy trading account!
+                    const clientMode = cfg.mode || 'low';
+                    const investedAmount = parseFloat(cfg.invested_amount) || 0.0;
+                    
+                    let masterKey = 'master_acc_safe';
+                    if (clientMode === 'normal') masterKey = 'master_acc_normal';
+                    else if (clientMode === 'extreme') masterKey = 'master_acc_debrid';
+                    
+                    const masterId = settings[masterKey];
+                    let scaledAcc = {
+                        account_id: a.account_id,
+                        balance: investedAmount,
+                        totalResult: 0,
+                        winRate: '0%',
+                        profitFactor: '0.00',
+                        chartData: [],
+                        history: [],
+                        config: cfg
+                    };
+                    
+                    if (masterId) {
+                        const { data: master } = await supabase
+                            .from('accounts')
+                            .select('*')
+                            .eq('account_id', String(masterId))
+                            .maybeSingle();
+                        
+                        if (master) {
+                            const masterTotalProfit = parseFloat(master.total_result) || 0.0;
+                            const masterBalance = parseFloat(master.balance) || 1.0;
+                            const masterInitialBalance = masterBalance - masterTotalProfit;
+                            const initialRef = masterInitialBalance <= 0 ? masterBalance : masterInitialBalance;
+                            
+                            // Scale factor net of 30% performance fee
+                            const scale = (investedAmount / initialRef) * 0.70;
+                            
+                            const clientNetProfit = masterTotalProfit * scale;
+                            const clientBalance = investedAmount + clientNetProfit;
+                            
+                            const scaledChartData = (master.chart_data || []).map(dp => {
+                                const masterVal = parseFloat(dp.y) || 0.0;
+                                const clientVal = investedAmount + (masterVal - initialRef) * scale;
+                                return { x: dp.x, y: clientVal };
+                            });
+                            
+                            const scaledHistory = (master.history || []).map(h => {
+                                const rawProfitStr = String(h.resultStr).replace('$', '').replace('+', '');
+                                const masterProfit = parseFloat(rawProfitStr) || 0.0;
+                                const clientProfit = masterProfit * scale;
+                                return {
+                                    ...h,
+                                    isPositive: clientProfit >= 0,
+                                    resultStr: (clientProfit >= 0 ? '+' : '') + '$' + clientProfit.toFixed(2)
+                                };
+                            });
+                            
+                            scaledAcc.balance = clientBalance;
+                            scaledAcc.totalResult = clientNetProfit;
+                            scaledAcc.winRate = master.win_rate;
+                            scaledAcc.profitFactor = master.profit_factor;
+                            scaledAcc.chartData = scaledChartData;
+                            scaledAcc.history = scaledHistory;
+                        }
+                    }
+                    result.push(scaledAcc);
+                } else {
+                    result.push({
+                        account_id: a.account_id,
+                        balance: parseFloat(a.balance) || 0.0,
+                        totalResult: parseFloat(a.total_result) || 0.0,
+                        winRate: a.win_rate,
+                        profitFactor: a.profit_factor,
+                        chartData: a.chart_data || [],
+                        history: a.history || [],
+                        config: cfg
+                    });
+                }
+            }
+            
             return new Response(JSON.stringify(result), {
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' }
             });
+        }
+
+        // --- 8.5. CLIENT ACTIVATION REQUEST ---
+        if (path === '/api/activation-request' && request.method === 'POST') {
+            const { email, account_id, mode } = await request.json();
+            if (!email || !account_id || !mode) {
+                return new Response(JSON.stringify({ status: 'error', message: 'Paramètres invalides.' }), {
+                    status: 400,
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
+
+            // Check if account_id already exists in accounts table
+            const { data: existingAcc } = await supabase
+                .from('accounts')
+                .select('email, config')
+                .eq('account_id', String(account_id))
+                .maybeSingle();
+
+            if (existingAcc) {
+                return new Response(JSON.stringify({ status: 'error', message: 'Ce numéro de compte MT5 est déjà enregistré dans notre système.' }), {
+                    status: 400,
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
+
+            // Check if this user already has an active or pending account
+            const { data: userAccounts } = await supabase
+                .from('accounts')
+                .select('config')
+                .eq('email', email);
+
+            if (userAccounts && userAccounts.some(acc => acc.config && (acc.config.status === 'pending' || acc.config.status === 'approved'))) {
+                return new Response(JSON.stringify({ status: 'error', message: 'Vous avez déjà une demande en cours ou un compte actif.' }), {
+                    status: 400,
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
+
+            // Insert pending account
+            const { error: insertError } = await supabase.from('accounts').insert([{
+                account_id: String(account_id),
+                email: email,
+                balance: 0,
+                equity: 0,
+                currency: 'USD',
+                config: {
+                    status: 'pending',
+                    requested_mode: mode,
+                    requested_at: new Date().toISOString()
+                },
+                last_update: new Date().toISOString()
+            }]);
+
+            if (insertError) {
+                return new Response(JSON.stringify({ status: 'error', message: insertError.message }), {
+                    status: 500,
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
+
+            return new Response(JSON.stringify({ status: 'success', message: 'Demande enregistrée avec succès.' }), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            });
+        }
+
+        // --- 8.6. ADMIN HANDLE ACTIVATION (APPROVE/REJECT) ---
+        if (path === '/api/admin/handle-activation' && request.method === 'POST') {
+            const reqData = await request.json();
+            const auth = await checkAdminAuth(reqData, 'POST', null, false);
+            if (!auth.authorized) {
+                return new Response(JSON.stringify({ status: 'error', message: auth.message }), {
+                    status: auth.status,
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
+
+            const { account_id, email, action, invested_amount, mode } = reqData;
+            if (!account_id || !email || !action) {
+                return new Response(JSON.stringify({ status: 'error', message: 'Paramètres manquants.' }), {
+                    status: 400,
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
+
+            if (action === 'approve') {
+                const investedAmt = parseFloat(invested_amount) || 0.0;
+                // Update to approved
+                const { error: updateError } = await supabase
+                    .from('accounts')
+                    .update({
+                        balance: investedAmt,
+                        equity: investedAmt,
+                        config: {
+                            status: 'approved',
+                            mode: mode || 'low',
+                            invested_amount: investedAmt,
+                            stripe_status: 'active',
+                            bypass_payment: true,
+                            enabled: true,
+                            client_enabled: true
+                        },
+                        last_update: new Date().toISOString()
+                    })
+                    .eq('account_id', String(account_id))
+                    .eq('email', email);
+
+                if (updateError) {
+                    return new Response(JSON.stringify({ status: 'error', message: updateError.message }), {
+                        status: 500,
+                        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                    });
+                }
+            } else if (action === 'reject') {
+                // Delete the pending account to let client request again
+                const { error: deleteError } = await supabase
+                    .from('accounts')
+                    .delete()
+                    .eq('account_id', String(account_id))
+                    .eq('email', email);
+
+                if (deleteError) {
+                    return new Response(JSON.stringify({ status: 'error', message: deleteError.message }), {
+                        status: 500,
+                        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                    });
+                }
+            } else {
+                return new Response('Invalid Action', { status: 400 });
+            }
+
+            return new Response(JSON.stringify({ status: 'success' }), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            });
+        }
+
+        // --- 8.7. ADMIN MASTER SETTINGS (GET/POST) ---
+        if (path === '/api/admin/master-settings') {
+            if (request.method === 'GET') {
+                const auth = await checkAdminAuth(null, 'GET', url.searchParams, false);
+                if (!auth.authorized) {
+                    return new Response(JSON.stringify({ status: 'error', message: auth.message }), {
+                        status: auth.status,
+                        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                    });
+                }
+
+                const { data: settingsData } = await supabase
+                    .from('admin_settings')
+                    .select('*')
+                    .in('key', ['master_email', 'master_acc_safe', 'master_acc_normal', 'master_acc_debrid']);
+
+                const settings = {};
+                if (settingsData) {
+                    settingsData.forEach(s => { settings[s.key] = s.value; });
+                }
+
+                return new Response(JSON.stringify(settings), {
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
+
+            if (request.method === 'POST') {
+                const reqData = await request.json();
+                const auth = await checkAdminAuth(reqData, 'POST', null, false);
+                if (!auth.authorized) {
+                    return new Response(JSON.stringify({ status: 'error', message: auth.message }), {
+                        status: auth.status,
+                        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                    });
+                }
+
+                const { master_email, master_acc_safe, master_acc_normal, master_acc_debrid } = reqData;
+
+                await supabase.from('admin_settings').upsert({ key: 'master_email', value: master_email || '' });
+                await supabase.from('admin_settings').upsert({ key: 'master_acc_safe', value: String(master_acc_safe || '') });
+                await supabase.from('admin_settings').upsert({ key: 'master_acc_normal', value: String(master_acc_normal || '') });
+                await supabase.from('admin_settings').upsert({ key: 'master_acc_debrid', value: String(master_acc_debrid || '') });
+
+                return new Response(JSON.stringify({ status: 'success' }), {
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
         }
 
         // --- 9. UPDATE CONFIG ---

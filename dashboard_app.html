@@ -703,14 +703,14 @@
                 <!-- Lock Overlay for empty state (Hidden by default in offline test mode) -->
                 <div id="dashboardLockOverlay" class="dashboard-lock-overlay absolute inset-0 z-50 flex items-center justify-center p-4 bg-[#030712]/85 backdrop-blur-xl rounded-3xl border border-amber-500/10 hidden">
                     <div class="glass lock-card max-w-[480px] w-full p-8 text-center space-y-6 border border-amber-500/20 shadow-2xl">
-                        <div class="lock-icon-container w-16 h-16 rounded-full bg-amber-500/5 border border-amber-500/30 flex items-center justify-center mx-auto">
-                            <i data-lucide="key-round" class="w-8 h-8 text-amber-400"></i>
+                        <div class="lock-icon-container w-16 h-16 rounded-full bg-amber-500/5 border border-amber-500/30 flex items-center justify-center mx-auto" id="lockOverlayIconContainer">
+                            <i data-lucide="key-round" class="w-8 h-8 text-amber-400" id="lockOverlayIcon"></i>
                         </div>
-                        <h2 class="font-cinzel text-2xl text-white">Aucun Compte MT5 Lié</h2>
-                        <p class="text-xs text-slate-400 leading-relaxed font-light">
+                        <h2 class="font-cinzel text-2xl text-white" id="lockOverlayTitle">Aucun Compte MT5 Lié</h2>
+                        <p class="text-xs text-slate-400 leading-relaxed font-light" id="lockOverlayDesc">
                             Pour commencer à suivre vos performances algorithmiques en direct sur l'Or, vous devez d'abord associer votre compte de trading MetaTrader 5 (MT5).
                         </p>
-                        <div class="lock-btn-group flex flex-col gap-2">
+                        <div class="lock-btn-group flex flex-col gap-2" id="lockOverlayBtnGroup">
                             <button class="lock-btn primary btn-gold" onclick="switchView('bot')">Configurer mon robot avant</button>
                         </div>
                     </div>
@@ -1050,9 +1050,9 @@
                                 </div>
                             </div>
 
-                            <button class="btn-gold" onclick="requestLicenseActivation()">
-                                Demander l'activation de ma licence
-                            </button>
+                             <button class="btn-gold" onclick="openActivationWizard()">
+                                 Activer
+                             </button>
                         </div>
 
                         <!-- Right: Simulation -->
@@ -1139,6 +1139,17 @@
                             Veuillez d'abord lier votre compte de trading MetaTrader 5 (MT5) pour pouvoir ajuster les paramètres de trading automatique.
                         </p>
                         <button class="btn-gold py-2.5 px-6 w-auto text-xs font-semibold" id="configLockButton" onclick="switchView('bot')">Configurer mon Bot</button>
+                    </div>
+
+                    <!-- Lock Overlay for Trading Params (Centralized copy-trading) -->
+                    <div id="centralizedConfigMask" class="absolute inset-0 z-50 flex flex-col items-center justify-center p-6 text-center bg-[#030712]/95 backdrop-blur-md border border-amber-500/10 rounded-2xl" style="display: none;">
+                        <div class="w-12 h-12 rounded-full bg-amber-500/5 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-4">
+                            <i data-lucide="info" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="font-cinzel text-base text-amber-400 font-medium mb-2">Gestion Centralisée</h4>
+                        <p class="text-[11px] text-slate-400 max-w-[240px] leading-relaxed">
+                            Votre compte de trading est configuré en mode d'adhésion automatique. Les paramètres de lot size, d'exposition et de gestion du risque sont pilotés de manière optimale et centralisée selon le profil choisi (<span id="centralizedModeLabel" class="text-white font-semibold">Conservateur</span>).
+                        </p>
                     </div>
 
                         <div class="space-y-4">
@@ -1265,6 +1276,81 @@
             </div>
             <div class="tuto-video-card-footer p-6 border-t border-white/10 flex justify-center items-center">
                 <button class="tuto-video-cta w-full py-3 bg-amber-500 text-black font-semibold text-xs rounded-full uppercase tracking-widest hover:bg-amber-400 transition text-center" onclick="closeTutoVideoModal()">Accéder au Dashboard</button>
+            </div>
+        </div>
+    <!-- AUTONOMOUS ACTIVATION WIZARD MODAL -->
+    <div id="activationWizardModal" class="tuto-video-overlay fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md hidden justify-center items-center p-4">
+        <div class="tuto-video-card glass max-w-md w-full rounded-3xl overflow-hidden border border-amber-500/20 shadow-2xl flex flex-col">
+            <!-- Modal Header -->
+            <div class="tuto-video-card-header p-6 border-b border-white/10 flex justify-between items-center">
+                <h3 class="text-white font-cinzel text-base flex items-center gap-2"><span class="text-amber-400">⚡</span> Activation SynapX</h3>
+                <button class="tuto-video-close text-slate-400 hover:text-white text-2xl" onclick="closeActivationWizard()">&times;</button>
+            </div>
+            
+            <!-- Step 1: Download Setup Guide -->
+            <div id="activationStep1" class="p-8 space-y-6 flex-grow flex flex-col justify-between">
+                <div class="space-y-4 text-center">
+                    <div class="w-12 h-12 rounded-full bg-amber-500/5 border border-amber-500/20 flex items-center justify-center mx-auto text-amber-400">
+                        <i data-lucide="file-text" class="w-6 h-6"></i>
+                    </div>
+                    <h4 class="font-cinzel text-sm text-white tracking-wider uppercase">Guide de Mise en Place</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed font-light">
+                        Téléchargez d'abord notre guide officiel contenant toutes les instructions nécessaires pour lier votre compte de trading MetaTrader 5 (MT5) PAMM à notre écosystème algorithmique.
+                    </p>
+                </div>
+                
+                <div class="space-y-4">
+                    <a href="SynapX Join.pdf" download target="_blank" onclick="markPdfDownloaded()" class="w-full py-3 border border-amber-500/30 hover:border-amber-500/60 text-amber-400 hover:bg-amber-500/5 font-semibold text-xs rounded-full uppercase tracking-widest transition flex items-center justify-center gap-2">
+                        <i data-lucide="download" class="w-4 h-4"></i> Télécharger SynapX Join.pdf
+                    </a>
+                    
+                    <button id="btnActivationNext" disabled class="w-full py-3 bg-amber-500 text-black font-semibold text-xs rounded-full uppercase tracking-widest hover:bg-amber-400 transition text-center opacity-50 cursor-not-allowed" onclick="goToActivationStep2()">
+                        Suivant
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 2: Input MT5 PAMM Account Number -->
+            <div id="activationStep2" class="p-8 space-y-6 flex-grow flex flex-col justify-between hidden">
+                <div class="space-y-4 text-center">
+                    <div class="w-12 h-12 rounded-full bg-amber-500/5 border border-amber-500/20 flex items-center justify-center mx-auto text-amber-400">
+                        <i data-lucide="hash" class="w-6 h-6"></i>
+                    </div>
+                    <h4 class="font-cinzel text-sm text-white tracking-wider uppercase">Numéro de Compte MT5 PAMM</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed font-light">
+                        Veuillez renseigner le numéro de compte MT5 PAMM reçu dans votre e-mail de configuration après avoir suivi les étapes du guide.
+                    </p>
+                </div>
+                
+                <div class="space-y-4">
+                    <input type="text" id="activationMt5Number" class="input-field w-full text-center font-mono font-bold text-white text-lg tracking-widest" placeholder="Ex: 849194" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 14px; outline: none; margin-bottom: 0;">
+                    
+                    <div class="flex gap-2">
+                        <button class="flex-1 py-3 border border-white/10 text-white font-semibold text-xs rounded-full uppercase tracking-widest hover:bg-white/5 transition text-center" onclick="goToActivationStep1()">
+                            Retour
+                        </button>
+                        <button class="flex-1 py-3 bg-amber-500 text-black font-semibold text-xs rounded-full uppercase tracking-widest hover:bg-amber-400 transition text-center" onclick="submitActivationRequest()">
+                            Envoyer
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Success / Pending confirmation -->
+            <div id="activationStep3" class="p-8 space-y-6 flex-grow flex flex-col justify-between hidden">
+                <div class="space-y-4 text-center">
+                    <div class="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto text-emerald-400">
+                        <i data-lucide="check-circle-2" class="w-6 h-6 animate-pulse"></i>
+                    </div>
+                    <h4 class="font-cinzel text-sm text-white tracking-wider uppercase">Demande Reçue</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed font-light">
+                        Votre demande d'activation a été enregistrée avec succès. Notre équipe technique validera l'adhésion de votre compte sous <strong>48 heures maximum</strong>.
+                    </p>
+                </div>
+                
+                <button class="w-full py-3 bg-emerald-500 text-black font-semibold text-xs rounded-full uppercase tracking-widest hover:bg-emerald-400 transition text-center" onclick="closeActivationWizard()">
+                    Compris
+                </button>
             </div>
         </div>
     </div>

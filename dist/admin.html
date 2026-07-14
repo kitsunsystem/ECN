@@ -328,6 +328,8 @@
         </div>
         <ul class="menu-list">
             <li class="menu-item active" id="navClient" onclick="switchView('client')">Clients</li>
+            <li class="menu-item" id="navActivations" onclick="switchView('activations')">⚡ Demandes</li>
+            <li class="menu-item" id="navMaster" onclick="switchView('master')">⚙️ Comptes Maîtres</li>
             <li class="menu-item" id="navDashboard" onclick="switchView('dashboard')">Dashboard</li>
             <li class="menu-item" id="navAffiliation" onclick="switchView('affiliation')">🤝 Affiliation</li>
             <li class="menu-item" id="navResults" onclick="switchView('results')">📈 Résultats Client</li>
@@ -420,6 +422,77 @@
                         <!-- Populated dynamically -->
                     </tbody>
                 </table>
+            </div>
+        </section>
+
+        <!-- ── VIEW: DEMANDES D'ACTIVATION ── -->
+        <section id="viewActivations" class="view-section">
+            <div class="view-header">
+                <div>
+                    <h2 style="font-size: 32px;">Demandes <span style="color: var(--theme);">d'Activation</span></h2>
+                    <p style="color: var(--text-dim); text-transform: uppercase; font-size: 10px; letter-spacing: 3px;">Validation des comptes MT5 PAMM clients</p>
+                </div>
+            </div>
+
+            <div class="glass" style="overflow-x: auto;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Nom & Email</th>
+                            <th>N° de Compte MT5</th>
+                            <th>Mode Demandé</th>
+                            <th>Date de Demande</th>
+                            <th style="text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="activationsTableBody">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ── VIEW: COMPTES MAÎTRES ── -->
+        <section id="viewMaster" class="view-section">
+            <div class="view-header">
+                <div>
+                    <h2 style="font-size: 32px;">Comptes <span style="color: var(--theme);">Maîtres</span></h2>
+                    <p style="color: var(--text-dim); text-transform: uppercase; font-size: 10px; letter-spacing: 3px;">Configuration des comptes MetaTrader 5 sources pour le copy-trading</p>
+                </div>
+            </div>
+
+            <div class="glass" style="padding: 32px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; border-radius: 16px;">
+                <div style="display: flex; align-items: center; gap: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 16px;">
+                    <div style="font-size: 28px; color: var(--theme);">⚙️</div>
+                    <div>
+                        <h3 class="serif" style="font-size: 20px; color: white;">Paramètres des Comptes Sources</h3>
+                        <p style="font-size: 11px; color: var(--text-dim);">Les performances de ces comptes définissent les résultats réels affichés sur le tableau de bord des clients.</p>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <div>
+                        <label style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; display: block; margin-bottom: 6px; font-weight: 600;">Adresse Email Maître</label>
+                        <input type="email" id="masterEmailInput" class="input-field" placeholder="Ex: master@synapx.com" style="margin-bottom: 0;">
+                    </div>
+                    
+                    <div>
+                        <label style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; display: block; margin-bottom: 6px; font-weight: 600;">ID Compte MT5 - Mode Conservateur (Safe)</label>
+                        <input type="text" id="masterSafeInput" class="input-field" placeholder="Ex: 10001" style="margin-bottom: 0;">
+                    </div>
+
+                    <div>
+                        <label style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; display: block; margin-bottom: 6px; font-weight: 600;">ID Compte MT5 - Mode Équilibré (Normal)</label>
+                        <input type="text" id="masterNormalInput" class="input-field" placeholder="Ex: 10002" style="margin-bottom: 0;">
+                    </div>
+
+                    <div>
+                        <label style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; display: block; margin-bottom: 6px; font-weight: 600;">ID Compte MT5 - Mode Débridé (Extreme)</label>
+                        <input type="text" id="masterDebridInput" class="input-field" placeholder="Ex: 10003" style="margin-bottom: 0;">
+                    </div>
+                </div>
+
+                <button class="btn-theme" style="padding: 12px;" onclick="saveMasterAccounts()">Enregistrer les Comptes Maîtres</button>
             </div>
         </section>
 
@@ -588,6 +661,56 @@
 
 
     </main>
+
+    <!-- Activation Request Detail Overlay -->
+    <div id="activationRequestOverlay" class="overlay">
+        <div class="overlay-content" style="max-width: 480px;">
+            <div class="overlay-header">
+                <h2 style="font-size: 20px; color: var(--theme);">⚡ Traitement de la demande</h2>
+                <button class="btn-theme" style="padding: 6px 12px;" onclick="closeActivationModal()">Fermer</button>
+            </div>
+            <div class="overlay-body" style="display: flex; flex-direction: column; gap: 20px; padding-top: 20px;">
+                <div class="glass" style="padding: 20px; display: flex; flex-direction: column; gap: 12px; border-radius: 12px;">
+                    <div>
+                        <span style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; font-weight: bold; display: block; margin-bottom: 2px;">Client</span>
+                        <div id="actClientName" style="font-weight: 700; color: white; font-size: 16px;">-</div>
+                        <div id="actClientEmail" style="font-size: 12px; color: var(--text-dim); font-family: monospace;">-</div>
+                    </div>
+                    
+                    <div>
+                        <span style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; font-weight: bold; display: block; margin-bottom: 2px;">Compte MT5 PAMM</span>
+                        <div id="actMt5Account" style="font-weight: 700; color: white; font-size: 16px; font-family: monospace;">-</div>
+                    </div>
+                    
+                    <div>
+                        <span style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; font-weight: bold; display: block; margin-bottom: 2px;">Mode Demandé</span>
+                        <div id="actRequestedMode" style="font-weight: 700; color: var(--theme); font-size: 14px;">-</div>
+                    </div>
+                </div>
+                
+                <div class="glass" style="padding: 20px; display: flex; flex-direction: column; gap: 16px; border-radius: 12px;">
+                    <div>
+                        <label style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; display: block; margin-bottom: 6px; font-weight: 600;">Montant Investi ($)</label>
+                        <input type="number" id="actInvestedAmount" class="input-field" value="1000" min="0" step="100" style="margin-bottom: 0;">
+                    </div>
+                    
+                    <div>
+                        <label style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; display: block; margin-bottom: 6px; font-weight: 600;">Mode Attribué</label>
+                        <select id="actAssignedMode" class="select-field" style="width: 100%; padding: 10px; border-radius: 6px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); color: white;">
+                            <option value="low">Conservateur</option>
+                            <option value="normal">Équilibré</option>
+                            <option value="extreme">Débridé</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 12px; margin-top: 10px;">
+                    <button class="btn-theme" style="flex: 1; background: var(--success); color: black;" onclick="processActivation('approve')">Approuver</button>
+                    <button class="btn-theme" style="flex: 1; background: var(--danger); color: white;" onclick="processActivation('reject')">Refuser</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Client Detail View Overlay -->
     <div id="clientDetailOverlay" class="overlay">
@@ -811,6 +934,7 @@
                 renderIPList();
                 updateSecurityUI();
                 renderAdminAffiliation();
+                renderActivationsList();
                 
                 // Redraw global profit chart if Results tab is active
                 const resultsView = document.getElementById('viewResults');
@@ -852,6 +976,10 @@
                 renderGlobalProfitChart();
             } else if (viewName === 'affiliation') {
                 renderAdminAffiliation();
+            } else if (viewName === 'activations') {
+                renderActivationsList();
+            } else if (viewName === 'master') {
+                loadMasterAccounts();
             }
         }
 
@@ -2171,6 +2299,162 @@
         setInterval(() => {
             if (adminPass && document.getElementById('loginScreen').style.display === 'none') fetchData();
         }, 15000);
+
+        // ─────────────────────────────────────────
+        // DEMANDES D'ACTIVATION & COMPTES MAÎTRES LOGIC
+        // ─────────────────────────────────────────
+        let activeActivationUser = null;
+        let activeActivationAccount = null;
+
+        function renderActivationsList() {
+            const listBody = document.getElementById('activationsTableBody');
+            if (!listBody) return;
+            
+            let pendingAccounts = [];
+            masterData.forEach(item => {
+                (item.accounts || []).forEach(acc => {
+                    if (acc.config && acc.config.status === 'pending') {
+                        pendingAccounts.push({
+                            user: item.user,
+                            account: acc
+                        });
+                    }
+                });
+            });
+            
+            if (pendingAccounts.length === 0) {
+                listBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 30px; color: var(--text-dim);">Aucune demande d'activation en attente.</td></tr>`;
+                return;
+            }
+            
+            listBody.innerHTML = pendingAccounts.map(p => {
+                const date = p.account.config.requested_at ? new Date(p.account.config.requested_at).toLocaleString() : 'N/A';
+                const modeLabel = p.account.config.requested_mode === 'low' ? 'Conservateur' : p.account.config.requested_mode === 'normal' ? 'Équilibré' : 'Débridé';
+                return `
+                    <tr>
+                        <td><strong>${p.user.fullName || p.user.email}</strong><br><span style="font-size:11px; color:var(--text-dim); font-family:monospace;">${p.user.email}</span></td>
+                        <td><span class="font-mono" style="font-family:monospace; font-weight:700;">${p.account.account_id}</span></td>
+                        <td><span class="badge badge-dim">${modeLabel}</span></td>
+                        <td>${date}</td>
+                        <td style="text-align: right;">
+                            <button class="btn-theme" onclick="openActivationModal('${p.user.fullName || ''}', '${p.user.email}', '${p.account.account_id}', '${p.account.config.requested_mode}')" style="padding: 6px 12px; font-size:10px; letter-spacing:1px;">Traiter</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function openActivationModal(fullName, email, account_id, mode) {
+            activeActivationUser = email;
+            activeActivationAccount = account_id;
+            
+            document.getElementById('actClientName').textContent = fullName || email;
+            document.getElementById('actClientEmail').textContent = email;
+            document.getElementById('actMt5Account').textContent = account_id;
+            
+            const modeLabel = mode === 'low' ? 'Conservateur' : mode === 'normal' ? 'Équilibré' : 'Débridé';
+            document.getElementById('actRequestedMode').textContent = modeLabel;
+            
+            document.getElementById('actInvestedAmount').value = 1000;
+            document.getElementById('actAssignedMode').value = mode;
+            
+            document.getElementById('activationRequestOverlay').classList.add('active');
+        }
+
+        function closeActivationModal() {
+            document.getElementById('activationRequestOverlay').classList.remove('active');
+            activeActivationUser = null;
+            activeActivationAccount = null;
+        }
+
+        async function processActivation(action) {
+            if (!activeActivationUser || !activeActivationAccount) return;
+            
+            const codeEl = document.getElementById('admin2faCode');
+            const code = codeEl ? codeEl.value.trim() : "";
+            
+            const payload = {
+                password: adminPass,
+                code: code,
+                account_id: activeActivationAccount,
+                email: activeActivationUser,
+                action: action,
+                invested_amount: document.getElementById('actInvestedAmount').value,
+                mode: document.getElementById('actAssignedMode').value
+            };
+            
+            try {
+                const res = await fetch('/api/admin/handle-activation', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await res.json();
+                if (res.ok && data.status === 'success') {
+                    showToast(action === 'approve' ? "Demande approuvée avec succès !" : "Demande refusée et supprimée.", "success");
+                    closeActivationModal();
+                    fetchData();
+                } else {
+                    showToast(data.message || "Erreur lors du traitement.", "error");
+                }
+            } catch (e) {
+                console.error("Handle activation error:", e);
+                showToast("Erreur réseau.", "error");
+            }
+        }
+
+        async function loadMasterAccounts() {
+            const codeEl = document.getElementById('admin2faCode');
+            const code = codeEl ? codeEl.value.trim() : "";
+            
+            try {
+                const res = await fetch(`/api/admin/master-settings?password=${adminPass}&code=${code}`);
+                if (res.ok) {
+                    const settings = await res.json();
+                    document.getElementById('masterEmailInput').value = settings.master_email || '';
+                    document.getElementById('masterSafeInput').value = settings.master_acc_safe || '';
+                    document.getElementById('masterNormalInput').value = settings.master_acc_normal || '';
+                    document.getElementById('masterDebridInput').value = settings.master_acc_debrid || '';
+                } else {
+                    showToast("Impossible de charger les configurations maîtres.", "error");
+                }
+            } catch (e) {
+                console.error("Load master accounts error:", e);
+            }
+        }
+
+        async function saveMasterAccounts() {
+            const codeEl = document.getElementById('admin2faCode');
+            const code = codeEl ? codeEl.value.trim() : "";
+            
+            const payload = {
+                password: adminPass,
+                code: code,
+                master_email: document.getElementById('masterEmailInput').value.trim(),
+                master_acc_safe: document.getElementById('masterSafeInput').value.trim(),
+                master_acc_normal: document.getElementById('masterNormalInput').value.trim(),
+                master_acc_debrid: document.getElementById('masterDebridInput').value.trim()
+            };
+            
+            try {
+                const res = await fetch('/api/admin/master-settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await res.json();
+                if (res.ok && data.status === 'success') {
+                    showToast("Comptes maîtres sauvegardés !", "success");
+                } else {
+                    showToast(data.message || "Erreur lors de la sauvegarde.", "error");
+                }
+            } catch (e) {
+                console.error("Save master accounts error:", e);
+                showToast("Erreur réseau.", "error");
+            }
+        }
     </script>
 </body>
 </html>

@@ -25,6 +25,7 @@ const filesToCopy = [
     'icon.png',
     'mitsuyoshi_presentation.pdf',
     'synapx_presentation.pdf',
+    'SynapX Join.pdf',
     'test.html',
     'rubix_logo.jpg',
     'illustration_trading.jpg',
