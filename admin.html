@@ -2358,11 +2358,11 @@
             document.getElementById('actInvestedAmount').value = 1000;
             document.getElementById('actAssignedMode').value = mode;
             
-            document.getElementById('activationRequestOverlay').classList.add('active');
+            document.getElementById('activationRequestOverlay').style.display = 'flex';
         }
 
         function closeActivationModal() {
-            document.getElementById('activationRequestOverlay').classList.remove('active');
+            document.getElementById('activationRequestOverlay').style.display = 'none';
             activeActivationUser = null;
             activeActivationAccount = null;
         }
