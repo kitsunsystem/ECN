@@ -724,24 +724,20 @@
                 <div id="dashboardRealContent" class="space-y-8">
                     
                     <!-- Performance KPIs Row -->
-                    <div class="stats-row grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div class="stats-row grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div class="glass stat-card p-6 text-center space-y-1" id="tutoStatBalance">
-                            <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Solde Compte</span>
+                            <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Solde PAMM</span>
                             <div class="stat-val text-xl sm:text-2xl font-bold font-mono text-white" id="statBalance">$24,840.50</div>
                         </div>
                         <div class="glass stat-card p-6 text-center space-y-1" id="tutoStatProfit">
-                            <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Profit Total Net</span>
+                            <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Gains Brut</span>
                             <div class="stat-val text-xl sm:text-2xl font-bold font-mono text-amber-400" id="statProfit">+$7,452.12</div>
                         </div>
-                        <div class="glass stat-card p-6 text-center space-y-1" id="tutoStatWin">
-                            <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Taux de Gain</span>
-                            <div class="stat-val text-xl sm:text-2xl font-bold font-mono text-amber-400" id="statWin">82.4%</div>
+                        <div class="glass stat-card p-6 text-center space-y-1" id="tutoStatProfitNet">
+                            <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Gains Net (-30% PAMM)</span>
+                            <div class="stat-val text-xl sm:text-2xl font-bold font-mono text-emerald-400" id="statProfitNet">+$5,216.48</div>
                         </div>
-                        <div class="glass stat-card p-6 text-center space-y-1" id="tutoStatPF">
-                            <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Profit Factor</span>
-                            <div class="stat-val text-xl sm:text-2xl font-bold font-mono text-amber-500" id="statPF">2.45</div>
-                        </div>
-                        <div class="glass stat-card p-6 text-center space-y-1 col-span-2 md:col-span-1" id="tutoStatToday">
+                        <div class="glass stat-card p-6 text-center space-y-1" id="tutoStatToday">
                             <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Gain du Jour</span>
                             <div class="stat-val text-xl sm:text-2xl font-bold font-mono text-white" id="statToday">+$342.10</div>
                         </div>
@@ -750,7 +746,7 @@
                     <!-- Performance Chart & Widget -->
                     <div class="dash-grid grid grid-cols-1 lg:grid-cols-12 gap-6">
                         <!-- Chart -->
-                        <div class="glass chart-card p-6 lg:col-span-8 space-y-6" id="tutoChartCard">
+                        <div class="glass chart-card p-6 lg:col-span-12 space-y-6" id="tutoChartCard">
                             <div class="chart-header flex flex-col sm:flex-row justify-between items-center gap-4">
                                 <h3 class="font-cinzel text-lg text-white">Croissance de l'Équité</h3>
                                 <div class="tf-btns flex gap-1.5 bg-white/5 border border-white/10 rounded-lg p-1">
@@ -764,60 +760,12 @@
                                 <canvas id="performanceChart"></canvas>
                             </div>
                         </div>
-
-                        <!-- Status card -->
-                        <div class="glass status-card p-6 lg:col-span-4 flex flex-col justify-between space-y-6" id="tutoStatusCard">
-                            <div class="space-y-4">
-                                <p class="text-[9px] uppercase tracking-widest text-slate-400">Statut du Trading</p>
-                                <div id="statusBadge" class="status-badge inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold tracking-wider border border-emerald-400/20 bg-emerald-400/10 text-emerald-400">
-                                    <span class="pulse-dot w-2 h-2 rounded-full bg-current animate-pulse"></span>
-                                    <span id="statusBadgeText" class="uppercase text-[9px]">Opérationnel</span>
-                                </div>
-                                <div class="status-main-text text-xl font-medium text-white" id="statusMain">Trading Actif</div>
-                                <p class="status-desc-text text-xs text-slate-400 leading-relaxed font-light" id="statusDesc">L'algorithme SynapX sécurise actuellement vos performances sur l'Or.</p>
-                            </div>
-                            <div class="status-summary border-t border-white/5 pt-4 space-y-2">
-                                <div class="summary-row flex justify-between text-xs">
-                                    <span class="summary-key text-slate-400">Multiplicateur Lot</span>
-                                    <span class="summary-val font-semibold text-white font-mono" id="summaryLot">1.00</span>
-                                </div>
-                                <div class="summary-row flex justify-between text-xs">
-                                    <span class="summary-key text-slate-400">Gain Aujourd'hui</span>
-                                    <span class="summary-val font-semibold text-amber-400 font-mono" id="summaryToday">$342.10</span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- History & 14 Days Grid -->
                     <div class="history-grid grid grid-cols-1 lg:grid-cols-12 gap-6">
-                        <!-- Left: Transaction History -->
-                        <div class="glass history-card p-6 lg:col-span-8 space-y-4" id="tutoHistoryCard">
-                            <h3 class="font-cinzel text-lg text-white">Historique des Transactions</h3>
-                            <div class="table-wrap overflow-x-auto">
-                                <div class="table-inner w-full">
-                                    <div class="table-head grid grid-cols-4 sm:grid-cols-6 gap-2 py-3 text-[10px] uppercase tracking-widest text-slate-400 font-bold border-b border-white/10 px-2">
-                                        <span class="hidden sm:block">Ticket</span>
-                                        <span>Date Clôture</span>
-                                        <span class="hidden sm:block">Durée</span>
-                                        <span>Type</span>
-                                        <span>Symbole</span>
-                                        <span class="text-right">Profit</span>
-                                    </div>
-                                    <div id="historyList" class="divide-y divide-white/5">
-                                        <!-- Dynamically generated offline fallbacks -->
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex justify-center pt-2">
-                                <button id="btnLoadMore" class="btn-gold py-2 px-6 w-auto text-[10px] font-semibold uppercase tracking-wider rounded-xl transition" onclick="loadMore()" style="display: none;">
-                                    Charger plus de trades
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Right: 14 Days Daily Performance -->
-                        <div class="glass history-card p-6 lg:col-span-4 space-y-4">
+                        <!-- 30 Derniers Jours -->
+                        <div class="glass history-card p-6 lg:col-span-12 space-y-4">
                             <h3 class="font-cinzel text-lg text-white">📊 30 Derniers Jours</h3>
                             <p class="text-xs text-slate-400 font-light leading-relaxed">Gains nets et performances consolidées.</p>
                             <div class="table-wrap">

@@ -491,10 +491,11 @@ function updateUI() {
         if (centralizedMask) centralizedMask.style.display = 'none';
         
         // Reset dashboard values to empty placeholders
-        document.getElementById('statBalance').textContent = '$0.00';
-        document.getElementById('statProfit').textContent  = '$0.00';
-        document.getElementById('statWin').textContent     = '0%';
-        document.getElementById('statPF').textContent      = '0.00';
+        if (document.getElementById('statBalance')) document.getElementById('statBalance').textContent = '$0.00';
+        if (document.getElementById('statProfit')) document.getElementById('statProfit').textContent  = '$0.00';
+        if (document.getElementById('statProfitNet')) document.getElementById('statProfitNet').textContent = '$0.00';
+        if (document.getElementById('statWin')) document.getElementById('statWin').textContent     = '0%';
+        if (document.getElementById('statPF')) document.getElementById('statPF').textContent      = '0.00';
         
         const todayEl = document.getElementById('statToday');
         if (todayEl) {
@@ -532,10 +533,22 @@ function updateUI() {
     const balance     = parseFloat(acc.balance) || 0;
     const totalResult = parseFloat(acc.totalResult) || 0;
 
-    document.getElementById('statBalance').textContent = '$' + balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    document.getElementById('statProfit').textContent  = (totalResult >= 0 ? '+' : '') + '$' + totalResult.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    document.getElementById('statWin').textContent     = acc.winRate    || '0%';
-    document.getElementById('statPF').textContent      = acc.profitFactor || '0.00';
+    if (document.getElementById('statBalance')) {
+        document.getElementById('statBalance').textContent = '$' + balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    if (document.getElementById('statProfit')) {
+        document.getElementById('statProfit').textContent  = (totalResult >= 0 ? '+' : '') + '$' + totalResult.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    if (document.getElementById('statProfitNet')) {
+        const netProfit = totalResult > 0 ? (totalResult * 0.70) : totalResult;
+        document.getElementById('statProfitNet').textContent = (netProfit >= 0 ? '+' : '') + '$' + netProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    if (document.getElementById('statWin')) {
+        document.getElementById('statWin').textContent     = acc.winRate    || '0%';
+    }
+    if (document.getElementById('statPF')) {
+        document.getElementById('statPF').textContent      = acc.profitFactor || '0.00';
+    }
 
     // ── Gain du Jour ──
     const nowParis = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Paris' }));
