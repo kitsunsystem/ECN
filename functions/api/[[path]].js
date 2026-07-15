@@ -914,28 +914,43 @@ export async function onRequest(context) {
                             const masterInitialBalance = masterBalance - masterTotalProfit;
                             const initialRef = masterInitialBalance <= 0 ? masterBalance : masterInitialBalance;
                             
-                            // Scale factor net of 30% performance fee
+                            // Only scale trades closed after approvedDate
+                            const approvedDate = cfg.approved_at ? new Date(cfg.approved_at) : new Date(0);
+                            
                             const scale = (investedAmount / initialRef) * 0.70;
                             
-                            const clientNetProfit = masterTotalProfit * scale;
-                            const clientBalance = investedAmount + clientNetProfit;
-                            
-                            const scaledChartData = (master.chart_data || []).map(dp => {
-                                const masterVal = parseFloat(dp.y) || 0.0;
-                                const clientVal = investedAmount + (masterVal - initialRef) * scale;
-                                return { x: dp.x, y: clientVal };
+                            const masterHistoryFiltered = (master.history || []).filter(h => {
+                                const tradeDate = new Date(h.date.replace(/\./g, '/'));
+                                return tradeDate >= approvedDate;
                             });
                             
-                            const scaledHistory = (master.history || []).map(h => {
+                            let clientNetProfit = 0.0;
+                            const scaledHistory = masterHistoryFiltered.map(h => {
                                 const rawProfitStr = String(h.resultStr).replace('$', '').replace('+', '');
                                 const masterProfit = parseFloat(rawProfitStr) || 0.0;
                                 const clientProfit = masterProfit * scale;
+                                clientNetProfit += clientProfit;
                                 return {
                                     ...h,
                                     isPositive: clientProfit >= 0,
                                     resultStr: (clientProfit >= 0 ? '+' : '') + '$' + clientProfit.toFixed(2)
                                 };
                             });
+                            
+                            let runningBalance = investedAmount;
+                            const sortedFilteredTrades = masterHistoryFiltered.slice().reverse();
+                            const scaledChartData = [{ x: approvedDate.toISOString().split('T')[0], y: runningBalance }];
+                            
+                            sortedFilteredTrades.forEach(t => {
+                                const rawProfitStr = String(t.resultStr).replace('$', '').replace('+', '');
+                                const masterProfit = parseFloat(rawProfitStr) || 0.0;
+                                const clientProfit = masterProfit * scale;
+                                runningBalance += clientProfit;
+                                const dateKey = t.date.split(' ')[0];
+                                scaledChartData.push({ x: dateKey, y: runningBalance });
+                            });
+                            
+                            const clientBalance = runningBalance;
                             
                             scaledAcc.balance = clientBalance;
                             scaledAcc.totalResult = clientNetProfit;
@@ -1063,7 +1078,8 @@ export async function onRequest(context) {
                             stripe_status: 'active',
                             bypass_payment: true,
                             enabled: true,
-                            client_enabled: true
+                            client_enabled: true,
+                            approved_at: new Date().toISOString()
                         },
                         last_update: new Date().toISOString()
                     })
