@@ -1304,11 +1304,21 @@ export async function onRequest(context) {
             }
             
             let referralCode = user.referral_code;
-            if (!referralCode || referralCode.trim() === "") {
-                const prefix = 'MITSU';
-                const randomNum = Math.floor(1000 + Math.random() * 9000);
-                referralCode = `${prefix}${randomNum}`;
-                await supabase.from('users').update({ referral_code: referralCode }).eq('email', email);
+            let isAffActive = user.is_affiliate_active;
+            
+            if (!referralCode || referralCode.trim() === "" || !isAffActive) {
+                const updatePayload = {};
+                if (!referralCode || referralCode.trim() === "") {
+                    const prefix = 'MITSU';
+                    const randomNum = Math.floor(1000 + Math.random() * 9000);
+                    referralCode = `${prefix}${randomNum}`;
+                    updatePayload.referral_code = referralCode;
+                }
+                if (!isAffActive) {
+                    isAffActive = true;
+                    updatePayload.is_affiliate_active = true;
+                }
+                await supabase.from('users').update(updatePayload).eq('email', email);
             }
             
             // Retrieve customizable settings from admin_settings
@@ -1485,6 +1495,7 @@ export async function onRequest(context) {
             return new Response(JSON.stringify({
                 status: 'success',
                 referral_code: referralCode,
+                is_affiliate_active: isAffActive,
                 rank: rank,
                 commission_rate: commissionRate,
                 total_capital: totalCapitalBrought,
