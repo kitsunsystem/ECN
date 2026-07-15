@@ -1334,6 +1334,16 @@ export async function onRequest(context) {
                     console.error("Parse crypto addresses error:", e);
                 }
             }
+            
+            let payoutHistory = [];
+            if (settings['aff_payout_history']) {
+                try {
+                    const allTx = JSON.parse(settings['aff_payout_history']) || [];
+                    payoutHistory = allTx.filter(tx => tx.email === email);
+                } catch (e) {
+                    console.error("Parse payout history error:", e);
+                }
+            }
             const userCryptoAddress = cryptoAddresses[email] || "";
 
             // Fetch all users to find direct referrals
@@ -1482,7 +1492,8 @@ export async function onRequest(context) {
                 weekly_commission: totalWeeklyCommission,
                 crypto_address: userCryptoAddress,
                 next_tier: nextTier,
-                referred_list: finalReferredList
+                referred_list: finalReferredList,
+                payout_history: payoutHistory
             }), {
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' }
             });
@@ -1781,6 +1792,46 @@ export async function onRequest(context) {
                         status: 500,
                         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
                     });
+                }
+
+                // Append transaction record to affiliate payout history in admin_settings
+                try {
+                    const { data: settingsData } = await supabase
+                        .from('admin_settings')
+                        .select('key, value')
+                        .in('key', ['aff_crypto_addresses', 'aff_payout_history']);
+                    
+                    let cryptoAddresses = {};
+                    let payoutHistory = [];
+                    
+                    (settingsData || []).forEach(row => {
+                        if (row.key === 'aff_crypto_addresses' && row.value) {
+                            try { cryptoAddresses = JSON.parse(row.value); } catch(e) {}
+                        }
+                        if (row.key === 'aff_payout_history' && row.value) {
+                            try { payoutHistory = JSON.parse(row.value); } catch(e) {}
+                        }
+                    });
+                    
+                    const cryptoAddr = cryptoAddresses[email] || "Non renseignée";
+                    
+                    const newTx = {
+                        id: 'TX' + Math.floor(100000 + Math.random() * 900000),
+                        date: new Date().toISOString(),
+                        email: email,
+                        amount: parseFloat(amount),
+                        cryptoAddress: cryptoAddr,
+                        status: 'completed'
+                    };
+                    
+                    payoutHistory.unshift(newTx);
+                    
+                    await supabase.from('admin_settings').upsert({
+                        key: 'aff_payout_history',
+                        value: JSON.stringify(payoutHistory)
+                    });
+                } catch (errTx) {
+                    console.error("Save payout history transaction error:", errTx);
                 }
 
                 return new Response(JSON.stringify({ status: 'success', message: 'Retrait enregistré.', withdrawn_total: newWithdrawn }), {

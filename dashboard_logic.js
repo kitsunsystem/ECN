@@ -3885,6 +3885,32 @@ async function loadAffiliationData() {
                 }).join('');
             }
         }
+
+        // Render payouts history table
+        const historyBody = document.getElementById('affPayoutsHistoryTableBody');
+        if (historyBody) {
+            if (!data.payout_history || data.payout_history.length === 0) {
+                historyBody.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-slate-500">Aucun historique de retrait disponible.</td></tr>`;
+            } else {
+                historyBody.innerHTML = data.payout_history.map(tx => {
+                    const dateFormatted = new Date(tx.date).toLocaleDateString('fr-FR', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    return `
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="py-4 font-mono text-slate-400">${tx.id}</td>
+                            <td class="py-4">${dateFormatted}</td>
+                            <td class="py-4 font-mono text-slate-400" style="word-break: break-all;">${tx.cryptoAddress}</td>
+                            <td class="py-4 font-mono text-amber-400 text-right font-semibold">+$${tx.amount.toFixed(2)}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
     } catch (e) {
         console.error("Load affiliation data error:", e);
         showToast("Impossible de charger les statistiques d'affiliation.", "error");

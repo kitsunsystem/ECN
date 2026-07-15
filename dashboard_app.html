@@ -1378,6 +1378,33 @@
                         </table>
                     </div>
                 </div>
+
+                <!-- Payouts History -->
+                <div class="glass p-6 md:p-8 rounded-2xl border border-white/10 space-y-6">
+                    <div class="text-left">
+                        <h3 class="font-cinzel text-base text-white font-semibold uppercase tracking-wider">Historique de vos Gains et Retraits</h3>
+                        <p class="text-xs text-slate-400 font-light">Historique des versements automatiques effectués sur votre adresse crypto.</p>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-white/10 pb-3 text-slate-400 uppercase tracking-widest text-[9px] font-bold">
+                                    <th class="pb-3">ID Transaction</th>
+                                    <th class="pb-3">Date de Versement</th>
+                                    <th class="pb-3">Adresse USDT TRC20</th>
+                                    <th class="pb-3 text-right">Montant Reçu</th>
+                                </tr>
+                            </thead>
+                            <tbody id="affPayoutsHistoryTableBody" class="divide-y divide-white/5 text-xs text-slate-300 font-light">
+                                <!-- Populated dynamically -->
+                                <tr>
+                                    <td colspan="4" class="py-6 text-center text-slate-500">Aucun historique de retrait disponible.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
 
