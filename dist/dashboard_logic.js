@@ -3808,7 +3808,7 @@ async function loadAffiliationData() {
         
         const linkInput = document.getElementById('affReferralLinkInput');
         if (linkInput) {
-            linkInput.value = `${window.location.origin}/index.html?ref=${data.referral_code || ''}`;
+            linkInput.value = `${window.location.origin}/dashboard_app.html?ref=${data.referral_code || ''}`;
         }
         
         // Update crypto address input
