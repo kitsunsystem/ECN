@@ -3788,3 +3788,155 @@ async function submitActivationRequest() {
     }
 }
 
+// ─────────────────────────────────────────
+// LOGIQUE D'AFFILIATION
+// ─────────────────────────────────────────
+async function loadAffiliationData() {
+    if (!currentUser || !currentUser.email) return;
+    try {
+        const res = await fetch(`${API_URL}/dashboard/affiliation?email=${encodeURIComponent(currentUser.email)}`);
+        const data = await res.json();
+        
+        if (data.status === 'error') {
+            showToast(data.message || "Erreur lors du chargement des données d'affiliation.", "error");
+            return;
+        }
+        
+        // Update referral code and link inputs
+        const codeInput = document.getElementById('affReferralCodeInput');
+        if (codeInput) codeInput.value = data.referral_code || '';
+        
+        const linkInput = document.getElementById('affReferralLinkInput');
+        if (linkInput) {
+            linkInput.value = `${window.location.origin}/index.html?ref=${data.referral_code || ''}`;
+        }
+        
+        // Update crypto address input
+        const cryptoInput = document.getElementById('affCryptoAddressInput');
+        if (cryptoInput) cryptoInput.value = data.crypto_address || '';
+        
+        // Update rank and stats UI
+        const rank = data.rank || 'bronze';
+        const rankBadge = rank === 'gold' ? '🥇' : rank === 'silver' ? '🥈' : '🥉';
+        const rankTitle = rank === 'gold' ? 'Ambassadeur Gold' : rank === 'silver' ? 'Ambassadeur Silver' : 'Ambassadeur Bronze';
+        
+        const badgeEl = document.getElementById('affRankBadge');
+        if (badgeEl) badgeEl.textContent = rankBadge;
+        
+        const titleEl = document.getElementById('affRankTitle');
+        if (titleEl) titleEl.textContent = rankTitle;
+        
+        const rateLabel = document.getElementById('affCommRateLabel');
+        if (rateLabel) rateLabel.textContent = `${data.commission_rate}%`;
+        
+        const pctEl = document.getElementById('affCommissionPercentage');
+        if (pctEl) pctEl.textContent = `${data.commission_rate}.00%`;
+        
+        // Calculate weekly commission and update UI
+        const weeklyCommEl = document.getElementById('affWeeklyCommission');
+        if (weeklyCommEl) weeklyCommEl.textContent = `$${data.weekly_commission.toFixed(2)}`;
+        
+        // Total Capital Brought
+        const totalCapEl = document.getElementById('affTotalCapitalBrought');
+        if (totalCapEl) totalCapEl.textContent = `$${data.total_capital.toLocaleString()}`;
+        
+        // Referred count
+        const refCountEl = document.getElementById('affReferredCount');
+        if (refCountEl) refCountEl.textContent = data.referred_count;
+        
+        // Progress bar to next tier
+        const progressTextEl = document.getElementById('affProgressText');
+        const progressBarEl = document.getElementById('affProgressBar');
+        
+        if (data.next_tier) {
+            const progressPct = Math.min((data.total_capital / data.next_tier.limit) * 100, 100);
+            if (progressTextEl) {
+                progressTextEl.textContent = `${data.total_capital.toLocaleString()}$ / ${data.next_tier.limit.toLocaleString()}$`;
+            }
+            if (progressBarEl) {
+                progressBarEl.style.width = `${progressPct}%`;
+            }
+        } else {
+            // Maximum tier reached (Gold)
+            if (progressTextEl) progressTextEl.textContent = "PALIER MAXIMUM ATTEINT";
+            if (progressBarEl) progressBarEl.style.width = "100%";
+        }
+        
+        // Render referred table
+        const tableBody = document.getElementById('affReferredTableBody');
+        if (tableBody) {
+            if (!data.referred_list || data.referred_list.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-slate-500">Aucun filleul actif pour le moment. Parrainez des membres pour débloquer cette section.</td></tr>`;
+            } else {
+                tableBody.innerHTML = data.referred_list.map(r => {
+                    const capitalLabel = `$${r.capital.toLocaleString()}`;
+                    const weeklyProfitLabel = r.weekly_profit >= 0 ? `+$${r.weekly_profit.toFixed(2)}` : `-$${Math.abs(r.weekly_profit).toFixed(2)}`;
+                    const commLabel = `+$${r.commission.toFixed(2)}`;
+                    const profitColor = r.weekly_profit >= 0 ? 'text-emerald-400' : 'text-rose-500';
+                    
+                    return `
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="py-4 font-medium text-white">${r.fullName || r.email}</td>
+                            <td class="py-4 font-mono">${capitalLabel}</td>
+                            <td class="py-4 font-mono ${profitColor}">${weeklyProfitLabel}</td>
+                            <td class="py-4 font-mono text-amber-400 text-right font-semibold">${commLabel}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+    } catch (e) {
+        console.error("Load affiliation data error:", e);
+        showToast("Impossible de charger les statistiques d'affiliation.", "error");
+    }
+}
+
+function copyReferralCode() {
+    const codeInput = document.getElementById('affReferralCodeInput');
+    if (codeInput && codeInput.value) {
+        navigator.clipboard.writeText(codeInput.value);
+        showToast("Code de parrainage copié !", "success");
+    }
+}
+
+function copyReferralLink() {
+    const linkInput = document.getElementById('affReferralLinkInput');
+    if (linkInput && linkInput.value) {
+        navigator.clipboard.writeText(linkInput.value);
+        showToast("Lien de parrainage copié !", "success");
+    }
+}
+
+async function saveAffiliateCryptoAddress() {
+    const addressInput = document.getElementById('affCryptoAddressInput');
+    if (!addressInput) return;
+    
+    const address = addressInput.value.trim();
+    if (!address) {
+        showToast("Veuillez renseigner votre adresse crypto.", "error");
+        return;
+    }
+    
+    try {
+        const res = await fetch(`${API_URL}/affiliation/crypto`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: currentUser.email,
+                crypto_address: address
+            })
+        });
+        
+        const data = await res.json();
+        if (data.status === 'success') {
+            showToast("Adresse de retrait crypto mise à jour !", "success");
+            await loadAffiliationData();
+        } else {
+            showToast(data.message || "Erreur lors de la sauvegarde.", "error");
+        }
+    } catch (e) {
+        console.error("Save affiliate crypto address error:", e);
+        showToast("Erreur réseau.", "error");
+    }
+}
+

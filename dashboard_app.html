@@ -648,6 +648,7 @@
                     <button class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition" id="navBot" onclick="switchView('bot')">Bots</button>
                     <button class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition" id="navConfig" onclick="switchView('config')">Configuration</button>
                     <button class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition" id="navCommunity" onclick="switchView('community')">Communauté</button>
+                    <button class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition" id="navAffiliation" onclick="switchView('affiliation')">Affiliation</button>
                 </nav>
 
                 <!-- Profile summary -->
@@ -682,6 +683,9 @@
             </button>
             <button class="mob-nav-btn flex flex-col items-center justify-center text-slate-400 hover:text-white transition p-2 rounded-xl" id="navMobCommunity" onclick="switchView('community')">
                 <i data-lucide="messages-square" class="w-5 h-5"></i>
+            </button>
+            <button class="mob-nav-btn flex flex-col items-center justify-center text-slate-400 hover:text-white transition p-2 rounded-xl" id="navMobAffiliation" onclick="switchView('affiliation')">
+                <i data-lucide="users-2" class="w-5 h-5"></i>
             </button>
         </nav>
 
@@ -1255,6 +1259,127 @@
                 </div>
             </div>
 
+            <!-- ── VIEW: AFFILIATION ── -->
+            <div id="viewAffiliation" class="view hidden space-y-8">
+                <!-- Top Rank Card -->
+                <div class="glass p-6 md:p-8 rounded-3xl border border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
+                    <div class="space-y-3 text-left w-full md:w-2/3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-2xl" id="affRankBadge">🥉</span>
+                            <h2 class="font-cinzel text-xl text-white font-semibold uppercase tracking-wider" id="affRankTitle">Ambassadeur Bronze</h2>
+                        </div>
+                        <p class="text-xs text-slate-400 font-light leading-relaxed">
+                            Félicitations pour votre engagement ! Vous gagnez actuellement <strong class="text-amber-400" id="affCommRateLabel">4%</strong> des revenus de vos filleuls. Augmentez votre volume de fonds levés pour débloquer les commissions Silver et Gold.
+                        </p>
+                        <!-- Progress Bar -->
+                        <div class="space-y-1.5 pt-2">
+                            <div class="flex justify-between text-[10px] uppercase tracking-widest text-slate-400 font-bold">
+                                <span>Progression Palier Suivant</span>
+                                <span id="affProgressText">400$ / 10 000$</span>
+                            </div>
+                            <div class="w-full h-2 rounded-full bg-white/5 border border-white/10 overflow-hidden">
+                                <div id="affProgressBar" class="h-full bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full transition-all duration-500" style="width: 4%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass p-4 rounded-xl border border-amber-500/10 bg-[#030712]/50 text-center flex flex-col justify-center min-w-[200px] w-full md:w-auto h-full">
+                        <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block mb-1">Commissions de la Semaine</span>
+                        <span class="font-mono text-3xl font-bold text-amber-400" id="affWeeklyCommission">$0.00</span>
+                        <span class="text-[9px] text-slate-500 font-light block mt-1">Retrait automatique chaque vendredi</span>
+                    </div>
+                </div>
+
+                <!-- KPIs row -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <div class="glass p-6 rounded-2xl border border-white/10 text-left space-y-2">
+                        <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block">Fonds Levés Totaux</span>
+                        <span class="font-mono text-2xl font-bold text-white" id="affTotalCapitalBrought">$0.00</span>
+                        <p class="text-[10px] text-slate-500 leading-none">Capital investi cumulé de vos filleuls</p>
+                    </div>
+                    <div class="glass p-6 rounded-2xl border border-white/10 text-left space-y-2">
+                        <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block">Nombre de Filleuls</span>
+                        <span class="font-mono text-2xl font-bold text-white" id="affReferredCount">0</span>
+                        <p class="text-[10px] text-slate-500 leading-none">Partenaires actifs enregistrés</p>
+                    </div>
+                    <div class="glass p-6 rounded-2xl border border-white/10 text-left space-y-2">
+                        <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block">Partage des Gains</span>
+                        <span class="font-mono text-2xl font-bold text-amber-400" id="affCommissionPercentage">4.00%</span>
+                        <p class="text-[10px] text-slate-500 leading-none">Votre taux de commission actuel</p>
+                    </div>
+                </div>
+
+                <!-- Referral Code / Link & Crypto Address -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Parrainage -->
+                    <div class="glass p-6 md:p-8 rounded-2xl border border-white/10 space-y-4 text-left">
+                        <h3 class="font-cinzel text-base text-white font-semibold uppercase tracking-wider">Parrainage Direct</h3>
+                        <p class="text-xs text-slate-400 leading-relaxed font-light">Partagez votre code ou votre lien d'inscription unique pour lier vos filleuls à votre réseau de parrainage.</p>
+                        
+                        <div class="space-y-3 pt-2">
+                            <div class="space-y-1">
+                                <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block">Votre Code de Parrainage</span>
+                                <div class="flex gap-2">
+                                    <input type="text" id="affReferralCodeInput" class="input-field font-mono font-bold text-amber-400 text-sm" readonly value="SYNAPX-XXXX" style="margin-bottom:0;">
+                                    <button class="btn-gold px-4 text-xs font-semibold py-0 flex-shrink-0" onclick="copyReferralCode()" style="width:auto;">Copier</button>
+                                </div>
+                            </div>
+                            <div class="space-y-1">
+                                <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block">Lien d'Inscription Affilié</span>
+                                <div class="flex gap-2">
+                                    <input type="text" id="affReferralLinkInput" class="input-field font-mono text-slate-300 text-xs" readonly value="https://synapx.com/?ref=XXXX" style="margin-bottom:0;">
+                                    <button class="btn-gold px-4 text-xs font-semibold py-0 flex-shrink-0" onclick="copyReferralLink()" style="width:auto;">Copier</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Retrait Crypto -->
+                    <div class="glass p-6 md:p-8 rounded-2xl border border-white/10 space-y-4 text-left flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-cinzel text-base text-white font-semibold uppercase tracking-wider">Adresse de Paiement Crypto</h3>
+                            <p class="text-xs text-slate-400 leading-relaxed font-light">
+                                Renseignez votre adresse de retrait crypto (USDT sur le réseau **TRC20**) pour recevoir automatiquement vos commissions de parrainage chaque vendredi.
+                            </p>
+                        </div>
+                        
+                        <div class="space-y-3 pt-4">
+                            <div class="space-y-1">
+                                <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block">Adresse USDT TRC20</span>
+                                <input type="text" id="affCryptoAddressInput" class="input-field font-mono text-white text-xs" placeholder="Saisissez votre adresse USDT TRC20" style="margin-bottom:0;">
+                            </div>
+                            <button class="btn-gold py-2.5 text-xs font-semibold" onclick="saveAffiliateCryptoAddress()">Enregistrer l'Adresse</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Referred List Table -->
+                <div class="glass p-6 md:p-8 rounded-2xl border border-white/10 space-y-6">
+                    <div class="text-left">
+                        <h3 class="font-cinzel text-base text-white font-semibold uppercase tracking-wider">Liste de vos Filleuls</h3>
+                        <p class="text-xs text-slate-400 font-light">Suivi en direct du capital de vos filleuls et de vos revenus associés.</p>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-white/10 pb-3 text-slate-400 uppercase tracking-widest text-[9px] font-bold">
+                                    <th class="pb-3">Membre Filleul</th>
+                                    <th class="pb-3">Capital Investi</th>
+                                    <th class="pb-3">Performance (Semaine)</th>
+                                    <th class="pb-3 text-right">Vos Gains (Semaine)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="affReferredTableBody" class="divide-y divide-white/5 text-xs text-slate-300 font-light">
+                                <!-- Populated dynamically -->
+                                <tr>
+                                    <td colspan="4" class="py-6 text-center text-slate-500">Aucun filleul actif pour le moment. Parrainez des membres pour débloquer cette section.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
 
 
         </main>
@@ -1510,9 +1635,10 @@
             dashboard: { title: 'Tableau de <span class="gold-luxury-text font-medium">Bord</span>', sub: 'Moniteur de performance en temps réel' },
             bot: { title: 'Espace <span class="gold-luxury-text font-medium">Bots</span>', sub: 'Gérez et configurez vos robots algorithmiques' },
             config: { title: 'Configuration <span class="gold-luxury-text font-medium">Robot</span>', sub: 'Ajustez vos paramètres et objectifs' },
-            community: { title: 'Communauté <span class="gold-luxury-text font-medium">SynapX</span>', sub: 'Rejoignez nos cercles officiels' }
+            community: { title: 'Communauté <span class="gold-luxury-text font-medium">SynapX</span>', sub: 'Rejoignez nos cercles officiels' },
+            affiliation: { title: 'Espace <span class="gold-luxury-text font-medium">Affiliation</span>', sub: 'Pilotez votre réseau de partenaires et commissions' }
         };
-        const VIEW_IDS = ['dashboard', 'config', 'community', 'bot'];
+        const VIEW_IDS = ['dashboard', 'config', 'community', 'bot', 'affiliation'];
 
         function switchView(name) {
             if (name === 'support') name = 'community';
@@ -1568,6 +1694,9 @@
 
             if (name === 'community' && typeof loadCommunityData === 'function') {
                 loadCommunityData();
+            }
+            if (name === 'affiliation' && typeof loadAffiliationData === 'function') {
+                loadAffiliationData();
             }
             if (typeof initCustomSelects === 'function') {
                 initCustomSelects();

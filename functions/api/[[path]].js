@@ -628,20 +628,23 @@ export async function onRequest(context) {
             const { data: users } = await supabase.from('users').select('*');
             const { data: accounts } = await supabase.from('accounts').select('*');
             
-            // Fetch affiliate overrides
-            const { data: overrideSetting } = await supabase
+            // Fetch affiliate overrides and crypto addresses
+            const { data: settingsData } = await supabase
                 .from('admin_settings')
-                .select('value')
-                .eq('key', 'affiliate_overrides')
-                .maybeSingle();
+                .select('key, value')
+                .in('key', ['affiliate_overrides', 'aff_crypto_addresses']);
 
             let overrides = {};
-            if (overrideSetting && overrideSetting.value) {
-                try {
-                    overrides = JSON.parse(overrideSetting.value);
-                } catch (err) {
-                    console.error("Parse overrides error in all-data worker:", err);
-                }
+            let cryptoAddresses = {};
+            if (settingsData) {
+                settingsData.forEach(row => {
+                    if (row.key === 'affiliate_overrides' && row.value) {
+                        try { overrides = JSON.parse(row.value); } catch (e) {}
+                    }
+                    if (row.key === 'aff_crypto_addresses' && row.value) {
+                        try { cryptoAddresses = JSON.parse(row.value); } catch (e) {}
+                    }
+                });
             }
 
             const usersList = users || [];
@@ -656,7 +659,8 @@ export async function onRequest(context) {
                     is_affiliate_active: u.is_affiliate_active || false,
                     is_community_tier: u.is_community_tier || false,
                     withdrawn_commission: parseFloat(u.withdrawn_commission) || 0.00,
-                    affiliate_rank_override: overrides[u.email] || "auto"
+                    affiliate_rank_override: overrides[u.email] || "auto",
+                    cryptoAddress: cryptoAddresses[u.email] || ""
                 },
                 accounts: accountsList.filter(a => a.email === u.email).map(a => ({
                     account_id: a.account_id, 
@@ -1274,19 +1278,6 @@ export async function onRequest(context) {
                     headers: { ...corsHeaders, 'Content-Type': 'application/json' }
                 });
             }
-            
-            if (!user.is_affiliate_active) {
-                return new Response(JSON.stringify({
-                    is_affiliate_active: false,
-                    referral_code: null,
-                    is_community_tier: false,
-                    stats: { referred_count: 0, sales_count: 0, total_sales_amount: 0, projected_comm: 0, earned_comm: 0, withdrawn_comm: 0, is_eligible: false, min_required: 1 },
-                    referred_list: [],
-                    chart_data: []
-                }), {
-                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-                });
-            }
 
             // Self-healing database cleanup of whitespaces & casing in referral codes
             try {
@@ -1320,11 +1311,33 @@ export async function onRequest(context) {
                 await supabase.from('users').update({ referral_code: referralCode }).eq('email', email);
             }
             
-            // Fetch all users and filter in JS (mirrors working admin logic)
-            const { data: allUsersForRef, error: queryError } = await supabase
-                .from('users')
-                .select('email, full_name, referred_by');
-                
+            // Retrieve customizable settings from admin_settings
+            const { data: settingsRows } = await supabase.from('admin_settings').select('key, value');
+            const settings = {};
+            (settingsRows || []).forEach(row => {
+                settings[row.key] = row.value;
+            });
+            
+            const bronzeLimit = parseFloat(settings['aff_bronze_limit']) || 1000;
+            const bronzePct = parseFloat(settings['aff_bronze_pct']) || 4;
+            const silverLimit = parseFloat(settings['aff_silver_limit']) || 10000;
+            const silverPct = parseFloat(settings['aff_silver_pct']) || 7;
+            const goldLimit = parseFloat(settings['aff_gold_limit']) || 100000;
+            const goldPct = parseFloat(settings['aff_gold_pct']) || 10;
+            
+            // Load crypto address
+            let cryptoAddresses = {};
+            if (settings['aff_crypto_addresses']) {
+                try {
+                    cryptoAddresses = JSON.parse(settings['aff_crypto_addresses']);
+                } catch (e) {
+                    console.error("Parse crypto addresses error:", e);
+                }
+            }
+            const userCryptoAddress = cryptoAddresses[email] || "";
+
+            // Fetch all users to find direct referrals
+            const { data: allUsersForRef } = await supabase.from('users').select('email, full_name, referred_by');
             const cleanRefCode = referralCode.trim().toUpperCase();
             const referredList = (allUsersForRef || []).filter(u => 
                 u.referred_by && u.referred_by.trim().toUpperCase() === cleanRefCode
@@ -1335,164 +1348,251 @@ export async function onRequest(context) {
             if (referredEmails.length > 0) {
                 const { data: accounts } = await supabase
                     .from('accounts')
-                    .select('email, account_id, initial_price_paid, balance, last_update')
+                    .select('email, account_id, config')
                     .in('email', referredEmails);
                 referredAccounts = accounts || [];
             }
             
-            // 1. Calculate salesCount first
-            let salesCount = 0;
-            referredList.forEach(ru => {
-                const hasActiveAccount = referredAccounts.some(a => a.email === ru.email);
-                if (hasActiveAccount) {
-                    salesCount++;
-                }
-            });
-
-            // 2. Fetch overrides
-            const { data: overrideSetting } = await supabase
-                .from('admin_settings')
-                .select('value')
-                .eq('key', 'affiliate_overrides')
-                .maybeSingle();
-
-            let overrides = {};
-            if (overrideSetting && overrideSetting.value) {
-                try {
-                    overrides = JSON.parse(overrideSetting.value);
-                } catch (err) {
-                    console.error("Parse overrides error in worker dashboard:", err);
-                }
-            }
-
-            const userOverride = overrides[email] || null;
-
-            // 3. Determine rank and commission rate
-            let rank = 'bronze';
-            let commissionRate = 0.23;
-            let rankTitle = 'Ambassadeur Bronze';
-            let rankBadge = '🥉';
-
-            const checkRank = userOverride || (
-                salesCount >= 50 ? 'diamond' :
-                salesCount >= 25 ? 'gold' :
-                salesCount >= 10 ? 'silver' : 'bronze'
-            );
-
-            if (checkRank === 'diamond' || checkRank === 'diamant') {
-                rank = 'diamond';
-                commissionRate = 0.40;
-                rankTitle = 'Ambassadeur Diamant';
-                rankBadge = '👑';
-            } else if (checkRank === 'gold' || checkRank === 'or') {
-                rank = 'gold';
-                commissionRate = 0.35;
-                rankTitle = 'Ambassadeur Or';
-                rankBadge = '🥇';
-            } else if (checkRank === 'silver' || checkRank === 'argent') {
-                rank = 'silver';
-                commissionRate = 0.30;
-                rankTitle = 'Ambassadeur Argent';
-                rankBadge = '🥈';
-            } else {
-                rank = 'bronze';
-                commissionRate = 0.23;
-                rankTitle = 'Ambassadeur Bronze';
-                rankBadge = '🥉';
-            }
-
-            // Everyone needs at least 1 sale to withdraw
-            const minSalesRequired = 1;
-            
-            let totalSalesAmount = 0;
-            let projectedComm = 0;
-            
-            const finalReferredList = referredList.map(ru => {
-                const userAccounts = referredAccounts.filter(a => a.email === ru.email);
-                const hasActiveAccount = userAccounts.length > 0;
-                
-                const pricePaid = userAccounts.reduce((sum, a) => sum + (parseFloat(a.initial_price_paid) || 0), 0);
-                const comm = pricePaid * commissionRate;
-                
-                // Get the earliest last_update as the activation date
-                let dateJoined = null;
-                if (hasActiveAccount) {
-                    const updates = userAccounts.map(a => a.last_update).filter(Boolean);
-                    if (updates.length > 0) {
-                        updates.sort((a, b) => new Date(a) - new Date(b));
-                        dateJoined = updates[0];
+            // Calculate capital brought per referral
+            const finalReferredListRaw = referredList.map(ru => {
+                const ruAccounts = referredAccounts.filter(a => a.email === ru.email);
+                let userCapital = 0;
+                ruAccounts.forEach(a => {
+                    if (a.config && a.config.status === 'approved') {
+                        userCapital += parseFloat(a.config.invested_amount) || 0;
                     }
-                }
-                
-                if (hasActiveAccount) {
-                    totalSalesAmount += pricePaid;
-                    projectedComm += comm;
-                }
-                
+                });
                 return {
                     fullName: ru.full_name,
                     email: ru.email,
-                    dateJoined: dateJoined,
-                    hasActiveAccount: hasActiveAccount,
-                    pricePaid: pricePaid,
-                    commission: comm
+                    capital: userCapital,
+                    accounts: ruAccounts
                 };
             });
             
-            const isEligible = (salesCount >= minSalesRequired);
-            const earnedComm = isEligible ? projectedComm : 0;
-            const withdrawnComm = parseFloat(user.withdrawn_commission) || 0.00;
-            const withdrawableComm = Math.max(0, earnedComm - withdrawnComm);
+            const totalCapitalBrought = finalReferredListRaw.reduce((sum, r) => sum + r.capital, 0);
             
-            // Sort active affiliates chronologically by signup date to build a cumulative timeline
-            const activeAffiliates = finalReferredList
-                .filter(item => item.hasActiveAccount && item.dateJoined)
-                .sort((a, b) => new Date(a.dateJoined) - new Date(b.dateJoined));
-                
-            let chartData = [{ x: 'Lancement', y: 0 }];
-            let cumulativeY = 0;
+            // Determine tier rank and commission rate
+            let rank = 'bronze';
+            let commissionRate = bronzePct;
+            let nextTier = { limit: silverLimit, pct: silverPct };
             
-            activeAffiliates.forEach(item => {
-                cumulativeY += item.commission;
-                const date = new Date(item.dateJoined);
-                const dateStr = date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+            if (totalCapitalBrought >= goldLimit) {
+                rank = 'gold';
+                commissionRate = goldPct;
+                nextTier = null;
+            } else if (totalCapitalBrought >= silverLimit) {
+                rank = 'silver';
+                commissionRate = silverPct;
+                nextTier = { limit: goldLimit, pct: goldPct };
+            } else {
+                rank = 'bronze';
+                commissionRate = bronzePct;
+                nextTier = { limit: silverLimit, pct: silverPct };
+            }
+            
+            // Retrieve master accounts to compute weekly returns
+            const masterSafeId = settings['master_acc_safe'];
+            const masterNormalId = settings['master_acc_normal'];
+            const masterDebridId = settings['master_acc_debrid'];
+            
+            const masterIds = [masterSafeId, masterNormalId, masterDebridId].filter(Boolean);
+            let masterAccounts = [];
+            if (masterIds.length > 0) {
+                const { data: mAccs } = await supabase
+                    .from('accounts')
+                    .select('*')
+                    .in('account_id', masterIds.map(String));
+                masterAccounts = mAccs || [];
+            }
+            
+            const masterSafe = masterAccounts.find(m => String(m.account_id) === String(masterSafeId));
+            const masterNormal = masterAccounts.find(m => String(m.account_id) === String(masterNormalId));
+            const masterDebrid = masterAccounts.find(m => String(m.account_id) === String(masterDebridId));
+            
+            const getMasterWeeklyReturnPct = (master) => {
+                if (!master || !master.history) return 0.0;
+                const now = Date.now();
+                const oneWeekAgo = now - 7 * 24 * 60 * 60 * 1000;
                 
-                chartData.push({
-                    x: dateStr,
-                    y: parseFloat(cumulativeY.toFixed(2))
+                let weeklyProfit = 0.0;
+                (master.history || []).forEach(h => {
+                    const tradeDateStr = h.time || h.date;
+                    if (!tradeDateStr) return;
+                    const tradeDate = new Date(tradeDateStr);
+                    if (tradeDate.getTime() >= oneWeekAgo) {
+                        const rawProfitStr = String(h.resultStr || '').replace('$', '').replace('+', '');
+                        const profit = parseFloat(rawProfitStr) || 0.0;
+                        weeklyProfit += profit;
+                    }
                 });
+                
+                const masterTotalProfit = parseFloat(master.total_result) || 0.0;
+                const masterBalance = parseFloat(master.balance) || 1.0;
+                const masterInitialBalance = masterBalance - masterTotalProfit;
+                const initialRef = masterInitialBalance <= 0 ? masterBalance : masterInitialBalance;
+                
+                return weeklyProfit / initialRef;
+            };
+            
+            const pctSafe = getMasterWeeklyReturnPct(masterSafe);
+            const pctNormal = getMasterWeeklyReturnPct(masterNormal);
+            const pctDebrid = getMasterWeeklyReturnPct(masterDebrid);
+            
+            let totalWeeklyCommission = 0;
+            const finalReferredList = finalReferredListRaw.map(r => {
+                let ruWeeklyProfit = 0;
+                let ruCommission = 0;
+                
+                r.accounts.forEach(a => {
+                    if (a.config && a.config.status === 'approved') {
+                        const cap = parseFloat(a.config.invested_amount) || 0;
+                        const mode = a.config.mode || 'low';
+                        let mPct = pctSafe;
+                        if (mode === 'normal') mPct = pctNormal;
+                        else if (mode === 'extreme') mPct = pctDebrid;
+                        
+                        const netWeeklyProfit = cap * mPct * 0.70;
+                        ruWeeklyProfit += netWeeklyProfit;
+                        
+                        // Sponsors only earn on positive returns
+                        const comm = Math.max(0, netWeeklyProfit) * (commissionRate / 100);
+                        ruCommission += comm;
+                    }
+                });
+                
+                totalWeeklyCommission += ruCommission;
+                
+                return {
+                    fullName: r.fullName,
+                    email: r.email,
+                    capital: r.capital,
+                    weekly_profit: ruWeeklyProfit,
+                    commission: ruCommission
+                };
             });
             
             return new Response(JSON.stringify({
-                is_affiliate_active: true,
-                referral_code: user.referral_code,
-                is_community_tier: user.is_community_tier || (commissionRate >= 0.30),
+                status: 'success',
+                referral_code: referralCode,
                 rank: rank,
-                rank_title: rankTitle,
-                rank_badge: rankBadge,
                 commission_rate: commissionRate,
-                stats: {
-                    referred_count: finalReferredList.length,
-                    sales_count: salesCount,
-                    total_sales_amount: totalSalesAmount,
-                    projected_comm: parseFloat(projectedComm.toFixed(2)),
-                    earned_comm: parseFloat(withdrawableComm.toFixed(2)),
-                    withdrawn_comm: parseFloat(withdrawnComm.toFixed(2)),
-                    is_eligible: isEligible,
-                    min_required: minSalesRequired
-                },
-                referred_list: finalReferredList,
-                chart_data: chartData,
-                debug: {
-                    query_error: queryError ? queryError.message : null,
-                    total_users_fetched: (allUsersForRef || []).length,
-                    referral_code_searched: cleanRefCode,
-                    all_referred_by_values: (allUsersForRef || []).map(u => ({ email: u.email, referred_by: u.referred_by })).filter(u => u.referred_by),
-                    matched_count: referredList.length
-                }
+                total_capital: totalCapitalBrought,
+                referred_count: finalReferredList.length,
+                weekly_commission: totalWeeklyCommission,
+                crypto_address: userCryptoAddress,
+                next_tier: nextTier,
+                referred_list: finalReferredList
             }), {
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' }
             });
+        }
+        
+        // --- 12B. SAVE AFFILIATE CRYPTO ADDRESS ---
+        if (path === '/api/affiliation/crypto' && request.method === 'POST') {
+            const { email, crypto_address } = await request.json();
+            if (!email || !crypto_address) {
+                return new Response('Email and Crypto Address are required', { status: 400 });
+            }
+            
+            // Retrieve current settings
+            const { data: settingsRow } = await supabase
+                .from('admin_settings')
+                .select('value')
+                .eq('key', 'aff_crypto_addresses')
+                .maybeSingle();
+                
+            let cryptoAddresses = {};
+            if (settingsRow && settingsRow.value) {
+                try {
+                    cryptoAddresses = JSON.parse(settingsRow.value);
+                } catch (e) {
+                    console.error("Parse crypto addresses error in post:", e);
+                }
+            }
+            
+            cryptoAddresses[email] = crypto_address.trim();
+            
+            // Update admin settings
+            const { error: upsertError } = await supabase
+                .from('admin_settings')
+                .upsert({
+                    key: 'aff_crypto_addresses',
+                    value: JSON.stringify(cryptoAddresses)
+                });
+                
+            if (upsertError) {
+                return new Response(JSON.stringify({ status: 'error', message: upsertError.message }), {
+                    status: 500,
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
+            
+            return new Response(JSON.stringify({ status: 'success' }), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            });
+        }
+
+        // --- 12C. GET/SAVE ADMIN AFFILIATION SETTINGS ---
+        if (path === '/api/admin/affiliation-settings') {
+            if (request.method === 'GET') {
+                const auth = await checkAdminAuth(null, 'GET', url.searchParams, true);
+                if (!auth.authorized) {
+                    return new Response(JSON.stringify({ status: 'error', code: auth.error, message: auth.message || auth.error }), {
+                        status: auth.status,
+                        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                    });
+                }
+                
+                const { data: settingsRows } = await supabase.from('admin_settings').select('key, value');
+                const settings = {};
+                (settingsRows || []).forEach(row => {
+                    settings[row.key] = row.value;
+                });
+                
+                return new Response(JSON.stringify({
+                    status: 'success',
+                    bronze_limit: parseFloat(settings['aff_bronze_limit']) || 1000,
+                    bronze_pct: parseFloat(settings['aff_bronze_pct']) || 4,
+                    silver_limit: parseFloat(settings['aff_silver_limit']) || 10000,
+                    silver_pct: parseFloat(settings['aff_silver_pct']) || 7,
+                    gold_limit: parseFloat(settings['aff_gold_limit']) || 100000,
+                    gold_pct: parseFloat(settings['aff_gold_pct']) || 10,
+                    crypto_addresses: settings['aff_crypto_addresses'] ? JSON.parse(settings['aff_crypto_addresses']) : {}
+                }), {
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
+            
+            if (request.method === 'POST') {
+                const reqData = await request.json();
+                const auth = await checkAdminAuth(reqData, 'POST', null);
+                if (!auth.authorized) {
+                    return new Response(JSON.stringify({ status: 'error', code: auth.error, message: auth.message || auth.error }), {
+                        status: auth.status,
+                        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                    });
+                }
+                
+                const { bronze_limit, bronze_pct, silver_limit, silver_pct, gold_limit, gold_pct } = reqData;
+                
+                const keys = {
+                    'aff_bronze_limit': String(bronze_limit),
+                    'aff_bronze_pct': String(bronze_pct),
+                    'aff_silver_limit': String(silver_limit),
+                    'aff_silver_pct': String(silver_pct),
+                    'aff_gold_limit': String(gold_limit),
+                    'aff_gold_pct': String(gold_pct)
+                };
+                
+                for (const [k, v] of Object.entries(keys)) {
+                    await supabase.from('admin_settings').upsert({ key: k, value: v });
+                }
+                
+                return new Response(JSON.stringify({ status: 'success' }), {
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
         }
 
         // --- 13. ADMIN UPDATE USER AFFILIATE ---

@@ -613,6 +613,42 @@
                 </div>
             </div>
 
+            <!-- PALIER CONFIGURATION SECTION -->
+            <div class="glass" style="padding: 24px; margin-bottom: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                <div style="text-align: left;">
+                    <h3 style="font-size: 18px; color: var(--theme); margin-bottom: 12px;">Configuration des Paliers d'Affiliation</h3>
+                    <p style="color: var(--text-dim); font-size: 11px; line-height: 1.5; margin-bottom: 0;">
+                        Définissez ici les seuils de capitaux levés (fonds levés des filleuls) nécessaires pour franchir chaque niveau d'affiliation, ainsi que le pourcentage des gains des filleuls reversé en commission.
+                    </p>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                        <!-- Bronze -->
+                        <div style="display: flex; flex-direction: column; gap: 6px; text-align: left;">
+                            <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim);">Seuil Bronze ($)</label>
+                            <input type="number" id="configBronzeLimit" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="1000">
+                            <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim); margin-top: 4px;">Comm. Bronze (%)</label>
+                            <input type="number" id="configBronzePct" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="4">
+                        </div>
+                        <!-- Silver -->
+                        <div style="display: flex; flex-direction: column; gap: 6px; text-align: left;">
+                            <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim);">Seuil Silver ($)</label>
+                            <input type="number" id="configSilverLimit" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="10000">
+                            <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim); margin-top: 4px;">Comm. Silver (%)</label>
+                            <input type="number" id="configSilverPct" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="7">
+                        </div>
+                        <!-- Gold -->
+                        <div style="display: flex; flex-direction: column; gap: 6px; text-align: left;">
+                            <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim);">Seuil Gold ($)</label>
+                            <input type="number" id="configGoldLimit" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="100000">
+                            <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim); margin-top: 4px;">Comm. Gold (%)</label>
+                            <input type="number" id="configGoldPct" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="10">
+                        </div>
+                    </div>
+                    <button class="btn-theme" onclick="saveAffiliateSettings()" style="width: auto; align-self: flex-end; padding: 8px 24px; font-size: 11px; font-weight: 600; text-transform: uppercase; border: none; border-radius: 6px; cursor: pointer;">Enregistrer les Paliers</button>
+                </div>
+            </div>
+
             <div class="kpi-row" style="margin-bottom: 24px;">
                 <div class="glass kpi-card">
                     <span class="kpi-label">Total Retirable Actuel</span>
@@ -635,8 +671,9 @@
                         <tr>
                             <th>Ambassadeur</th>
                             <th>Code Parrainage</th>
-                            <th>Clients Actifs</th>
+                            <th>Fonds Levés ($)</th>
                             <th>Grade Actuel</th>
+                            <th>Adresse Crypto (TRC20)</th>
                             <th>Gains Brut</th>
                             <th>Déjà Retiré</th>
                             <th style="color: var(--success);">Solde Retirable</th>
@@ -856,6 +893,18 @@
         let activeAccId = "";
         let chartFixed = null;
         let chartMRR = null;
+        
+        let masterAccSafe = '';
+        let masterAccNormal = '';
+        let masterAccDebrid = '';
+        let affiliateSettings = {
+            bronze_limit: 1000,
+            bronze_pct: 4,
+            silver_limit: 10000,
+            silver_pct: 7,
+            gold_limit: 100000,
+            gold_pct: 10
+        };
 
         // Mock action logs persistent store
         let logsList = JSON.parse(localStorage.getItem('mitsu_admin_logs') || '[]');
@@ -925,6 +974,8 @@
                 }
                 
                 masterData = await res.json();
+                await loadMasterAccounts();
+                await loadAffiliateSettings();
                 document.getElementById('loginScreen').style.display = 'none';
                 
                 renderUserList();
@@ -1033,37 +1084,44 @@
             }).join('');
         }
 
-        function computeUserRankDetails(user, salesCount) {
-            const override = user.affiliate_rank_override || "auto";
-            const checkRank = override !== "auto" ? override : (
-                salesCount >= 50 ? 'diamond' :
-                salesCount >= 25 ? 'gold' :
-                salesCount >= 10 ? 'silver' : 'bronze'
-            );
-
-            let rank = 'bronze';
-            let rate = 0.23;
-            let title = '🥉 Bronze';
-            if (checkRank === 'diamond' || checkRank === 'diamant') {
-                rank = 'diamond';
-                rate = 0.40;
-                title = '👑 Diamant';
-            } else if (checkRank === 'gold' || checkRank === 'or') {
-                rank = 'gold';
-                rate = 0.35;
-                title = '🥇 Or';
-            } else if (checkRank === 'silver' || checkRank === 'argent') {
-                rank = 'silver';
-                rate = 0.30;
-                title = '🥈 Argent';
+        function getMasterWeeklyReturnPctLocal(masterAccountId) {
+            if (!masterAccountId) return 0.0;
+            let masterAcc = null;
+            for (let i = 0; i < masterData.length; i++) {
+                const acc = masterData[i].accounts.find(a => String(a.account_id) === String(masterAccountId));
+                if (acc) {
+                    masterAcc = acc;
+                    break;
+                }
             }
-
-            return { rank, rate, title };
+            if (!masterAcc || !masterAcc.history) return 0.0;
+            
+            const now = Date.now();
+            const oneWeekAgo = now - 7 * 24 * 60 * 60 * 1000;
+            let weeklyProfit = 0.0;
+            
+            masterAcc.history.forEach(h => {
+                const tradeDateStr = h.time || h.date;
+                if (!tradeDateStr) return;
+                const tradeDate = new Date(tradeDateStr);
+                if (tradeDate.getTime() >= oneWeekAgo) {
+                    const rawProfitStr = String(h.resultStr || '').replace('$', '').replace('+', '');
+                    const profit = parseFloat(rawProfitStr) || 0.0;
+                    weeklyProfit += profit;
+                }
+            });
+            
+            const masterTotalProfit = parseFloat(masterAcc.totalResult) || 0.0;
+            const masterBalance = parseFloat(masterAcc.balance) || 1.0;
+            const masterInitialBalance = masterBalance - masterTotalProfit;
+            const initialRef = masterInitialBalance <= 0 ? masterBalance : masterInitialBalance;
+            
+            return weeklyProfit / initialRef;
         }
 
         function getAffiliateStats(user) {
             if (!user.is_affiliate_active) {
-                return { salesCount: 0, totalSales: 0, projectedComm: 0, withdrawnComm: 0, withdrawableComm: 0, rankTitle: '🥉 Bronze', rate: 0.23 };
+                return { totalCapital: 0, weeklyComm: 0, withdrawnComm: 0, withdrawableComm: 0, rankTitle: '🥉 Bronze', rate: affiliateSettings.bronze_pct / 100, cryptoAddress: "" };
             }
 
             const code = user.referral_code ? user.referral_code.trim().toUpperCase() : "";
@@ -1071,30 +1129,69 @@
                 ? masterData.filter(u => u.user.referred_by && u.user.referred_by.trim().toUpperCase() === code)
                 : [];
 
-            let salesCount = 0;
-            let totalSales = 0;
+            let totalCapitalBrought = 0;
             children.forEach(c => {
                 const childAccounts = c.accounts || [];
-                if (childAccounts.length > 0) {
-                    salesCount++;
-                    const pricePaid = childAccounts.reduce((sum, a) => sum + (parseFloat(a.initial_price_paid) || 0), 0);
-                    totalSales += pricePaid;
-                }
+                childAccounts.forEach(a => {
+                    if (a.config && a.config.status === 'approved') {
+                        totalCapitalBrought += parseFloat(a.config.invested_amount) || 0;
+                    }
+                });
             });
 
-            const { rank, rate, title } = computeUserRankDetails(user, salesCount);
-            const projectedComm = totalSales * rate;
+            // Determine rank based on total capital
+            let rank = 'bronze';
+            let rate = affiliateSettings.bronze_pct / 100;
+            let title = '🥉 Bronze';
+            
+            if (totalCapitalBrought >= affiliateSettings.gold_limit) {
+                rank = 'gold';
+                rate = affiliateSettings.gold_pct / 100;
+                title = '🥇 Gold';
+            } else if (totalCapitalBrought >= affiliateSettings.silver_limit) {
+                rank = 'silver';
+                rate = affiliateSettings.silver_pct / 100;
+                title = '🥈 Silver';
+            } else {
+                rank = 'bronze';
+                rate = affiliateSettings.bronze_pct / 100;
+                title = '🥉 Bronze';
+            }
+
+            // Calculate weekly commission based on master accounts weekly performance
+            const pctSafe = getMasterWeeklyReturnPctLocal(masterAccSafe);
+            const pctNormal = getMasterWeeklyReturnPctLocal(masterAccNormal);
+            const pctDebrid = getMasterWeeklyReturnPctLocal(masterAccDebrid);
+            
+            let weeklyComm = 0;
+            children.forEach(c => {
+                const childAccounts = c.accounts || [];
+                childAccounts.forEach(a => {
+                    if (a.config && a.config.status === 'approved') {
+                        const cap = parseFloat(a.config.invested_amount) || 0;
+                        const mode = a.config.mode || 'low';
+                        let mPct = pctSafe;
+                        if (mode === 'normal') mPct = pctNormal;
+                        else if (mode === 'extreme') mPct = pctDebrid;
+                        
+                        const netWeeklyProfit = cap * mPct * 0.70;
+                        const comm = Math.max(0, netWeeklyProfit) * rate;
+                        weeklyComm += comm;
+                    }
+                });
+            });
+
             const withdrawnComm = parseFloat(user.withdrawn_commission) || 0;
-            const withdrawableComm = Math.max(0, projectedComm - withdrawnComm);
+            const withdrawableComm = Math.max(0, weeklyComm - withdrawnComm);
 
             return {
-                salesCount,
-                totalSales,
-                projectedComm,
+                totalCapital: totalCapitalBrought,
+                weeklyComm,
                 withdrawnComm,
                 withdrawableComm,
                 rankTitle: title,
-                rate
+                rate,
+                cryptoAddress: user.cryptoAddress || ""
             };
         }
 
@@ -1704,6 +1801,58 @@
             </tr>`).join('');
         }
 
+        async function loadAffiliateSettings() {
+            const codeEl = document.getElementById('admin2faCode');
+            const code = codeEl ? codeEl.value.trim() : "";
+            try {
+                const res = await fetch(`/api/admin/affiliation-settings?password=${adminPass}&code=${code}`);
+                const data = await res.json();
+                if (data.status === 'success') {
+                    affiliateSettings = data;
+                    document.getElementById('configBronzeLimit').value = data.bronze_limit;
+                    document.getElementById('configBronzePct').value = data.bronze_pct;
+                    document.getElementById('configSilverLimit').value = data.silver_limit;
+                    document.getElementById('configSilverPct').value = data.silver_pct;
+                    document.getElementById('configGoldLimit').value = data.gold_limit;
+                    document.getElementById('configGoldPct').value = data.gold_pct;
+                }
+            } catch (e) {
+                console.error("Load affiliate settings error:", e);
+            }
+        }
+
+        async function saveAffiliateSettings() {
+            const codeEl = document.getElementById('admin2faCode');
+            const code = codeEl ? codeEl.value.trim() : "";
+            try {
+                const res = await fetch(`/api/admin/affiliation-settings`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        password: adminPass,
+                        code: code,
+                        bronze_limit: parseFloat(document.getElementById('configBronzeLimit').value),
+                        bronze_pct: parseFloat(document.getElementById('configBronzePct').value),
+                        silver_limit: parseFloat(document.getElementById('configSilverLimit').value),
+                        silver_pct: parseFloat(document.getElementById('configSilverPct').value),
+                        gold_limit: parseFloat(document.getElementById('configGoldLimit').value),
+                        gold_pct: parseFloat(document.getElementById('configGoldPct').value)
+                    })
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    showToast("Paramètres d'affiliation enregistrés !", "success");
+                    await loadAffiliateSettings();
+                    renderAdminAffiliation();
+                } else {
+                    showToast(data.message || "Erreur de sauvegarde", "error");
+                }
+            } catch (e) {
+                console.error("Save affiliate settings error:", e);
+                showToast("Erreur réseau.", "error");
+            }
+        }
+
         function renderAdminAffiliation() {
             const affiliates = masterData.filter(d => d.user.is_affiliate_active);
 
@@ -1717,7 +1866,7 @@
             if (affiliates.length === 0) {
                 tableBody.innerHTML = `
                     <tr>
-                        <td colspan="8" style="text-align: center; color: var(--text-dim); padding: 24px;">
+                        <td colspan="10" style="text-align: center; color: var(--text-dim); padding: 24px;">
                             Aucun ambassadeur actif pour le moment.
                         </td>
                     </tr>
@@ -1734,20 +1883,26 @@
 
                     return `
                         <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                            <td style="padding: 12px 8px;">
+                            <td style="padding: 12px 8px; text-align: left;">
                                 <strong>${fullName}</strong><br>
                                 <small style="color:var(--text-dim);">${email}</small>
                             </td>
-                            <td style="padding: 12px 8px; font-family: monospace; font-weight:700; color:var(--theme);">${referralCode}</td>
-                            <td style="padding: 12px 8px; text-align: center;">${stats.salesCount}</td>
-                            <td style="padding: 12px 8px;">${stats.rankTitle} (${(stats.rate * 100).toFixed(0)}%)</td>
-                            <td style="padding: 12px 8px;">${stats.projectedComm.toFixed(2)} €</td>
-                            <td style="padding: 12px 8px;">${stats.withdrawnComm.toFixed(2)} €</td>
-                            <td style="padding: 12px 8px; color: var(--success); font-weight: 700;">${stats.withdrawableComm.toFixed(2)} €</td>
+                            <td style="padding: 12px 8px; text-align: left; font-family: monospace; font-weight:700; color:var(--theme);">${referralCode}</td>
+                            <td style="padding: 12px 8px; text-align: left; font-family: monospace;">$${stats.totalCapital.toLocaleString()}</td>
+                            <td style="padding: 12px 8px; text-align: left;">${stats.rankTitle} (${(stats.rate * 100).toFixed(0)}%)</td>
+                            <td style="padding: 12px 8px; text-align: left; font-family: monospace; font-size: 11px;">
+                                ${stats.cryptoAddress ? `
+                                    <span class="text-white" style="word-break: break-all;">${stats.cryptoAddress}</span>
+                                    <button class="btn-theme" style="padding: 2px 6px; font-size: 9px; margin-left: 4px; border: none; border-radius: 3px; cursor: pointer;" onclick="navigator.clipboard.writeText('${stats.cryptoAddress}'); showToast('Adresse copiée!', 'success');">Copier</button>
+                                ` : '<span style="color: var(--danger);">Non configurée</span>'}
+                            </td>
+                            <td style="padding: 12px 8px; text-align: left; font-family: monospace;">$${stats.weeklyComm.toFixed(2)}</td>
+                            <td style="padding: 12px 8px; text-align: left; font-family: monospace;">$${stats.withdrawnComm.toFixed(2)}</td>
+                            <td style="padding: 12px 8px; text-align: left; color: var(--success); font-weight: 700; font-family: monospace;">$${stats.withdrawableComm.toFixed(2)}</td>
                             <td style="padding: 12px 8px; text-align: right;">
                                 <button class="btn-theme" style="padding: 6px 12px; font-size:11px; background:${stats.withdrawableComm > 0 ? 'var(--success)' : 'rgba(255,255,255,0.05)'}; color:${stats.withdrawableComm > 0 ? 'black' : 'var(--text-dim)'}; border:none; border-radius:4px; font-weight:700; cursor: ${stats.withdrawableComm > 0 ? 'pointer' : 'not-allowed'};" 
                                     onclick="payoutAffiliate('${email}', ${stats.withdrawableComm})" ${stats.withdrawableComm <= 0 ? 'disabled' : ''}>
-                                    Payer (remettre à 0)
+                                    Marquer Payé
                                 </button>
                             </td>
                         </tr>
@@ -1756,10 +1911,10 @@
             }
 
             const withdrawableEl = document.getElementById('adminTotalWithdrawable');
-            if (withdrawableEl) withdrawableEl.textContent = totalWithdrawable.toFixed(2) + " €";
+            if (withdrawableEl) withdrawableEl.textContent = "$" + totalWithdrawable.toFixed(2);
 
             const withdrawnEl = document.getElementById('adminTotalWithdrawn');
-            if (withdrawnEl) withdrawnEl.textContent = totalWithdrawn.toFixed(2) + " €";
+            if (withdrawnEl) withdrawnEl.textContent = "$" + totalWithdrawn.toFixed(2);
 
             const totalAffEl = document.getElementById('adminTotalAffiliates');
             if (totalAffEl) totalAffEl.textContent = totalAffiliates;
@@ -1779,9 +1934,10 @@
                 if (affLogs.length === 0) {
                     logsFeed.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-dim); font-size: 12px;">Aucun événement d'affiliation récent.</div>`;
                 } else {
-                    logsFeed.innerHTML = affLogs.map(log => `
-                        <div style="display:flex; justify-content:space-between; background:rgba(255,255,255,0.02); padding: 8px 12px; border-radius:6px; font-size:11px;">
-                            <span><span style="color:var(--text-dim); margin-right:8px;">[${log.time}]</span> ${log.action}</span>
+                    logsFeed.innerHTML = affLogs.map(item => `
+                        <div class="log-row">
+                            <span style="color: var(--text-dim); font-family: monospace;">${item.date}</span>
+                            <span style="color: white; font-weight: 500;">${item.action}</span>
                         </div>
                     `).join('');
                 }
@@ -1790,7 +1946,7 @@
 
         async function payoutAffiliate(email, amount) {
             if (amount <= 0) return;
-            if (!confirm(`💸 Confirmez-vous le versement de ${amount.toFixed(2)} € pour le partenaire ${email} ?\n\nCela enregistrera le retrait et remettra son solde retirable à 0.`)) return;
+            if (!confirm(`💸 Confirmez-vous le versement de $${amount.toFixed(2)} pour le partenaire ${email} ?\n\nCela enregistrera le retrait et remettra son solde retirable à 0.`)) return;
 
             try {
                 const res = await fetch('/api/admin/create-withdrawal', {
@@ -2416,6 +2572,10 @@
                     document.getElementById('masterSafeInput').value = settings.master_acc_safe || '';
                     document.getElementById('masterNormalInput').value = settings.master_acc_normal || '';
                     document.getElementById('masterDebridInput').value = settings.master_acc_debrid || '';
+                    
+                    masterAccSafe = settings.master_acc_safe || '';
+                    masterAccNormal = settings.master_acc_normal || '';
+                    masterAccDebrid = settings.master_acc_debrid || '';
                 } else {
                     showToast("Impossible de charger les configurations maîtres.", "error");
                 }
