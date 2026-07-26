@@ -3830,8 +3830,8 @@ async function loadAffiliationData() {
         
         // Update rank and stats UI
         const rank = data.rank || 'bronze';
-        const rankBadge = rank === 'gold' ? '🥇' : rank === 'silver' ? '🥈' : '🥉';
-        const rankTitle = rank === 'gold' ? 'Ambassadeur Gold' : rank === 'silver' ? 'Ambassadeur Silver' : 'Ambassadeur Bronze';
+        const rankBadge = rank === 'diamond' ? '💎' : rank === 'gold' ? '🥇' : rank === 'silver' ? '🥈' : '🥉';
+        const rankTitle = rank === 'diamond' ? 'Ambassadeur Diamant' : rank === 'gold' ? 'Ambassadeur Gold' : rank === 'silver' ? 'Ambassadeur Silver' : 'Ambassadeur Bronze';
         
         const badgeEl = document.getElementById('affRankBadge');
         if (badgeEl) badgeEl.textContent = rankBadge;
@@ -3846,15 +3846,15 @@ async function loadAffiliationData() {
         if (pctEl) pctEl.textContent = `${data.commission_rate}.00%`;
         
         // Highlight active tier card in breakdown grid
-        ['Bronze', 'Silver', 'Gold'].forEach(t => {
+        ['Bronze', 'Silver', 'Gold', 'Diamond'].forEach(t => {
             const cardEl = document.getElementById(`tierCard${t}`);
             const badgeEl = document.getElementById(`tierBadge${t}`);
             const isCurrentRank = rank.toLowerCase() === t.toLowerCase();
             
             if (cardEl) {
                 if (isCurrentRank) {
-                    cardEl.style.borderColor = t === 'Gold' ? 'rgba(234, 179, 8, 0.8)' : t === 'Silver' ? 'rgba(226, 232, 240, 0.8)' : 'rgba(245, 158, 11, 0.8)';
-                    cardEl.style.boxShadow = '0 0 20px rgba(245, 158, 11, 0.2)';
+                    cardEl.style.borderColor = t === 'Diamond' ? 'rgba(34, 211, 238, 0.8)' : t === 'Gold' ? 'rgba(234, 179, 8, 0.8)' : t === 'Silver' ? 'rgba(226, 232, 240, 0.8)' : 'rgba(245, 158, 11, 0.8)';
+                    cardEl.style.boxShadow = t === 'Diamond' ? '0 0 20px rgba(34, 211, 238, 0.25)' : '0 0 20px rgba(245, 158, 11, 0.2)';
                 } else {
                     cardEl.style.borderColor = '';
                     cardEl.style.boxShadow = '';

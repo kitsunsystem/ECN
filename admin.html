@@ -622,27 +622,34 @@
                     </p>
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 16px;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
                         <!-- Bronze -->
                         <div style="display: flex; flex-direction: column; gap: 6px; text-align: left;">
                             <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim);">Seuil Bronze ($)</label>
-                            <input type="number" id="configBronzeLimit" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="1000">
+                            <input type="number" id="configBronzeLimit" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="25000">
                             <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim); margin-top: 4px;">Comm. Bronze (%)</label>
-                            <input type="number" id="configBronzePct" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="4">
+                            <input type="number" id="configBronzePct" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="2">
                         </div>
                         <!-- Silver -->
                         <div style="display: flex; flex-direction: column; gap: 6px; text-align: left;">
                             <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim);">Seuil Silver ($)</label>
-                            <input type="number" id="configSilverLimit" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="10000">
+                            <input type="number" id="configSilverLimit" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="70000">
                             <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim); margin-top: 4px;">Comm. Silver (%)</label>
-                            <input type="number" id="configSilverPct" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="7">
+                            <input type="number" id="configSilverPct" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="4">
                         </div>
                         <!-- Gold -->
                         <div style="display: flex; flex-direction: column; gap: 6px; text-align: left;">
                             <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim);">Seuil Gold ($)</label>
-                            <input type="number" id="configGoldLimit" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="100000">
+                            <input type="number" id="configGoldLimit" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="200000">
                             <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim); margin-top: 4px;">Comm. Gold (%)</label>
-                            <input type="number" id="configGoldPct" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="10">
+                            <input type="number" id="configGoldPct" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="7">
+                        </div>
+                        <!-- Diamond -->
+                        <div style="display: flex; flex-direction: column; gap: 6px; text-align: left;">
+                            <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim);">Seuil Diamant ($)</label>
+                            <input type="number" id="configDiamondLimit" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="200000">
+                            <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim); margin-top: 4px;">Comm. Diamant (%)</label>
+                            <input type="number" id="configDiamondPct" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="10">
                         </div>
                     </div>
                     <button class="btn-theme" onclick="saveAffiliateSettings()" style="width: auto; align-self: flex-end; padding: 8px 24px; font-size: 11px; font-weight: 600; text-transform: uppercase; border: none; border-radius: 6px; cursor: pointer;">Enregistrer les Paliers</button>
@@ -898,12 +905,14 @@
         let masterAccNormal = '';
         let masterAccDebrid = '';
         let affiliateSettings = {
-            bronze_limit: 1000,
-            bronze_pct: 4,
-            silver_limit: 10000,
-            silver_pct: 7,
-            gold_limit: 100000,
-            gold_pct: 10
+            bronze_limit: 25000,
+            bronze_pct: 2,
+            silver_limit: 70000,
+            silver_pct: 4,
+            gold_limit: 200000,
+            gold_pct: 7,
+            diamond_limit: 200000,
+            diamond_pct: 10
         };
 
         // Mock action logs persistent store
@@ -1141,20 +1150,24 @@
 
             // Determine rank based on total capital
             let rank = 'bronze';
-            let rate = affiliateSettings.bronze_pct / 100;
+            let rate = (affiliateSettings.bronze_pct || 2) / 100;
             let title = '🥉 Bronze';
             
-            if (totalCapitalBrought >= affiliateSettings.gold_limit) {
+            if (totalCapitalBrought >= (affiliateSettings.gold_limit || 200000)) {
+                rank = 'diamond';
+                rate = (affiliateSettings.diamond_pct || 10) / 100;
+                title = '💎 Diamant';
+            } else if (totalCapitalBrought >= (affiliateSettings.silver_limit || 70000)) {
                 rank = 'gold';
-                rate = affiliateSettings.gold_pct / 100;
+                rate = (affiliateSettings.gold_pct || 7) / 100;
                 title = '🥇 Gold';
-            } else if (totalCapitalBrought >= affiliateSettings.silver_limit) {
+            } else if (totalCapitalBrought >= (affiliateSettings.bronze_limit || 25000)) {
                 rank = 'silver';
-                rate = affiliateSettings.silver_pct / 100;
+                rate = (affiliateSettings.silver_pct || 4) / 100;
                 title = '🥈 Silver';
             } else {
                 rank = 'bronze';
-                rate = affiliateSettings.bronze_pct / 100;
+                rate = (affiliateSettings.bronze_pct || 2) / 100;
                 title = '🥉 Bronze';
             }
 
@@ -1809,12 +1822,14 @@
                 const data = await res.json();
                 if (data.status === 'success') {
                     affiliateSettings = data;
-                    document.getElementById('configBronzeLimit').value = data.bronze_limit;
-                    document.getElementById('configBronzePct').value = data.bronze_pct;
-                    document.getElementById('configSilverLimit').value = data.silver_limit;
-                    document.getElementById('configSilverPct').value = data.silver_pct;
-                    document.getElementById('configGoldLimit').value = data.gold_limit;
-                    document.getElementById('configGoldPct').value = data.gold_pct;
+                    document.getElementById('configBronzeLimit').value = data.bronze_limit || 25000;
+                    document.getElementById('configBronzePct').value = data.bronze_pct || 2;
+                    document.getElementById('configSilverLimit').value = data.silver_limit || 70000;
+                    document.getElementById('configSilverPct').value = data.silver_pct || 4;
+                    document.getElementById('configGoldLimit').value = data.gold_limit || 200000;
+                    document.getElementById('configGoldPct').value = data.gold_pct || 7;
+                    if (document.getElementById('configDiamondLimit')) document.getElementById('configDiamondLimit').value = data.diamond_limit || 200000;
+                    if (document.getElementById('configDiamondPct')) document.getElementById('configDiamondPct').value = data.diamond_pct || 10;
                 }
             } catch (e) {
                 console.error("Load affiliate settings error:", e);
@@ -1836,7 +1851,9 @@
                         silver_limit: parseFloat(document.getElementById('configSilverLimit').value),
                         silver_pct: parseFloat(document.getElementById('configSilverPct').value),
                         gold_limit: parseFloat(document.getElementById('configGoldLimit').value),
-                        gold_pct: parseFloat(document.getElementById('configGoldPct').value)
+                        gold_pct: parseFloat(document.getElementById('configGoldPct').value),
+                        diamond_limit: parseFloat(document.getElementById('configDiamondLimit') ? document.getElementById('configDiamondLimit').value : 200000),
+                        diamond_pct: parseFloat(document.getElementById('configDiamondPct') ? document.getElementById('configDiamondPct').value : 10)
                     })
                 });
                 const data = await res.json();
