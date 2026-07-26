@@ -1086,8 +1086,8 @@ function setMitsuRegion(region) {
     
     // Update RubiX Bot pricing labels in cards
     document.getElementById('valMitsuLowPrice').textContent = 'Conservateur';
-    document.getElementById('valMitsuNormalPrice').textContent = '2x à 3x plus que le conservateur';
-    document.getElementById('valMitsuExtremePrice').textContent = '2x plus que le modéré';
+    document.getElementById('valMitsuNormalPrice').textContent = 'Modéré';
+    document.getElementById('valMitsuExtremePrice').textContent = 'Débridé';
     
     safeSetText('valMitsuLowAdd', 'Gratuit');
     safeSetText('valMitsuNormalAdd', 'Gratuit');
@@ -1197,8 +1197,8 @@ function initMitsuConfigurator() {
     
     // Reset pricing labels in cards
     document.getElementById('valMitsuLowPrice').textContent = 'Conservateur';
-    document.getElementById('valMitsuNormalPrice').textContent = '2x à 3x plus que le conservateur';
-    document.getElementById('valMitsuExtremePrice').textContent = '2x plus que le modéré';
+    document.getElementById('valMitsuNormalPrice').textContent = 'Modéré';
+    document.getElementById('valMitsuExtremePrice').textContent = 'Débridé';
     safeSetText('valMitsuLowAdd', 'Gratuit');
     safeSetText('valMitsuNormalAdd', 'Gratuit');
     safeSetText('valMitsuExtremeAdd', 'Gratuit');
