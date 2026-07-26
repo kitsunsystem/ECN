@@ -890,34 +890,6 @@
                         <h3 class="font-cinzel text-xl text-white">Configuration : SynapX</h3>
                     </div>
 
-                    <!-- Mode tabs: Perso / Propfirm (Moved to top level to avoid dead end) -->
-                    <div class="space-y-2 max-w-md mx-auto w-full mb-4">
-                        <span class="config-label text-[10px] uppercase tracking-widest text-slate-400 font-bold block text-center">Type de capital</span>
-                        <div class="mode-tabs flex bg-white/5 border border-white/10 rounded-xl p-1">
-                            <button id="tabMitsuPerso" class="flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wider text-amber-400 bg-amber-500/10 font-bold active" onclick="switchMitsuCapType('perso')">Compte Personnel (Perso)</button>
-                            <button id="tabMitsuProp" class="flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wider text-slate-400 hover:text-white" onclick="switchMitsuCapType('propfirm')">Compte Prop Firm</button>
-                        </div>
-                    </div>
-
-                    <!-- Prop Firm contact block -->
-                    <div id="mitsuPropFirmContactBox" class="glass configurator-card p-8 text-center space-y-6 max-w-2xl mx-auto rounded-3xl" style="display: none;">
-                        <div class="w-16 h-16 rounded-full bg-amber-500/5 border border-amber-500/20 flex items-center justify-center mx-auto text-amber-400">
-                            <i data-lucide="shield-alert" class="w-8 h-8"></i>
-                        </div>
-                        <div class="space-y-2">
-                            <h4 class="font-cinzel text-xl text-white font-medium">Service Prop Firm Sur-Mesure</h4>
-                            <p class="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
-                                L'activation de notre algorithme SynapX sur un compte Prop Firm (Challenge ou Compte Validé) est entièrement personnalisée. Nos ingénieurs configurent votre robot sur-mesure pour respecter scrupuleusement les règles strictes de drawdowns quotidien et maximal imposées par votre Prop Firm.
-                            </p>
-                        </div>
-                        <div class="p-4 bg-amber-500/5 border border-amber-500/10 rounded-2xl max-w-md mx-auto text-xs text-slate-300">
-                            ⚙️ <strong>Accès Privé</strong> : Nous ajustons l'exposition, le lot size adaptatif et les protections au cas par cas après analyse de vos contraintes.
-                        </div>
-                        <button class="btn-gold py-3.5 px-8 w-auto text-xs uppercase tracking-widest font-bold mx-auto flex items-center gap-2" onclick="requestLicenseActivation('propfirm')">
-                            <i data-lucide="send" class="w-4 h-4"></i> Contacter notre Support VIP sur Telegram
-                        </button>
-                    </div>
-
                     <div class="config-split grid grid-cols-1 lg:grid-cols-12 gap-6" id="mitsuConfigSplit">
                         <!-- Left: Form -->
                         <div class="glass configurator-card p-6 lg:col-span-7 space-y-6">

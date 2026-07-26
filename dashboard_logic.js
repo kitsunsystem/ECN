@@ -1443,41 +1443,34 @@ function updateMitsuCalculator() {
 }
 
 function updateMitsuPlanDetails() {
-    const isProp = (mitsuCapType === 'propfirm');
     const detailsBox = document.getElementById('mitsuPlanDetailsBox');
     if (!detailsBox) return;
     
     let planTitle = "Plan Conservateur";
     let icon = "🛡️";
-    let monthlyPct = isProp ? "1.5% Brut (1.05% Net)" : "15.0% Brut (10.5% Net)";
-    let weeklyPct = isProp ? "0.34% Brut (0.24% Net)" : "3.5% Brut (2.4% Net)";
-    let risk = isProp ? "Extrêmement Faible" : "Prudent & Modéré";
-    let desc = isProp 
-        ? "Configuration conçue pour passer et conserver les comptes Prop Firm sans enfreindre la limite maximale de drawdown avec partage de profit de 30%."
-        : "Idéal pour sécuriser un capital régulier avec un drawdown minimal et 30% de partage de profits prélevé sur vos gains.";
+    let monthlyPct = "15.0% Brut (10.5% Net)";
+    let weeklyPct = "3.5% Brut (2.4% Net)";
+    let risk = "Prudent & Modéré";
+    let desc = "Idéal pour sécuriser un capital régulier avec un drawdown minimal et 30% de partage de profits prélevé sur vos gains.";
         
     if (mitsuPlan === 'normal') {
         planTitle = "Plan Modéré";
         icon = "⚖️";
-        monthlyPct = isProp ? "4.5% Brut (3.15% Net)" : "45.0% Brut (31.5% Net)";
-        weeklyPct = isProp ? "0.97% Brut (0.68% Net)" : "10.4% Brut (7.3% Net)";
-        risk = isProp ? "Faible" : "Modéré";
-        desc = isProp
-            ? "Profil de risque équilibré idéal pour les challenges Prop Firm avec un objectif de profit journalier confortable et 30% de partage de profits."
-            : "Le meilleur ratio performance/risque pour accroître votre capital personnel de façon constante avec 30% de partage de profits.";
+        monthlyPct = "45.0% Brut (31.5% Net)";
+        weeklyPct = "10.4% Brut (7.3% Net)";
+        risk = "Modéré";
+        desc = "Le meilleur ratio performance/risque pour accroître votre capital personnel de façon constante avec 30% de partage de profits.";
     } else if (mitsuPlan === 'extreme') {
         planTitle = "Plan Débridé";
         icon = "⚡";
-        monthlyPct = isProp ? "10.0% Brut (7.0% Net)" : "100.0% Brut (70.0% Net)";
-        weeklyPct = isProp ? "2.3% Brut (1.6% Net)" : "23.3% Brut (16.3% Net)";
-        risk = isProp ? "Modéré" : "Agressif / Fort Rendement";
-        desc = isProp
-            ? "Maximise les gains sur Prop Firm en poussant l'algorithme vers des objectifs élevés tout en surveillant la limite quotidienne et 30% de partage de profits."
-            : "Conçu pour les investisseurs cherchant des performances de croissance rapides grâce aux intérêts composés (30% de commission sur les gains).";
+        monthlyPct = "100.0% Brut (70.0% Net)";
+        weeklyPct = "23.3% Brut (16.3% Net)";
+        risk = "Agressif / Fort Rendement";
+        desc = "Conçu pour les investisseurs cherchant des performances de croissance rapides grâce aux intérêts composés (30% de commission sur les gains).";
     }
     
     document.getElementById('mitsuDetailIcon').textContent = icon;
-    document.getElementById('mitsuDetailTitle').textContent = `${planTitle} (${mitsuCapType === 'propfirm' ? 'Prop Firm' : 'Perso'})`;
+    document.getElementById('mitsuDetailTitle').textContent = planTitle;
     
     const listHtml = `
         <li>Objectif de profit mensuel : <strong>~${monthlyPct}</strong> par mois</li>
