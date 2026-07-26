@@ -617,8 +617,11 @@ app.post('/api/admin/update-user-affiliate', adminAuthMiddleware, async (req, re
         const { data: user } = await supabase.from('users').select('referral_code, first_name').eq('email', email).maybeSingle();
         let newReferralCode = user ? user.referral_code : null;
         
+        if (newReferralCode && newReferralCode.includes('MITSU')) {
+            newReferralCode = newReferralCode.replace(/MITSU/g, 'SYNAPX');
+        }
         if (is_affiliate_active && (!newReferralCode || newReferralCode.trim() === "")) {
-            const prefix = ((user && user.first_name) ? user.first_name.trim().replace(/[^a-zA-Z]/g, '') : 'MITSU').substring(0, 4).toUpperCase() || 'MITSU';
+            const prefix = 'SYNAPX';
             const randomNum = Math.floor(1000 + Math.random() * 9000);
             newReferralCode = `${prefix}${randomNum}`;
         }
@@ -874,20 +877,35 @@ app.get('/api/dashboard/affiliation', async (req, res) => {
             });
         }
 
-        // Self-healing database cleanup of whitespaces & casing in referral codes
+        // Self-healing database cleanup of whitespaces, casing & migrating MITSU prefix to SYNAPX for everyone
         try {
             const { data: allUsers } = await supabase.from('users').select('email, referral_code, referred_by');
             if (allUsers) {
                 for (const u of allUsers) {
                     let updated = false;
                     const updatePayload = {};
-                    if (u.referral_code && u.referral_code !== u.referral_code.trim().toUpperCase()) {
-                        updatePayload.referral_code = u.referral_code.trim().toUpperCase();
-                        updated = true;
+                    let code = u.referral_code ? u.referral_code.trim().toUpperCase() : null;
+                    let ref = u.referred_by ? u.referred_by.trim().toUpperCase() : null;
+
+                    if (code) {
+                        if (code.includes('MITSU')) {
+                            code = code.replace(/MITSU/g, 'SYNAPX');
+                            updated = true;
+                        }
+                        if (code !== u.referral_code) {
+                            updatePayload.referral_code = code;
+                            updated = true;
+                        }
                     }
-                    if (u.referred_by && u.referred_by !== u.referred_by.trim().toUpperCase()) {
-                        updatePayload.referred_by = u.referred_by.trim().toUpperCase();
-                        updated = true;
+                    if (ref) {
+                        if (ref.includes('MITSU')) {
+                            ref = ref.replace(/MITSU/g, 'SYNAPX');
+                            updated = true;
+                        }
+                        if (ref !== u.referred_by) {
+                            updatePayload.referred_by = ref;
+                            updated = true;
+                        }
                     }
                     if (updated) {
                         await supabase.from('users').update(updatePayload).eq('email', u.email);
@@ -899,8 +917,12 @@ app.get('/api/dashboard/affiliation', async (req, res) => {
         }
         
         let referralCode = user.referral_code;
+        if (referralCode && referralCode.includes('MITSU')) {
+            referralCode = referralCode.replace(/MITSU/g, 'SYNAPX');
+            await supabase.from('users').update({ referral_code: referralCode }).eq('email', email);
+        }
         if (!referralCode || referralCode.trim() === "") {
-            const prefix = 'MITSU';
+            const prefix = 'SYNAPX';
             const randomNum = Math.floor(1000 + Math.random() * 9000);
             referralCode = `${prefix}${randomNum}`;
             await supabase.from('users').update({ referral_code: referralCode }).eq('email', email);

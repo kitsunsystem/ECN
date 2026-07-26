@@ -625,6 +625,35 @@ export async function onRequest(context) {
                 });
             }
             
+            // Self-healing migration of MITSU referral codes & referred_by fields to SYNAPX
+            try {
+                const { data: allUsersToMigrate } = await supabase.from('users').select('email, referral_code, referred_by');
+                if (allUsersToMigrate) {
+                    for (const u of allUsersToMigrate) {
+                        let updated = false;
+                        const updatePayload = {};
+                        let code = u.referral_code ? u.referral_code.trim().toUpperCase() : null;
+                        let ref = u.referred_by ? u.referred_by.trim().toUpperCase() : null;
+
+                        if (code && code.includes('MITSU')) {
+                            code = code.replace(/MITSU/g, 'SYNAPX');
+                            updatePayload.referral_code = code;
+                            updated = true;
+                        }
+                        if (ref && ref.includes('MITSU')) {
+                            ref = ref.replace(/MITSU/g, 'SYNAPX');
+                            updatePayload.referred_by = ref;
+                            updated = true;
+                        }
+                        if (updated) {
+                            await supabase.from('users').update(updatePayload).eq('email', u.email);
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Migration error in all-data:", e);
+            }
+
             const { data: users } = await supabase.from('users').select('*');
             const { data: accounts } = await supabase.from('accounts').select('*');
             
@@ -1295,20 +1324,35 @@ export async function onRequest(context) {
                 });
             }
 
-            // Self-healing database cleanup of whitespaces & casing in referral codes
+            // Self-healing database cleanup of whitespaces, casing & migrating MITSU prefix to SYNAPX for everyone
             try {
                 const { data: allUsers } = await supabase.from('users').select('email, referral_code, referred_by');
                 if (allUsers) {
                     for (const u of allUsers) {
                         let updated = false;
                         const updatePayload = {};
-                        if (u.referral_code && u.referral_code !== u.referral_code.trim().toUpperCase()) {
-                            updatePayload.referral_code = u.referral_code.trim().toUpperCase();
-                            updated = true;
+                        let code = u.referral_code ? u.referral_code.trim().toUpperCase() : null;
+                        let ref = u.referred_by ? u.referred_by.trim().toUpperCase() : null;
+
+                        if (code) {
+                            if (code.includes('MITSU')) {
+                                code = code.replace(/MITSU/g, 'SYNAPX');
+                                updated = true;
+                            }
+                            if (code !== u.referral_code) {
+                                updatePayload.referral_code = code;
+                                updated = true;
+                            }
                         }
-                        if (u.referred_by && u.referred_by !== u.referred_by.trim().toUpperCase()) {
-                            updatePayload.referred_by = u.referred_by.trim().toUpperCase();
-                            updated = true;
+                        if (ref) {
+                            if (ref.includes('MITSU')) {
+                                ref = ref.replace(/MITSU/g, 'SYNAPX');
+                                updated = true;
+                            }
+                            if (ref !== u.referred_by) {
+                                updatePayload.referred_by = ref;
+                                updated = true;
+                            }
                         }
                         if (updated) {
                             await supabase.from('users').update(updatePayload).eq('email', u.email);
@@ -1320,12 +1364,16 @@ export async function onRequest(context) {
             }
             
             let referralCode = user.referral_code;
+            if (referralCode && referralCode.includes('MITSU')) {
+                referralCode = referralCode.replace(/MITSU/g, 'SYNAPX');
+                await supabase.from('users').update({ referral_code: referralCode }).eq('email', email);
+            }
             let isAffActive = user.is_affiliate_active;
             
             if (!referralCode || referralCode.trim() === "" || !isAffActive) {
                 const updatePayload = {};
                 if (!referralCode || referralCode.trim() === "") {
-                    const prefix = 'MITSU';
+                    const prefix = 'SYNAPX';
                     const randomNum = Math.floor(1000 + Math.random() * 9000);
                     referralCode = `${prefix}${randomNum}`;
                     updatePayload.referral_code = referralCode;
@@ -1659,9 +1707,11 @@ export async function onRequest(context) {
             // Check if user already has a referral code, generate one if active and missing
             const { data: user } = await supabase.from('users').select('referral_code, first_name').eq('email', email).maybeSingle();
             let newReferralCode = user ? user.referral_code : null;
-            
+            if (newReferralCode && newReferralCode.includes('MITSU')) {
+                newReferralCode = newReferralCode.replace(/MITSU/g, 'SYNAPX');
+            }
             if (is_affiliate_active && (!newReferralCode || newReferralCode.trim() === "")) {
-                const prefix = ((user && user.first_name) ? user.first_name.trim().replace(/[^a-zA-Z]/g, '') : 'MITSU').substring(0, 4).toUpperCase() || 'MITSU';
+                const prefix = 'SYNAPX';
                 const randomNum = Math.floor(1000 + Math.random() * 9000);
                 newReferralCode = `${prefix}${randomNum}`;
             }
