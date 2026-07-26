@@ -3845,6 +3845,27 @@ async function loadAffiliationData() {
         const pctEl = document.getElementById('affCommissionPercentage');
         if (pctEl) pctEl.textContent = `${data.commission_rate}.00%`;
         
+        // Highlight active tier card in breakdown grid
+        ['Bronze', 'Silver', 'Gold'].forEach(t => {
+            const cardEl = document.getElementById(`tierCard${t}`);
+            const badgeEl = document.getElementById(`tierBadge${t}`);
+            const isCurrentRank = rank.toLowerCase() === t.toLowerCase();
+            
+            if (cardEl) {
+                if (isCurrentRank) {
+                    cardEl.style.borderColor = t === 'Gold' ? 'rgba(234, 179, 8, 0.8)' : t === 'Silver' ? 'rgba(226, 232, 240, 0.8)' : 'rgba(245, 158, 11, 0.8)';
+                    cardEl.style.boxShadow = '0 0 20px rgba(245, 158, 11, 0.2)';
+                } else {
+                    cardEl.style.borderColor = '';
+                    cardEl.style.boxShadow = '';
+                }
+            }
+            if (badgeEl && isCurrentRank) {
+                badgeEl.textContent = "★ RANG ACTUEL ★";
+                badgeEl.className = "text-[9px] uppercase tracking-widest font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40";
+            }
+        });
+        
         // Calculate weekly commission and update UI
         const weeklyCommEl = document.getElementById('affWeeklyCommission');
         if (weeklyCommEl) weeklyCommEl.textContent = `$${data.weekly_commission.toFixed(2)}`;
