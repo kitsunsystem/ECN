@@ -1085,9 +1085,9 @@ function setMitsuRegion(region) {
     const symbol = isEU ? '€' : '$';
     
     // Update RubiX Bot pricing labels in cards
-    document.getElementById('valMitsuLowPrice').textContent = 'Jusqu\'à 15%';
-    document.getElementById('valMitsuNormalPrice').textContent = 'Jusqu\'à 45%';
-    document.getElementById('valMitsuExtremePrice').textContent = 'Jusqu\'à 100%';
+    document.getElementById('valMitsuLowPrice').textContent = 'Conservateur';
+    document.getElementById('valMitsuNormalPrice').textContent = '2x à 3x plus';
+    document.getElementById('valMitsuExtremePrice').textContent = '2x plus';
     
     safeSetText('valMitsuLowAdd', 'Gratuit');
     safeSetText('valMitsuNormalAdd', 'Gratuit');
@@ -1196,9 +1196,9 @@ function initMitsuConfigurator() {
     if (btnLionAF) btnLionAF.classList.remove('active');
     
     // Reset pricing labels in cards
-    document.getElementById('valMitsuLowPrice').textContent = 'Jusqu\'à 15%';
-    document.getElementById('valMitsuNormalPrice').textContent = 'Jusqu\'à 45%';
-    document.getElementById('valMitsuExtremePrice').textContent = 'Jusqu\'à 100%';
+    document.getElementById('valMitsuLowPrice').textContent = 'Conservateur';
+    document.getElementById('valMitsuNormalPrice').textContent = '2x à 3x plus';
+    document.getElementById('valMitsuExtremePrice').textContent = '2x plus';
     safeSetText('valMitsuLowAdd', 'Gratuit');
     safeSetText('valMitsuNormalAdd', 'Gratuit');
     safeSetText('valMitsuExtremeAdd', 'Gratuit');
@@ -1287,9 +1287,9 @@ function requestLicenseActivation(overrideType) {
         message = "Bonjour, je souhaite obtenir une licence SynapX sur-mesure pour mon compte Prop Firm.";
     } else {
         const capital = document.getElementById('mitsuSimCapital')?.value || "1000";
-        let planLabel = "Conservateur (15%)";
-        if (mitsuPlan === 'normal') planLabel = "Équilibré (45%)";
-        else if (mitsuPlan === 'extreme') planLabel = "Débridé (100%)";
+        let planLabel = "Conservateur";
+        if (mitsuPlan === 'normal') planLabel = "Modéré";
+        else if (mitsuPlan === 'extreme') planLabel = "Débridé";
         
         message = `Bonjour, je souhaite activer ma licence SynapX gratuite pour mon compte Personnel.\n\nConfiguration choisie :\n- Capital de départ : ${capital}$\n- Mode choisi : ${planLabel}\n- Partage de profits : 30% sur gains`;
     }
@@ -1457,11 +1457,11 @@ function updateMitsuPlanDetails() {
         : "Idéal pour sécuriser un capital régulier avec un drawdown minimal et 30% de partage de profits prélevé sur vos gains.";
         
     if (mitsuPlan === 'normal') {
-        planTitle = "Plan Équilibré";
+        planTitle = "Plan Modéré";
         icon = "⚖️";
         monthlyPct = isProp ? "4.5% Brut (3.15% Net)" : "45.0% Brut (31.5% Net)";
         weeklyPct = isProp ? "0.97% Brut (0.68% Net)" : "10.4% Brut (7.3% Net)";
-        risk = isProp ? "Faible" : "Équilibré";
+        risk = isProp ? "Faible" : "Modéré";
         desc = isProp
             ? "Profil de risque équilibré idéal pour les challenges Prop Firm avec un objectif de profit journalier confortable et 30% de partage de profits."
             : "Le meilleur ratio performance/risque pour accroître votre capital personnel de façon constante avec 30% de partage de profits.";
