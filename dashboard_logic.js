@@ -2327,6 +2327,12 @@ function closeTutoVideoModal() {
     const modal = document.getElementById('tutoVideoModal');
     if (modal) {
         modal.style.display = 'none';
+        const iframe = document.getElementById('tutoVideoIframe');
+        if (iframe) {
+            const src = iframe.src;
+            iframe.src = '';
+            iframe.src = src;
+        }
     }
     
     if (currentUser && currentUser.email) {
