@@ -895,6 +895,40 @@
     </div>
 
     <script>
+        function showToast(message, type = 'info') {
+            let container = document.getElementById('mitsuToastContainer');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'mitsuToastContainer';
+                container.className = 'mitsu-toast-container';
+                document.body.appendChild(container);
+            }
+            
+            const toast = document.createElement('div');
+            toast.className = `mitsu-toast ${type}`;
+            
+            let icon = '💡';
+            if (type === 'success') icon = '✅';
+            else if (type === 'error') icon = '❌';
+            else if (type === 'warning') icon = '⚠️';
+            else if (type === 'info') icon = '✨';
+            
+            toast.innerHTML = `
+                <span class="mitsu-toast-icon">${icon}</span>
+                <span class="mitsu-toast-message">${message}</span>
+                <button class="mitsu-toast-close" onclick="this.parentElement.remove()">×</button>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 10);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
         let adminPass = "";
         let masterData = [];
         let activeEmail = "";
@@ -1134,8 +1168,8 @@
         }
 
         function getAffiliateStats(user) {
-            if (!user.is_affiliate_active) {
-                return { totalCapital: 0, weeklyComm: 0, withdrawnComm: 0, withdrawableComm: 0, rankTitle: '🥉 Bronze', rate: affiliateSettings.bronze_pct / 100, cryptoAddress: "" };
+            if (!user || !user.is_affiliate_active) {
+                return { totalCapital: 0, weeklyComm: 0, projectedComm: 0, withdrawnComm: 0, withdrawableComm: 0, rankTitle: '🥉 Bronze', rate: (affiliateSettings.bronze_pct || 2) / 100, cryptoAddress: "" };
             }
 
             const code = user.referral_code ? user.referral_code.trim().toUpperCase() : "";
@@ -1205,6 +1239,7 @@
             return {
                 totalCapital: totalCapitalBrought,
                 weeklyComm,
+                projectedComm: weeklyComm,
                 withdrawnComm,
                 withdrawableComm,
                 rankTitle: title,
@@ -1256,10 +1291,10 @@
             }
 
             // Calculations for affiliation financial stats using helper
-            const stats = getAffiliateStats(data.user);
-            const projectedComm = stats.projectedComm;
-            const withdrawnComm = stats.withdrawnComm;
-            const withdrawableComm = stats.withdrawableComm;
+            const stats = getAffiliateStats(data.user) || {};
+            const projectedComm = stats.projectedComm ?? stats.weeklyComm ?? 0;
+            const withdrawnComm = stats.withdrawnComm ?? 0;
+            const withdrawableComm = stats.withdrawableComm ?? 0;
 
             document.getElementById('detAffStatBrut').textContent = projectedComm.toLocaleString(undefined, {minimumFractionDigits: 2}) + " €";
             document.getElementById('detAffStatWithdrawn').textContent = withdrawnComm.toLocaleString(undefined, {minimumFractionDigits: 2}) + " €";
