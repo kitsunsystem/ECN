@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mitsuyoshi System - Outro Professionnelle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;700&display=swap');
+
+        :root {
+            --gold: #c5a059;
+            --gold-light: #e2c28a;
+        }
+
+        body {
+            background-color: #050505;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Container Principal */
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 2rem;
+        }
+
+        /* Logo avec animation de révélation douce */
+        .logo-wrap {
+            position: relative;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeIn 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-img {
+            width: 280px;
+            filter: drop-shadow(0 0 50px rgba(197, 160, 89, 0.15));
+            transition: filter 1s ease;
+        }
+
+        /* Titre Institutionnel */
+        .brand-title {
+            font-weight: 100;
+            font-size: 2.5rem;
+            letter-spacing: 1.2rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            animation: revealText 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+            background: linear-gradient(to bottom, #fff 0%, #aaa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-title b {
+            font-weight: 700;
+            letter-spacing: 1.3rem;
+        }
+
+        /* Slogan Raffiné */
+        .slogan {
+            font-weight: 400;
+            font-size: 0.9rem;
+            letter-spacing: 0.4rem;
+            text-transform: uppercase;
+            color: var(--gold);
+            opacity: 0;
+            animation: revealText 1.5s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
+        }
+
+        @keyframes revealText {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Décoration de fond : Lueur Radiale */
+        .ambient-glow {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, rgba(197, 160, 89, 0.05) 0%, transparent 70%);
+            z-index: -1;
+            animation: glowBreath 8s infinite alternate;
+        }
+
+        @keyframes glowBreath {
+            from { opacity: 0.4; transform: scale(1); }
+            to { opacity: 0.8; transform: scale(1.2); }
+        }
+
+        /* Barre de séparation cinématique */
+        .divider {
+            width: 0px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+            animation: expandDivider 2s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+        }
+
+        @keyframes expandDivider {
+            to { width: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+
+    <div class="main-wrapper">
+        <!-- Logo Section -->
+        <div class="logo-wrap">
+            <img src="icon.png" alt="Mitsuyoshi Icon" class="logo-img">
+        </div>
+
+        <!-- Text Section -->
+        <div class="flex flex-col items-center">
+            <h1 class="brand-title">Mitsuyoshi <b>System</b></h1>
+            <div class="divider mb-4"></div>
+            <p class="slogan">La Révolution est Personnalisée.</p>
+        </div>
+    </div>
+
+    <!-- Script pour interaction -->
+    <script>
+        // Relance l'animation au clic pour faciliter les prises vidéo
+        document.body.addEventListener('click', () => {
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                window.location.reload();
+            }, 300);
+        });
+    </script>
+
+</body>
+</html>

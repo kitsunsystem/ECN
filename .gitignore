@@ -1,0 +1,8 @@
+node_modules/
+db_stats.json
+server_log.txt
+.DS_Store
+*.log
+.env
+presentation_player.html
+build_presentation.js

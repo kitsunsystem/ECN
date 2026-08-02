@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<title>Mitsuyoshi System — Présentation Élite</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Playfair+Display:ital,wght@1,500;1,700&amp;family=Outfit:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --theme: #d4af37;
+            --violet: #8b5cf6;
+            --magenta: #d946ef;
+            --bg: #030208;
+            --text-dim: #9ca3af;
+            --text-bright: #f3f4f6;
+            --border: rgba(255, 255, 255, 0.08);
+            --glass: rgba(12, 8, 34, 0.65);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0b0914;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-bright);
+            overflow-y: auto;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* Screen display container */
+        .presentation-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        /* Slide Dimensions matching A4 Landscape */
+        .slide {
+            width: 297mm;
+            height: 210mm;
+            margin: 25px auto;
+            background: var(--bg);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 20mm 20mm;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            page-break-after: always;
+            break-after: page;
+        }
+
+        /* Ambient rotating CSS gradient blobs */
+        .glow-blobs {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.13;
+            mix-blend-mode: screen;
+        }
+
+        .blob-1 {
+            width: 140mm;
+            height: 140mm;
+            background: var(--violet);
+            top: -30mm;
+            right: -30mm;
+        }
+
+        .blob-2 {
+            width: 120mm;
+            height: 120mm;
+            background: var(--magenta);
+            bottom: -30mm;
+            left: -30mm;
+        }
+
+        .blob-3 {
+            width: 100mm;
+            height: 100mm;
+            background: var(--theme);
+            top: 45%;
+            left: 45%;
+            opacity: 0.07;
+        }
+
+        /* Cyber grid overlay */
+        .cyber-grid {
+            position: absolute;
+            inset: 0;
+            background-size: 15mm 15mm;
+            background-image: 
+                linear-gradient(to right, rgba(139, 92, 246, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(139, 92, 246, 0.03) 1px, transparent 1px);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Slide Header & Footer */
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 9pt;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--violet);
+            margin-bottom: 2mm;
+            position: relative;
+            z-index: 5;
+        }
+
+        .slide-subtitle {
+            color: #6b7280;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .slide-divider {
+            height: 1px;
+            background: linear-gradient(90deg, var(--theme) 0%, rgba(212, 175, 55, 0.1) 100%);
+            margin-bottom: 5mm;
+            position: relative;
+            z-index: 5;
+        }
+
+        .slide-footer {
+            position: absolute;
+            bottom: 8mm;
+            left: 20mm;
+            right: 20mm;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 7.5pt;
+            color: #555866;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 3mm;
+            z-index: 5;
+        }
+
+        .footer-left {
+            color: var(--theme);
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .footer-center {
+            font-weight: 500;
+        }
+
+        .footer-right {
+            color: var(--violet);
+            font-weight: 800;
+        }
+
+        /* Grid Content Layout with Variations */
+        .slide-content {
+            display: grid;
+            gap: 8mm;
+            flex: 1;
+            position: relative;
+            z-index: 5;
+            align-content: stretch;
+            min-height: 0;
+        }
+
+        /* Default 2-column layout */
+        .slide-content.layout-2cols {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        /* 1 Full-width Column */
+        .slide-content.layout-full {
+            grid-template-columns: 1fr;
+        }
+
+        /* Asymmetric columns (65% / 35%) */
+        .slide-content.layout-2cols-asym {
+            grid-template-columns: 1.8fr 1.2fr;
+        }
+
+        /* Asymmetric columns reverse (35% / 65%) */
+        .slide-content.layout-2cols-reverse {
+            grid-template-columns: 1.2fr 1.8fr;
+        }
+
+        /* 3 columns layout */
+        .slide-content.layout-3cols {
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6mm;
+        }
+
+        /* 4 columns layout */
+        .slide-content.layout-4cols {
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 4.5mm;
+        }
+
+        /* Stacked vertical layout */
+        .slide-content.layout-stacked {
+            display: flex;
+            flex-direction: column;
+            gap: 5mm;
+        }
+
+        /* Glassmorphic Panels */
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(139, 92, 246, 0.22);
+            border-radius: 16px;
+            padding: 8mm 10mm;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            height: 100%;
+        }
+
+        .card.gold-border {
+            border-color: rgba(212, 175, 55, 0.32);
+        }
+
+        .card.red-border {
+            border-color: rgba(239, 68, 68, 0.35);
+        }
+
+        /* Cover Page Styling */
+        .slide.cover {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0;
+        }
+
+        .cover-content {
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .cover-logo {
+            width: 32mm;
+            height: 32mm;
+            margin-bottom: 8mm;
+            filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.25));
+        }
+
+        .cover-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 38pt;
+            font-weight: 900;
+            letter-spacing: -1px;
+            color: #ffffff;
+            margin: 0 0 3mm 0;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .cover-subtitle {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 15pt;
+            color: var(--theme);
+            margin: 0 0 12mm 0;
+            letter-spacing: 0.5px;
+        }
+
+        .cover-card {
+            width: 170mm;
+            background: rgba(12, 8, 34, 0.75);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+            padding: 7mm 12mm;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.7);
+        }
+
+        /* Highlight box */
+        .callout-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: rgba(212, 175, 55, 0.05);
+            border: 2px dashed var(--theme);
+            border-radius: 12px;
+            padding: 10mm;
+            height: 100%;
+            width: 100%;
+}
+
+        .callout-num {
+            font-family: 'Outfit', sans-serif;
+            font-size: 38pt;
+            font-weight: 900;
+            color: var(--theme);
+            margin-bottom: 2mm;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+}
+
+        /* Typography */
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 28pt;
+            font-weight: 800;
+            color: #ffffff;
+            margin-top: 0;
+            margin-bottom: 3.5mm;
+            display: flex;
+            align-items: center;
+            gap: 3mm;
+            position: relative;
+            z-index: 5;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-weight: 700;
+            font-size: 19pt;
+            color: var(--theme);
+            margin-top: 0;
+            margin-bottom: 5.5mm;
+            border-left: 2.5px solid var(--theme);
+            padding-left: 4.5mm;
+        }
+
+        h2.violet {
+            color: var(--violet);
+            border-left-color: var(--violet);
+        }
+
+        p {
+            font-size: 13.5pt;
+            line-height: 1.8;
+            color: var(--text-dim);
+            margin-top: 0;
+            margin-bottom: 5mm;
+        }
+
+        p strong {
+            color: #ffffff;
+        }
+
+        ul {
+            margin-top: 0;
+            margin-bottom: 5mm;
+            padding-left: 5mm;
+        }
+
+        li {
+            font-size: 13pt;
+            line-height: 1.85;
+            color: var(--text-dim);
+            margin-bottom: 3mm;
+        }
+
+        li strong {
+            color: #ffffff;
+        }
+
+        /* Styled Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2mm;
+            margin-bottom: 3mm;
+        }
+
+        th, td {
+            padding: 2.5mm 4mm;
+            text-align: left;
+            font-size: 11pt;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: #ffffff;
+            background: rgba(139, 92, 246, 0.12);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            color: #d1d5db;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Setup Guides and Stages */
+        .step-container {
+            display: flex;
+            flex-direction: column;
+            gap: 3.5mm;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 4mm;
+            align-items: flex-start;
+        }
+
+        .step-num {
+            width: 9.5mm;
+            height: 9.5mm;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1.5px solid var(--theme);
+            color: var(--theme);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 11.5pt;
+            margin-top: 0.5mm;
+            flex-shrink: 0;
+}
+
+        .step-num.violet {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: var(--violet);
+            color: var(--violet);
+        }
+
+        .step-text {
+            flex: 1;
+        }
+
+        .step-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 12.5pt;
+            color: #ffffff;
+            margin-bottom: 1mm;
+        }
+
+        /* Compact overrides for dense grids */
+        .dense .card {
+            padding: 6mm 8mm;
+        }
+        .dense h2 {
+            font-size: 15.5pt;
+            margin-bottom: 2.5mm;
+        }
+        .dense li {
+            font-size: 11pt;
+            line-height: 1.55;
+            margin-bottom: 1.5mm;
+        }
+        .dense p {
+            font-size: 11.5pt;
+            line-height: 1.55;
+            margin-bottom: 3mm;
+        }
+        .dense ul {
+            margin-bottom: 2mm;
+        }
+
+        /* Print Media Overrides */
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 0;
+            }
+            body {
+                background: var(--bg);
+            }
+            .presentation-container {
+                padding: 0;
+            }
+            .slide {
+                margin: 0;
+                box-shadow: none;
+                border: none;
+                width: 297mm;
+                height: 210mm;
+                page-break-after: always;
+                break-after: page;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="presentation-container">
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 1: COVER -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide cover">
+<div class="glow-blobs">
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+</div>
+<div class="cyber-grid"></div>
+<div class="cover-content">
+<img alt="Logo Mitsuyoshi" class="cover-logo" onerror="this.style.display='none'" src="icon.png"/>
+<h1 class="cover-title">MITSUYOSHI SYSTEM</h1>
+<p class="cover-subtitle">Présentation Complète de l'Écosystème &amp; Solutions Algorithmiques</p>
+<div class="cover-card">
+<p style="text-align: center; margin: 0; font-size: 13.5pt; line-height: 1.8; color: #a3a3c2;">
+<strong>ANALYSE QUANTITATIVE &amp; INFRASTRUCTURE ÉLITE</strong><br/>
+                        Un écosystème de trading automatisé clé en main, alliant rigueur mathématique,<br/>
+                        gestion stricte des risques et transparence totale. Propulsé par <strong>Kitsun System</strong>.
+                    </p>
+</div>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 2: SOMMAIRE -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">Table des Matières</span>
+</div>
+<div class="slide-divider"></div>
+<h1>Sommaire Général</h1>
+<div class="slide-content layout-3cols dense">
+<div class="card">
+<h2 class="violet">Partie I : Histoire &amp; Accès</h2>
+<ul>
+<li><strong>01. L'Équipe Fondatrice</strong><br/>Profils de Marco, Yassine et Cyril.</li>
+<li><strong>02. Philosophie &amp; Engagement</strong><br/>Rigueur statistique et survie du capital.</li>
+<li><strong>03. Partenaire Technologique</strong><br/>Rôle applicatif et Cloud de Kitsun System.</li>
+<li><strong>04. Hébergement VPS Élite</strong><br/>Sécurité de l'exécution continue 24h/24.</li>
+</ul>
+</div>
+<div class="card gold-border">
+<h2 class="violet">Partie II : Infrastructure &amp; Bot</h2>
+<ul>
+<li><strong>05. Sécurité &amp; Courtiers</strong><br/>Comptes ségrégués et brokers partenaires.</li>
+<li><strong>06. Modèle Bypass</strong><br/>Suppression des abonnements VPS.</li>
+<li><strong>07. Mitsuyoshi Bot (Maitre)</strong><br/>Algorithme de suivi de tendance.</li>
+<li><strong>08. Gestion des Risques</strong><br/>Systèmes coupe-circuits et stop-loss.</li>
+</ul>
+</div>
+<div class="card">
+<h2 class="violet">Partie III : Offres &amp; Lancement</h2>
+<ul>
+<li><strong>09. Palier Minimal (&lt; 1k EUR)</strong><br/>Money management sur petit capital.</li>
+<li><strong>10. Mode Perso vs Prop Firm</strong><br/>Ajustements selon le type de compte.</li>
+<li><strong>11. Lion X &amp; Comptes CENT</strong><br/>Trading agressive et protocole de retrait.</li>
+<li><strong>12. Tarification &amp; Affiliation</strong><br/>Grille tarifaire unique et ambassadeurs.</li>
+<li><strong>13. Guide de Démarrage &amp; FAQ</strong><br/>Lancement pas à pas et questions.</li>
+</ul>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">SOMMAIRE</span>
+<span class="footer-center">MITSUYOSHI SYSTEM ECOSYSTEM</span>
+<span class="footer-right">PAGE 2 SUR 22</span>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 3: QUI SOMMES-NOUS ? LES FONDATEURS -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">01. Histoire &amp; Fondations</span>
+</div>
+<div class="slide-divider"></div>
+<h1>L'Équipe Fondatrice</h1>
+<div class="slide-content layout-2cols-asym">
+<div class="card gold-border">
+<h2>Co-fondateurs : Yassine &amp; Marco</h2>
+<div style="display: flex; gap: 5mm; align-items: flex-start; margin-bottom: 4mm;">
+<img src="marco.webp" style="width: 18mm; height: 18mm; border-radius: 12px; border: 1.5px solid var(--theme); object-fit: cover;"/>
+<div>
+<p style="margin-bottom: 1mm;"><strong>Marco (Co-fondateur)</strong> : 42 ans. Gère l'image de marque, le marketing et les relations clients, fort d'une solide expérience en direction de projets financiers.</p>
+</div>
+</div>
+<div style="display: flex; gap: 5mm; align-items: flex-start;">
+<div style="width: 18mm; height: 18mm; border-radius: 12px; border: 1.5px solid var(--theme); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 18pt; flex-shrink: 0;">📊</div>
+<div>
+<p style="margin-bottom: 0;"><strong>Yassine (Co-fondateur)</strong> : Concepteur quantitatif. Fort de 6 ans d'expérience sur les marchés financiers, il gère la logique mathématique et l'étalonnage technique des presets de risque.</p>
+</div>
+</div>
+</div>
+<div class="card" style="align-items: center; text-align: center; justify-content: center;">
+<img src="cyril.webp" style="width: 25mm; height: 25mm; border-radius: 50%; border: 2px solid var(--violet); margin-bottom: 4mm; object-fit: cover;"/>
+<h2 style="border: none; padding: 0; margin-bottom: 2mm;">Cyril : Partenaire</h2>
+<p style="margin-bottom: 0; line-height: 1.7">Investisseur et partenaire stratégique, Cyril intervient sur l'analyse de cybersécurité et de la stabilité réseau. Il stresse-teste activement nos algorithmes en conditions réelles.</p>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">01. HISTORIQUE</span>
+<span class="footer-center">CO-FONDATEURS &amp; PARTENAIRES</span>
+<span class="footer-right">PAGE 3 SUR 22</span>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 4: PHILOSOPHIE & ENGAGEMENT ÉTHIQUE -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">01. Histoire &amp; Fondations</span>
+</div>
+<div class="slide-divider"></div>
+<h1>Philosophie &amp; Engagement</h1>
+<div class="slide-content layout-3cols">
+<div class="card">
+<h2>Vérité Statistique</h2>
+<p>Le marché du trading est risqué. Nous rejetons fermement les promesses irréalistes de richesse instantanée.</p>
+<p style="margin-bottom: 0">Le <strong>risque zéro n'existe pas</strong>, et la transparence quant aux risques est notre premier engagement.</p>
+</div>
+<div class="card gold-border">
+<h2>Survie du Capital</h2>
+<p>Notre première règle est la protection de votre mise de départ avant la recherche de rendements excessifs.</p>
+<p style="margin-bottom: 0">L'algorithme bride son exposition pour assurer la pérennité du compte sur le long terme.</p>
+</div>
+<div class="card">
+<h2>Stress-Testing Réel</h2>
+<p>Tous nos presets sont validés sur des backtests massifs et testés en direct sur des comptes internes.</p>
+<p style="margin-bottom: 0">Les statistiques fournies proviennent de connexions directes aux courtiers, excluant toute altération.</p>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">01. PHILOSOPHIE</span>
+<span class="footer-center">TRANSPARENCE &amp; ENGAGEMENT ÉTHIQUE</span>
+<span class="footer-right">PAGE 4 SUR 22</span>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 5: LE RÔLE CLÉ DE KITSUN SYSTEM -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">01. Histoire &amp; Fondations</span>
+</div>
+<div class="slide-divider"></div>
+<h1>Partenaire Technique : Kitsun System</h1>
+<div class="slide-content layout-stacked">
+<div class="card" style="flex: 1.05; justify-content: center; padding: 10mm 12mm;">
+<h2>Développement Web &amp; Espace VIP</h2>
+<p style="margin-bottom: 0;  line-height: 1.75"><strong>Kitsun System</strong> est l'architecte applicatif de Mitsuyoshi. Il a conçu le site d'accueil, l'espace membre interactif privé (Dashboard VIP adaptatif) et le simulateur de profit. L'interface centralise le solde, la courbe d'équité et le relevé de transactions en temps réel.</p>
+</div>
+<div style="display: grid; grid-template-columns: 1.5fr 1.5fr; gap: 8mm; flex: 1.15;">
+<div class="card gold-border" style="justify-content: center; padding: 10mm 12mm;">
+<h2>Infrastructure Serveur &amp; Cloud</h2>
+<p style="margin-bottom: 0;  line-height: 1.7">Kitsun administre les serveurs privés virtuels (VPS) hébergeant les terminaux clients et sécurise les liaisons API permettant la mise à jour instantanée des données.</p>
+</div>
+<div class="card" style="align-items: center; justify-content: center; background: rgba(139, 92, 246, 0.04); border-color: rgba(139,92,246,0.3); padding: 8mm;">
+<img src="kitsun_logo_haut.png" style="width: 105mm; max-width: 90%; filter: drop-shadow(0 0 15px rgba(139,92,246,0.35));"/>
+</div>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">01. PARTENAIRE</span>
+<span class="footer-center">KITSUN SYSTEM ROLE</span>
+<span class="footer-right">PAGE 5 SUR 22</span>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 6: L'HÉBERGEMENT VPS DÉDIÉ 24H/24 -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">02. Infrastructure &amp; Accès</span>
+</div>
+<div class="slide-divider"></div>
+<h1>L'Hébergement VPS Élite</h1>
+<div class="slide-content layout-2cols-asym">
+<div class="card">
+<h2>Exécution Continue sans Interruption</h2>
+<p>Pour exécuter un algorithme de trading de manière optimale, le terminal MT5 doit rester connecté 24h/24 aux flux de marché.</p>
+<p>Un ordinateur de maison n'offre pas la stabilité nécessaire face aux coupures de courant, pertes de réseau internet ou redémarrages système.</p>
+<p style="margin-bottom: 0;">L'hébergement professionnel assure un <strong>uptime supérieur à 99.9%</strong> et élimine le slippage grâce à des serveurs installés au plus proche des courtiers.</p>
+</div>
+<div class="card gold-border" style="justify-content: center; padding: 10mm;">
+<div class="callout-box" style="padding: 10mm;">
+<div class="callout-num">99.9%</div>
+<p style="font-weight: bold; color: var(--theme); margin-bottom: 0; letter-spacing: 1px">Uptime Serveur Garanti</p>
+<p style="color: var(--text-dim); margin-top: 3.5mm; margin-bottom: 0; line-height: 1.7">Latence minimale &amp; zéro contrainte matérielle pour l'investisseur.</p>
+</div>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">02. INFRASTRUCTURE</span>
+<span class="footer-center">VPS HEBERGEMENT CONTINU 24/7</span>
+<span class="footer-right">PAGE 6 SUR 22</span>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 7: LES COURTIERS ET COMPTES SÉGREGÉS -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">02. Infrastructure &amp; Accès</span>
+</div>
+<div class="slide-divider"></div>
+<h1>Sécurité Bancaire : Brokers Partenaires</h1>
+<div class="slide-content layout-2cols-reverse">
+<div style="display: flex; flex-direction: column; gap: 6mm;">
+<div class="card">
+<h2>Vantage Markets</h2>
+<p style="margin-bottom: 0; line-height: 1.6">Broker mondial régulé (ASIC, FCA, VFSC) offrant une sécurité institutionnelle éprouvée.</p>
+</div>
+<div class="card gold-border">
+<h2>PuPrime</h2>
+<p style="margin-bottom: 0; line-height: 1.6">Idéal pour ses vitesses d'exécution exceptionnelles et le support natif des comptes CENT.</p>
+</div>
+</div>
+<div class="card">
+<h2>Le Rôle du Broker &amp; Ségrégation</h2>
+<p>Le courtier est l'entité habilitée à détenir votre capital et à exécuter les ordres sur les marchés. <strong>Mitsuyoshi Systems ne détient pas votre capital.</strong></p>
+<p>Vous ouvrez votre compte à votre nom propre et conservez le contrôle exclusif de vos dépôts et de vos retraits.</p>
+<p style="margin-bottom: 0;">Nos courtiers appliquent la <strong>ségrégation des fonds</strong> : votre capital est conservé dans des banques internationales majeures, totalement séparé des comptes opérationnels du broker.</p>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">02. SÉCURITÉ</span>
+<span class="footer-center">COURTIERS PARTENAIRES REGULES</span>
+<span class="footer-right">PAGE 7 SUR 22</span>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 8: LA TECHNOLOGIE RÉVOLUTIONNAIRE BYPASS -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">02. Infrastructure &amp; Accès</span>
+</div>
+<div class="slide-divider"></div>
+<h1>Le Modèle Révolutionnaire Bypass</h1>
+<div class="slide-content layout-full">
+<div class="card gold-border">
+<h2>Élimination des Abonnements VPS pour le client</h2>
+<p>La majorité des services concurrents imposent des abonnements récurrents lourds (location du robot + frais de serveur VPS), ce qui ampute directement la rentabilité, surtout pour les comptes modestes.</p>
+<p>Grâce à notre architecture optimisée mise en place par Kitsun System :</p>
+<table style="margin-top: 4mm;">
+<thead>
+<tr>
+<th style="width: 50%;">Modèle Classique Concurrent</th>
+<th style="width: 50%; background: rgba(212,175,55,0.15); border-bottom-color: var(--theme);">Modèle Bypass Mitsuyoshi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Abonnement mensuel récurrent pour la licence.</td>
+<td><strong>Accès unique à vie</strong> (frais uniques).</td>
+</tr>
+<tr>
+<td>Location et configuration d'un VPS par le client (15-30€/mois).</td>
+<td><strong>VPS entièrement offert et configuré</strong> par nos techniciens.</td>
+</tr>
+<tr>
+<td>Frais fixes qui pénalisent les petits capitaux.</td>
+<td>Aucun prélèvement mensuel automatique.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">02. BYPASS</span>
+<span class="footer-center">MODÈLE TARIFAIRE INNOVANT</span>
+<span class="footer-right">PAGE 8 SUR 22</span>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 9: MITSUYOSHI BOT - CONCEPT ET LOGIQUE -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">03. Les Solutions Algorithmiques</span>
+</div>
+<div class="slide-divider"></div>
+<h1>Mitsuyoshi Bot : Logique Algorithmique</h1>
+<div class="slide-content layout-3cols">
+<div class="card" style="align-items: center; text-align: center; justify-content: center; padding: 10mm;">
+<img src="panda.webp" style="width: 32mm; height: 32mm; border-radius: 12px; border: 2px solid var(--theme); margin-bottom: 5mm; object-fit: cover;"/>
+<h2 style="border: none; padding: 0; margin-bottom: 2mm;">Algorithme Maître</h2>
+<p style="margin-bottom: 0; line-height: 1.7">Notre robot phare, actif en conditions réelles depuis plus de 24 mois sur l'Or (XAUUSD).</p>
+</div>
+<div class="card gold-border">
+<h2>Analyse Directionnelle</h2>
+<p style="line-height: 1.7">L'algorithme n'ouvre pas d'ordres au hasard. Il analyse la structure du prix sur plusieurs unités de temps simultanées.</p>
+<p style="line-height: 1.7">Il détermine le flux directionnel dominant pour entrer en position uniquement lorsqu'il y a un avantage statistique fort.</p>
+</div>
+<div class="card">
+<h2>Grid Dynamique</h2>
+<p style="line-height: 1.7">Pour lisser les légères corrections contre la tendance, le bot gère une grille d'ordres dynamique et strictement contrôlée.</p>
+<p style="line-height: 1.7">Le lotage et l'espacement des positions s'adaptent automatiquement selon la volatilité en temps réel.</p>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">03. MITSUYOSHI BOT</span>
+<span class="footer-center">TREND FOLLOWING HYBRIDE</span>
+<span class="footer-right">PAGE 9 SUR 22</span>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 10: MITSUYOSHI BOT - DRAWDOWN & SÉCURITÉ -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">03. Les Solutions Algorithmiques</span>
+</div>
+<div class="slide-divider"></div>
+<h1>Mitsuyoshi Bot : Gestion des Risques</h1>
+<div class="slide-content layout-stacked">
+<div class="card" style="flex: 1; justify-content: center; padding: 10mm 12mm;">
+<h2>Stop-Loss Technique Global</h2>
+<p style="margin-bottom: 0;  line-height: 1.7">À l'inverse des robots simplistes qui laissent courir les pertes jusqu'à brûler le compte, le Mitsuyoshi Bot intègre une gestion rigoureuse des ordres de protection. Chaque cycle d'ordres possède un <strong>Stop-Loss technique</strong>. Les transactions sont clôturées dès qu'une invalidation de tendance majeure est confirmée par notre modèle mathématique.</p>
+</div>
+<div class="card red-border" style="flex: 1; justify-content: center; padding: 10mm 12mm;">
+<h2>Coupe-circuits Quotidiens Automatiques</h2>
+<p style="margin-bottom: 0;  line-height: 1.7">Pour faire face aux secousses du marché ou événements géopolitiques imprévisibles, le système applique un filtre de protection du capital. Si le compte atteint la perte maximale autorisée programmée (ex: 4%), le robot ferme instantanément tous les trades en cours et se met en veille, protégeant ainsi les 96% restants de votre capital.</p>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">03. RISQUE</span>
+<span class="footer-center">STOP-LOSS &amp; COUPE-CIRCUITS DE SECURITE</span>
+<span class="footer-right">PAGE 10 SUR 22</span>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 11: LA RÈGLE DES CAPITAUX INFERIEURS A 1000€ -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">03. Les Solutions Algorithmiques</span>
+</div>
+<div class="slide-divider"></div>
+<h1>Palier Minimal de Gestion (&lt; 1 000 EUR)</h1>
+<div class="slide-content layout-2cols-reverse dense">
+<div class="card gold-border">
+<h2>Règle de Calibrage sur 1 000 EUR</h2>
+<p>Pour les investisseurs disposant d'un capital de départ compris entre 500 EUR et 1 000 EUR :</p>
+<ul>
+<li>Le robot simule et exécute la gestion des risques <strong>sur la base fictive de 1 000 EUR</strong>.</li>
+<li>Un compte à 500 EUR générera ainsi la même rentabilité brute en euros qu'un compte à 1 000 EUR.</li>
+<li>Le Drawdown en pourcentage sera proportionnellement doublé sur le capital de départ réel de l'utilisateur.</li>
+</ul>
+</div>
+<div class="card">
+<h2>La contrainte technique du micro-lot</h2>
+<p>Sur les serveurs des brokers, la taille minimale autorisée pour une position est de <strong>0.01 lot</strong> (micro-lot).</p>
+<p>Pour un petit compte (ex : 500 EUR), ouvrir un micro-lot représente déjà un engagement de marge important.</p>
+<p style="margin-bottom: 0;">Il est donc techniquement impossible de diviser ce lot minimal pour les petits portefeuilles sans fausser la gestion du risque.</p>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">03. REGLE 1K</span>
+<span class="footer-center">MONEY MANAGEMENT SUR CAPITAUX MODESTES</span>
+<span class="footer-right">PAGE 11 SUR 22</span>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 12: MODE PERSONNEL VS CHALLENGES PROPFIRM -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">03. Les Solutions Algorithmiques</span>
+</div>
+<div class="slide-divider"></div>
+<h1>Mode Personnel vs Challenges Prop Firm</h1>
+<div class="slide-content layout-2cols dense">
+<div class="card">
+<h2>Le Mode Personnel (Comptes Propres)</h2>
+<p>En mode personnel, l'investisseur paramètre son niveau de risque et ses objectifs selon son profil psychologique :</p>
+<ul>
+<li><strong>Low Risk</strong> : Approche sécuritaire visant ~25% / mois.</li>
+<li><strong>Normal Risk</strong> : Calibrage standard visant ~45% / mois.</li>
+<li><strong>Extreme Risk</strong> : Performance agressive visant ~65% / mois.</li>
+</ul>
+<p style="margin-bottom: 0">L'utilisateur configure et modifie ce profil à tout moment sur son tableau de bord.</p>
+</div>
+<div class="card gold-border">
+<h2>Le Mode Prop Firm (Challenges)</h2>
+<p>Les Prop Firms imposent le respect d'une perte quotidienne maximale très stricte (généralement 5%). Notre preset est configuré pour ces contraintes :</p>
+<ul>
+<li><strong>Sécurité stricte</strong> : Cible de profit mensuelle prudente d'environ 5%.</li>
+<li><strong>Drawdown surveillé</strong> : Exposition réelle bridée en deçà de 4% sur le serveur VPS.</li>
+<li><strong>Gros capitaux</strong> : Adapté pour des comptes financés allant de 10 000 $ à 400 000 $.</li>
+</ul>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">03. MODES</span>
+<span class="footer-center">PERSO VS CHALLENGES PROPFIRMS</span>
+<span class="footer-right">PAGE 12 SUR 22</span>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 13: MITSUYOSHI LION X - PRÉSENTATION -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">03. Les Solutions Algorithmiques</span>
+</div>
+<div class="slide-divider"></div>
+<h1>Mitsuyoshi Lion X : Algorithme Agressif</h1>
+<div class="slide-content layout-stacked dense">
+<div class="card" style="flex: 1.05; flex-direction: row; gap: 10mm; align-items: center;">
+<img src="lion.webp" style="width: 32mm; height: 32mm; border-radius: 12px; border: 2px solid var(--theme); object-fit: cover; flex-shrink: 0;"/>
+<div>
+<h2 style="border: none; padding: 0; margin-bottom: 2mm;">Haute Volatilité sur l'Or (XAUUSD)</h2>
+<p style="margin-bottom: 0;  line-height: 1.7">Le <strong>Lion X</strong> est un robot complémentaire conçu spécifiquement pour le trading à fort rendement sur l'Or. Contrairement à la régularité du Mitsuyoshi Bot, sa logique vise à capter des gains rapides en tirant parti des accélérations brutales du métal jaune.</p>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; flex: 1.15;">
+<div class="card gold-border" style="justify-content: center;">
+<h2>Performance Cible Élevée</h2>
+<p style="margin-bottom: 0; line-height: 1.7">Le Lion X est conçu pour réaliser des performances rapides, pouvant atteindre jusqu'à <strong>50% par semaine</strong> en conditions favorables. Compte tenu de son exposition agressive, il est <strong>incompatible avec les challenges Prop Firms</strong> et s'exécute sur comptes personnels.</p>
+</div>
+<div class="card" style="justify-content: center;">
+<h2>Stratégie de Risque Contrôlé</h2>
+<p style="margin-bottom: 0; line-height: 1.7">Bien que le robot soit agressif, il intègre des sécurités de coupure en cas de dérive brutale des cours de l'Or, permettant de préserver le capital nominal du compte de courtage.</p>
+</div>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">03. LION X</span>
+<span class="footer-center">VOLATILITE OR &amp; HAUT RENDEMENT</span>
+<span class="footer-right">PAGE 13 SUR 22</span>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 14: LION X - EXÉCUTION SUR COMPTES CENT -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">03. Les Solutions Algorithmiques</span>
+</div>
+<div class="slide-divider"></div>
+<h1>Lion X : L'Exécution sur Comptes CENT</h1>
+<div class="slide-content layout-2cols-asym">
+<div class="card">
+<h2>Qu'est-ce qu'un compte CENT ?</h2>
+<p>Un compte CENT exprime son solde en centimes de dollar (cents). Un versement réel de 100 $ s'affichera ainsi comme un solde de <strong>10 000 cents</strong> chez le broker (PuPrime).</p>
+<p>Cette particularité permet d'ouvrir des positions de taille micrométrique (100 fois plus petites que sur un compte standard) tout en restant connecté aux conditions réelles du marché.</p>
+<p style="margin-bottom: 0;">Compte tenu de sa stratégie agressive, le Lion X a besoin d'une marge de fluctuation importante (drawdown courant) pour laisser respirer ses positions sur l'Or.</p>
+</div>
+<div class="card gold-border" style="justify-content: center; padding: 10mm;">
+<div class="callout-box" style="padding: 10mm;">
+<div class="callout-num">100 $</div>
+<p style="font-weight: bold; color: var(--theme); margin-bottom: 0; letter-spacing: 1px">Dépôt Minimal Conseillé</p>
+<p style="color: var(--text-dim); margin-top: 3.5mm; margin-bottom: 0; line-height: 1.7">Affiché comme 10 000 cents pour absorber les mouvements volatils de l'Or.</p>
+</div>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">03. COMPTES CENT</span>
+<span class="footer-center">FLEXIBILITE ET LIMITATION DU RISQUE NOMINAL</span>
+<span class="footer-right">PAGE 14 SUR 22</span>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 15: LION X - CONSIGNES DE RETRAITS ET SÉCURISATION -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">03. Les Solutions Algorithmiques</span>
+</div>
+<div class="slide-divider"></div>
+<h1>Lion X : Sécurisation &amp; Retraits</h1>
+<div class="slide-content layout-full">
+<div class="card gold-border" style="justify-content: flex-start; gap: 6mm;">
+<div>
+<h2>La Règle d'Or : "Pay Yourself First"</h2>
+<p style="margin-bottom: 4mm;">Pour tout preset de trading spéculatif agressif, la meilleure des protections est le retrait systématique des bénéfices afin de récupérer votre mise de départ au plus vite.</p>
+<p style="margin-bottom: 0;">Une fois votre mise initiale récupérée, vous laissez tourner le robot uniquement avec les gains générés. Vous tradez alors sans aucun risque sur vos fonds propres.</p>
+</div>
+<div class="step-container" style="margin-top: 2mm; gap: 5mm;">
+<div class="step-item">
+<div class="step-num">1</div>
+<div class="step-text">
+<div class="step-title">Retrait Hebdomadaire Systématique</div>
+<p style="margin: 0;  line-height: 1.6">Chaque vendredi soir, retirez l'intégralité des profits réalisés durant la semaine depuis votre espace client chez le broker.</p>
+</div>
+</div>
+<div class="step-item">
+<div class="step-num">2</div>
+<div class="step-text">
+<div class="step-title">Récupération du Capital de Départ</div>
+<p style="margin: 0;  line-height: 1.6">Poursuivez ce protocole jusqu'à ce que les retraits cumulés soient égaux à 100% de votre dépôt de départ.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">03. STRATEGIE</span>
+<span class="footer-center">RETRAITS DE BENEFICES SYSTEMATIQUES</span>
+<span class="footer-right">PAGE 15 SUR 22</span>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 16: TARIFS ET FORMULES DES LICENCES -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">04. Tarification &amp; Affiliation</span>
+</div>
+<div class="slide-divider"></div>
+<h1>Tarifs des Licences à Vie</h1>
+<div class="slide-content layout-3cols">
+<div class="card">
+<h2 style="border-left-color: var(--violet); color: var(--violet); font-size: 17.5pt;">Licence Low Cost</h2>
+<p style="font-size: 26pt; font-weight: 800; color: #ffffff; margin-bottom: 2.5mm;">300 EUR</p>
+<p style="font-style: italic; color: var(--theme); margin-bottom: 5mm">Paiement Unique (À vie)</p>
+<ul>
+<li>Limite capital perso : 2 500 EUR</li>
+<li>Limite compte Prop Firm : 10 000 $</li>
+<li>Performance visée : ~25% / mois</li>
+</ul>
+</div>
+<div class="card gold-border">
+<h2 style="font-size: 17.5pt;">Licence Normal</h2>
+<p style="font-size: 26pt; font-weight: 800; color: #ffffff; margin-bottom: 2.5mm;">700 EUR</p>
+<p style="font-style: italic; color: var(--theme); margin-bottom: 5mm">Paiement Unique (À vie)</p>
+<ul>
+<li>Limite capital perso : 5 000 EUR</li>
+<li>Limite compte Prop Firm : 50 000 $</li>
+<li>Performance visée : ~45% / mois</li>
+</ul>
+</div>
+<div class="card">
+<h2 style="border-left-color: var(--magenta); color: var(--magenta); font-size: 17.5pt;">Licence Extreme</h2>
+<p style="font-size: 26pt; font-weight: 800; color: #ffffff; margin-bottom: 2.5mm;">1 000 EUR</p>
+<p style="font-style: italic; color: var(--theme); margin-bottom: 5mm">Paiement Unique (À vie)</p>
+<ul>
+<li>Limite capital perso : 10 000 EUR</li>
+<li>Limite compte Prop Firm : 100 000 $+</li>
+<li>Performance visée : ~65% / mois</li>
+</ul>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">04. LICENCES</span>
+<span class="footer-center">PLANS LICENCES PERSONNELLES &amp; PROP FIRMS</span>
+<span class="footer-right">PAGE 16 SUR 22</span>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 17: GRILLE DE SYNTHÈSE DES TARIFS -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">04. Tarification &amp; Affiliation</span>
+</div>
+<div class="slide-divider"></div>
+<h1>Grille Récapitulative des Licences</h1>
+<div class="slide-content layout-full dense">
+<div class="card gold-border">
+<h2>Synthèse des conditions de capital et de tarifs</h2>
+<p>Les tarifs d'acquisition des licences à vie sont identiques que vous les exécutiez sur compte personnel ou sur compte challenge Prop Firm. Seuls les plafonds de capital sont ajustés :</p>
+<table>
+<thead>
+<tr>
+<th>Formule</th>
+<th>Prix Licence (À Vie)</th>
+<th>Capital Max (Perso)</th>
+<th>Capital Max (Prop Firm)</th>
+<th>Performance Cible</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Low Cost</strong></td>
+<td>300 EUR</td>
+<td>2 500 EUR</td>
+<td>10 000 USD</td>
+<td>~25% / mois</td>
+</tr>
+<tr>
+<td><strong>Normal</strong></td>
+<td>700 EUR</td>
+<td>5 000 EUR</td>
+<td>50 000 USD</td>
+<td>~45% / mois</td>
+</tr>
+<tr>
+<td><strong>Extreme</strong></td>
+<td>1 000 EUR</td>
+<td>10 000 EUR</td>
+<td>100 000 USD et plus</td>
+<td>~65% / mois</td>
+</tr>
+<tr>
+<td><strong>Lion X</strong></td>
+<td>300 EUR (ou Gratuit)*</td>
+<td>Spéculatif (CENT)</td>
+<td>Incompatible</td>
+<td>Jusqu'à 50% / semaine</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-top: 2mm; color: var(--text-dim)">* Lion X est offert à 100% si l'utilisateur s'enregistre via notre lien d'affiliation de courtier partenaire.</p>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">04. TARIFS</span>
+<span class="footer-center">TABLEAU DE COMPARAISON TARIFAIRE</span>
+<span class="footer-right">PAGE 17 SUR 22</span>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 18: ESPACE AFFILIATION ET DASHBOARD INTERACTIF -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">04. Tarification &amp; Affiliation</span>
+</div>
+<div class="slide-divider"></div>
+<h1>L'Espace Partenaire &amp; Affiliation</h1>
+<div class="slide-content layout-2cols-reverse dense">
+<div class="card gold-border">
+<h2>Simulateur de Gains Intégré</h2>
+<p>Pour aider nos affiliés à estimer leurs gains potentiels, le tableau de bord intègre un module de simulation en temps réel.</p>
+<p>Sélectionnez la formule recommandée commercialisée (ex: licence Normal à 700 EUR), ajustez le nombre de ventes mensuelles estimées, et le système calcule instantanément vos commissions mensuelles selon votre grade actuel.</p>
+</div>
+<div class="card">
+<h2>Recommander et être Rémunéré</h2>
+<p>Le dashboard membre VIP intègre un module d'affiliation robuste géré par Kitsun System :</p>
+<ul>
+<li>Chaque membre dispose d'un lien d'affiliation unique et d'un code de réduction à partager.</li>
+<li>Le suivi des clics, des prospects inscrits et des ventes validées est mis à jour en temps réel.</li>
+<li>Demande de retrait simplifiée avec virement exécuté sous un délai de 48 heures.</li>
+</ul>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">04. AFFILIATION</span>
+<span class="footer-center">DASHBOARD &amp; INTERACTION PARTENAIRE</span>
+<span class="footer-right">PAGE 18 SUR 22</span>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 19: NIVEAUX D'AMBASSADEURS ET COMMISSIONS -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">04. Tarification &amp; Affiliation</span>
+</div>
+<div class="slide-divider"></div>
+<h1>Niveaux de Commissions Ambassadeurs</h1>
+<div class="slide-content layout-4cols">
+<div class="card" style="justify-content: center;">
+<h2 style="border-left-color: #cd7f32; color: #cd7f32;; font-size: 16.5pt;">🥉 Bronze</h2>
+<p style="font-weight: 800; color: #ffffff; margin-bottom: 2.5mm; text-shadow: 0 0 10px rgba(255,255,255,0.1)">23%</p>
+<p style="color: var(--text-dim); margin-bottom: 0; line-height: 1.6">Grade par défaut dès l'inscription sur l'espace VIP. Aucun minimum de ventes requis.</p>
+</div>
+<div class="card" style="justify-content: center;">
+<h2 style="border-left-color: #c0c0c0; color: #c0c0c0;; font-size: 16.5pt;">🥈 Argent</h2>
+<p style="font-weight: 800; color: #ffffff; margin-bottom: 2.5mm; text-shadow: 0 0 10px rgba(255,255,255,0.1)">30%</p>
+<p style="color: var(--text-dim); margin-bottom: 0; line-height: 1.6">Débloqué dès 10+ ventes de licences validées sur le tableau de bord.</p>
+</div>
+<div class="card gold-border" style="justify-content: center;">
+<h2 style="; font-size: 16.5pt;">🥇 Or</h2>
+<p style="font-weight: 800; color: #ffffff; margin-bottom: 2.5mm; text-shadow: 0 0 10px rgba(255,255,255,0.1)">35%</p>
+<p style="color: var(--text-dim); margin-bottom: 0; line-height: 1.6">Débloqué dès 25+ ventes de licences validées. Taux de commission définitif.</p>
+</div>
+<div class="card" style="justify-content: center;">
+<h2 style="border-left-color: var(--magenta); color: var(--magenta);; font-size: 16.5pt;">👑 Diamant</h2>
+<p style="font-weight: 800; color: #ffffff; margin-bottom: 2.5mm; text-shadow: 0 0 10px rgba(255,255,255,0.1)">40%</p>
+<p style="color: var(--text-dim); margin-bottom: 0; line-height: 1.6">Débloqué dès 50+ ventes de licences validées. Donne également accès à un contact direct avec les fondateurs.</p>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">04. AMBASSADEUR</span>
+<span class="footer-center">GRILLES DES COMMISSIONS PAR GRADE</span>
+<span class="footer-right">PAGE 19 SUR 22</span>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 20: GUIDE DE DÉMARRAGE - ÉTAPE 1 & 2 -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">05. Guide de Configuration</span>
+</div>
+<div class="slide-divider"></div>
+<h1>Guide de Démarrage (Étape 1 &amp; 2)</h1>
+<div class="slide-content layout-2cols">
+<div class="card gold-border">
+<h2>Étape 1 : Choix &amp; Licence</h2>
+<div class="step-container">
+<div class="step-item">
+<div class="step-num">1</div>
+<div class="step-text">
+<div class="step-title">Sélection sur le Dashboard VIP</div>
+<p style="margin: 0">Choisissez votre robot (Mitsuyoshi Bot ou Lion X) et configurez vos paramètres de capital.</p>
+</div>
+</div>
+<div class="step-item">
+<div class="step-num">2</div>
+<div class="step-text">
+<div class="step-title">Acquisition de la Licence</div>
+<p style="margin: 0">Procédez au paiement unique de votre licence à vie pour générer vos clés d'accès.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="card">
+<h2>Étape 2 : Liaison Broker</h2>
+<div class="step-container">
+<div class="step-item">
+<div class="step-num violet">3</div>
+<div class="step-text">
+<div class="step-title">Ouverture du compte de trading</div>
+<p style="margin: 0">Inscrivez-vous chez un de nos brokers partenaires (Vantage ou PuPrime) avec un levier 1:500.</p>
+</div>
+</div>
+<div class="step-item">
+<div class="step-num violet">4</div>
+<div class="step-text">
+<div class="step-title">Envoi des accès de lecture</div>
+<p style="margin: 0">Transmettez vos accès MT5 en mode lecture seule (mot de passe investisseur) au support technique Telegram pour initier la liaison.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">05. CONFIGURATION</span>
+<span class="footer-center">ETAPE 1 &amp; 2 : COMMANDE &amp; BROKER</span>
+<span class="footer-right">PAGE 20 SUR 22</span>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 21: GUIDE DE DÉMARRAGE - ÉTAPE 3 & LANCEMENT -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">05. Guide de Configuration</span>
+</div>
+<div class="slide-divider"></div>
+<h1>Guide de Démarrage (Lancement)</h1>
+<div class="slide-content layout-2cols-reverse">
+<div class="card gold-border">
+<h2>Étape 4 : Suivi &amp; Retraits</h2>
+<div class="step-container">
+<div class="step-item">
+<div class="step-num violet">7</div>
+<div class="step-text">
+<div class="step-title">Visualisation Mobile MT5</div>
+<p style="margin: 0">Téléchargez MT5 sur votre smartphone et connectez-vous pour voir chaque transaction s'exécuter en temps réel.</p>
+</div>
+</div>
+<div class="step-item">
+<div class="step-num violet">8</div>
+<div class="step-text">
+<div class="step-title">Retrait des gains</div>
+<p style="margin: 0">Effectuez vos retraits de profits directement depuis l'espace client de votre courtier. Aucune action n'est requise sur le robot.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="card">
+<h2>Étape 3 : Déploiement automatique</h2>
+<div class="step-container">
+<div class="step-item">
+<div class="step-num">5</div>
+<div class="step-text">
+<div class="step-title">Hébergement VPS actif sous 24h</div>
+<p style="margin: 0">Notre équipe technique déploie votre terminal MT5 sur notre serveur VPS Cloud. Le preset de risque et le lotage initial sont calibrés par nos soins.</p>
+</div>
+</div>
+<div class="step-item">
+<div class="step-num">6</div>
+<div class="step-text">
+<div class="step-title">Routage automatique</div>
+<p style="margin: 0">Les ordres de trading sont copiés de manière autonome et automatique, sans aucune action requise de votre part.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">05. CONFIGURATION</span>
+<span class="footer-center">ETAPE 3 &amp; 4 : DÉPLOIEMENT &amp; SUIVI</span>
+<span class="footer-right">PAGE 21 SUR 22</span>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<!-- SLIDE 22: FAQ & CONCLUSION -->
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+<div class="slide">
+<div class="glow-blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+<div class="cyber-grid"></div>
+<div class="slide-header">
+<span>Mitsuyoshi System</span>
+<span class="slide-subtitle">06. FAQ &amp; Conclusion</span>
+</div>
+<div class="slide-divider"></div>
+<h1>FAQ &amp; Conclusion de l'Écosystème</h1>
+<div class="slide-content layout-2cols-asym dense">
+<div class="card" style="justify-content: center;">
+<h2>Foire Aux Questions VIP</h2>
+<p style="margin-bottom: 3.5mm; line-height: 1.6"><strong>Le système est-il adapté aux débutants ?</strong><br/>
+                    Oui, à 100%. Nous gérons toute l'installation sur le VPS. Un simple smartphone suffit pour suivre vos gains via l'application MT5.</p>
+<p style="margin-bottom: 3.5mm; line-height: 1.6"><strong>L'équipe peut-elle retirer mon argent ?</strong><br/>
+                    Impossible. Les identifiants transmis au support ne permettent que d'exécuter des trades. Seul le titulaire légal peut retirer son argent.</p>
+<p style="margin-bottom: 3.5mm; line-height: 1.6"><strong>Y a-t-il une période de blocage des fonds ?</strong><br/>
+                    Non. Votre capital reste 100% disponible. Vous pouvez retirer vos gains ou solder votre compte broker à tout moment sans frais.</p>
+<p style="margin-bottom: 0; line-height: 1.6"><strong>Quelles Prop Firms sont compatibles ?</strong><br/>
+                    Toutes les Prop Firms autorisant l'utilisation d'EAs tiers sont compatibles avec notre preset de risques bridé à &lt; 4%.</p>
+</div>
+<div class="card gold-border" style="justify-content: space-between; text-align: center; align-items: center;">
+<div>
+<h2 style="font-size: 17.5pt;">Rejoignez notre Élite</h2>
+<p style="margin-bottom: 4mm">Prenez le contrôle de vos investissements grâce à nos solutions algorithmiques d'élite prêtes à l'emploi.</p>
+</div>
+<div style="background: rgba(139, 92, 246, 0.05); padding: 8mm 6mm; border-radius: 12px; border: 1.5px solid rgba(139,92,246,0.3); width: 100%;">
+<p style="margin-bottom: 2.5mm;  font-weight: bold; color: var(--violet); letter-spacing: 0.5px">Canal Telegram Officiel :</p>
+<span style="font-size: 17.5pt; color: #ffffff; font-weight: 800; display: block; letter-spacing: 0.5px; text-shadow: 0 0 10px rgba(255,255,255,0.1);">@MitsuyoshiEA</span>
+<p style="margin-top: 3mm; margin-bottom: 0;  color: var(--text-dim)">Support &amp; Contact direct : @ysestp</p>
+</div>
+</div>
+</div>
+<div class="slide-footer">
+<span class="footer-left">CONCLUSION</span>
+<span class="footer-center">MITSUYOSHI SYSTEM &amp; KITSUN SYSTEM</span>
+<span class="footer-right">PAGE 22 SUR 22</span>
+</div>
+</div>
+</div>
+</body>
+</html>

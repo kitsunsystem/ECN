@@ -1,0 +1,1936 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SYNAPX | Dashboard Prestige</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    
+    <!-- Fonts Google: Cinzel & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --theme: #d4af37; /* Luxury Gold */
+            --theme-glow: rgba(212, 175, 55, 0.12);
+            --theme-glow-intense: rgba(212, 175, 55, 0.35);
+            --bg: #030712; /* SynapX Obsidian Black */
+            --panel: rgba(6, 10, 22, 0.65);
+            --text: #f8fafc;
+            --text-dim: #94a3b8;
+            --success: #fbbf24;
+            --danger: #f43f5e;
+            --info: #38bdf8;
+            --border: rgba(212, 175, 55, 0.15);
+            --sidebar-w: 0px;
+        }
+
+        /* Light Theme variables matching Champagne style */
+        html.light {
+            --theme: #aa7c11; /* Golden Champagne */
+            --theme-glow: rgba(170, 124, 17, 0.08);
+            --theme-glow-intense: rgba(170, 124, 17, 0.25);
+            --bg: #faf9f5; /* Premium Alabaster */
+            --panel: rgba(255, 255, 255, 0.75);
+            --text: #1c1a17;
+            --text-dim: #706a64;
+            --border: rgba(170, 124, 17, 0.18);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            transition: background-color 0.6s ease, color 0.5s ease;
+        }
+
+        h1, h2, h3, h4, h5, .font-prestige { 
+            font-family: 'Cinzel', serif; 
+        }
+
+        /* iOS-style Glassmorphism (iOS 26.5 concept) */
+        .glass, .configurator-card, .config-card, .community-card, .support-card, .history-card {
+            background: rgba(255, 255, 255, 0.03) !important;
+            backdrop-filter: blur(30px) saturate(190%) !important;
+            -webkit-backdrop-filter: blur(30px) saturate(190%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 24px !important;
+            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1) !important;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
+
+        html.light .glass, html.light .configurator-card, html.light .config-card, html.light .community-card, html.light .support-card, html.light .history-card {
+            background: rgba(255, 255, 255, 0.6) !important;
+            border: 1px solid rgba(0, 0, 0, 0.06) !important;
+            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.03), inset 0 1px 2px 0 rgba(255, 255, 255, 0.8) !important;
+        }
+        
+        .glass:hover, .configurator-card:hover, .config-card:hover, .community-card:hover, .support-card:hover, .history-card:hover {
+            border-color: rgba(212, 175, 55, 0.4) !important;
+            box-shadow: 0 20px 50px rgba(212, 175, 55, 0.05), inset 0 1px 1px 0 rgba(255, 255, 255, 0.15) !important;
+        }
+
+        html.light .glass:hover {
+            border-color: rgba(170, 124, 17, 0.4) !important;
+            box-shadow: 0 20px 50px rgba(170, 124, 17, 0.05) !important;
+        }
+
+        /* Gold Luxury Shimmer effect */
+        .gold-luxury-text {
+            background: linear-gradient(135deg, #FFF9E6 0%, #F5D061 25%, #D4AF37 50%, #AA7C11 75%, #FFF9E6 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: goldShimmer 6s linear infinite;
+        }
+
+        @keyframes goldShimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* Plan cards styling */
+        .plan-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .plan-card:hover {
+            border-color: rgba(212, 175, 55, 0.3);
+            background: rgba(212, 175, 55, 0.02);
+            transform: translateY(-2px);
+        }
+        .plan-card.active {
+            border-color: var(--theme) !important;
+            background: rgba(212, 175, 55, 0.08) !important;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
+        }
+
+        /* Custom inputs matching prestige landing page */
+        .input-field, .select-field {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 14px 16px;
+            color: var(--text);
+            outline: none;
+            transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        html.light .input-field, html.light .select-field {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            color: #1c1a17;
+        }
+        .input-field:focus, .select-field:focus {
+            border-color: var(--theme);
+            background: rgba(212, 175, 55, 0.03);
+            box-shadow: 0 0 15px var(--theme-glow);
+        }
+
+        /* Custom Stepper Styling */
+        .custom-stepper {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 3px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .stepper-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 9px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .stepper-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        /* General Button Golden */
+        .btn-gold {
+            width: 100%;
+            background: linear-gradient(135deg, #FFF9E6 0%, #F5D061 25%, #D4AF37 50%, #AA7C11 75%, #FFF9E6 100%);
+            background-size: 200% auto;
+            color: black;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 11px;
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
+            animation: goldShimmer 6s linear infinite;
+        }
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--theme-glow-intense);
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--theme); border-radius: 10px; }
+
+        /* Modern iOS Toggle styling */
+        .slider {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 26px;
+            transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .slider:before {
+            background: white;
+            transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        input:checked + .slider { background: var(--theme); }
+
+        /* Dynamic view entrance */
+        .view {
+            display: none !important;
+        }
+        .view.active {
+            display: block !important;
+            animation: viewEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes viewEntrance {
+            0% { opacity: 0; transform: translateY(20px); filter: blur(10px); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+    
+        #optLionPartner.active, #optLionPaid.active {
+            border-color: #f43f5e !important;
+            background: rgba(244, 63, 94, 0.08) !important;
+            box-shadow: 0 0 15px rgba(244, 63, 94, 0.15) !important;
+        }
+        
+        #checkClientEnabled:checked + .slider {
+            background: var(--theme) !important;
+        }
+        
+        #checkClientEnabled:checked + .slider:before {
+            transform: translateX(24px) !important;
+        }
+        
+        /* Ambient mouse glow base setup */
+        #ambient-glow {
+            transition: left 0.1s ease-out, top 0.1s ease-out;
+        }
+
+        .profit-pos {
+            color: #fbbf24 !important;
+        }
+        .profit-neg {
+            color: #f43f5e !important;
+        }
+
+    
+        /* ══════════════════════════════════════
+           TOAST NOTIFICATION STYLES
+        ══════════════════════════════════════ */
+        .mitsu-toast-container {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+            width: 90%;
+            max-width: 400px;
+        }
+        .mitsu-toast {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 14px 18px;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 500;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: auto;
+        }
+        .mitsu-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .mitsu-toast.success {
+            border-color: rgba(16, 185, 129, 0.3);
+            background: rgba(6, 78, 59, 0.8);
+            color: #d1fae5;
+            box-shadow: 0 10px 30px -10px rgba(6, 78, 59, 0.4);
+        }
+        .mitsu-toast.error {
+            border-color: rgba(239, 68, 68, 0.3);
+            background: rgba(127, 29, 29, 0.8);
+            color: #fee2e2;
+            box-shadow: 0 10px 30px -10px rgba(127, 29, 29, 0.4);
+        }
+        .mitsu-toast.info {
+            border-color: rgba(245, 158, 11, 0.3);
+            background: rgba(120, 53, 4, 0.8);
+            color: #fef3c7;
+            box-shadow: 0 10px 30px -10px rgba(120, 53, 4, 0.4);
+        }
+        .mitsu-toast-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mitsu-toast-message {
+            flex-grow: 1;
+            line-height: 1.4;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            text-align: left;
+        }
+        .mitsu-toast-close {
+            background: none;
+            border: none;
+            color: currentColor;
+            opacity: 0.5;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0 2px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.2s;
+        }
+        .mitsu-toast-close:hover {
+            opacity: 0.9;
+        }
+
+        /* Timeframe active buttons */
+        .btn-tf.active {
+            color: #fbbf24 !important; /* text-amber-400 */
+            background-color: rgba(245, 158, 11, 0.1) !important; /* bg-amber-500/10 */
+        }
+        .btn-tf:not(.active) {
+            color: #94a3b8 !important; /* text-slate-400 */
+            background-color: transparent !important;
+        }
+
+        /* Auth tabs active highlights */
+        .auth-tab.active {
+            color: #fbbf24 !important; /* text-amber-400 */
+            background-color: rgba(245, 158, 11, 0.1) !important; /* bg-amber-500/10 */
+            font-weight: 700 !important;
+        }
+        .auth-tab:not(.active) {
+            color: #94a3b8 !important; /* text-slate-400 */
+            background-color: transparent !important;
+            font-weight: 600 !important;
+        }
+
+        /* ══════════════════════════════════════
+           LIGHT THEME PRESTIGE OVERRIDES
+        ══════════════════════════════════════ */
+        body.light-theme {
+            background-color: #f8fafc !important;
+            background-image: radial-gradient(ellipse at 50% 60%, rgba(212, 175, 55, 0.05) 0%, transparent 65%) !important;
+            color: #334155 !important;
+        }
+        body.light-theme .mitsu-toast {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(0, 0, 0, 0.06);
+            color: #1e293b;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+        }
+        body.light-theme .mitsu-toast.success {
+            background: rgba(209, 250, 229, 0.95);
+            border-color: rgba(16, 185, 129, 0.2);
+            color: #065f46;
+        }
+        body.light-theme .mitsu-toast.error {
+            background: rgba(254, 226, 226, 0.95);
+            border-color: rgba(239, 68, 68, 0.2);
+            color: #991b1b;
+        }
+        body.light-theme .mitsu-toast.info {
+            background: rgba(254, 243, 199, 0.95);
+            border-color: rgba(245, 158, 11, 0.2);
+            color: #92400e;
+        }
+        body.light-theme .text-white,
+        body.light-theme h1,
+        body.light-theme h2,
+        body.light-theme h3,
+        body.light-theme h4,
+        body.light-theme h5,
+        body.light-theme h6 {
+            color: #0f172a !important;
+        }
+        body.light-theme .text-slate-400 {
+            color: #64748b !important;
+        }
+        body.light-theme .text-slate-300 {
+            color: #475569 !important;
+        }
+        body.light-theme .glass,
+        body.light-theme .configurator-card,
+        body.light-theme .config-card,
+        body.light-theme .plan-card,
+        body.light-theme .bg-\[\#060a16\]\/50 {
+            background: rgba(255, 255, 255, 0.8) !important;
+            border-color: rgba(212, 175, 55, 0.18) !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+        }
+        body.light-theme #header-bar {
+            background: rgba(255, 255, 255, 0.8) !important;
+            border-color: rgba(0, 0, 0, 0.06) !important;
+        }
+        body.light-theme #bottomDock,
+        body.light-theme #desktopDock {
+            background: rgba(255, 255, 255, 0.85) !important;
+            border-color: rgba(0, 0, 0, 0.08) !important;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.12) !important;
+        }
+        body.light-theme #desktopDock button.text-slate-400:hover {
+            color: #0f172a !important;
+        }
+        body.light-theme th {
+            color: #475569 !important;
+            border-color: rgba(0, 0, 0, 0.06) !important;
+        }
+        body.light-theme td {
+            color: #334155 !important;
+            border-color: rgba(0, 0, 0, 0.04) !important;
+        }
+        body.light-theme tr:hover td {
+            background: rgba(0, 0, 0, 0.02) !important;
+        }
+        body.light-theme .input-field {
+            background: rgba(0, 0, 0, 0.03) !important;
+            border-color: rgba(212, 175, 55, 0.25) !important;
+            color: #0f172a !important;
+        }
+        body.light-theme .input-field:focus {
+            background: rgba(255, 255, 255, 1) !important;
+            border-color: #fbbf24 !important;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.15) !important;
+        }
+        body.light-theme .toggle-wrapper {
+            background: rgba(0, 0, 0, 0.02) !important;
+            border-color: rgba(0, 0, 0, 0.06) !important;
+        }
+        body.light-theme .toggle-title {
+            color: #1e293b !important;
+        }
+        body.light-theme .toggle-sub {
+            color: #64748b !important;
+        }
+        body.light-theme .slider {
+            background: rgba(0, 0, 0, 0.1) !important;
+        }
+        body.light-theme .slider:before {
+            background: #ffffff !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+        }
+        body.light-theme .modal-card,
+        body.light-theme #configLockMask,
+        body.light-theme #affiliationBlurOverlay {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border-color: rgba(212, 175, 55, 0.2) !important;
+        }
+        body.light-theme #configLockMask h4,
+        body.light-theme #affiliationBlurOverlay h2 {
+            color: #0f172a !important;
+        }
+        body.light-theme ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.15) !important;
+        }
+
+        /* Responsive Mobile Configuration Tabs styling */
+        @media (max-width: 767px) {
+            .config-grid.show-trading #tutoSecurityCard {
+                display: none !important;
+            }
+            .config-grid.show-security #tutoConfigCard {
+                display: none !important;
+            }
+        }
+
+    </style>
+</head>
+<body class="selection:bg-amber-400 selection:text-black">
+
+    <!-- AMBIENT MOUSE GLOW EFFECT -->
+    <div id="ambient-glow" 
+         class="fixed pointer-events-none z-0 w-[450px] h-[450px] rounded-full blur-[120px] transition-transform duration-200 ease-out opacity-25"
+         style="background: radial-gradient(circle, rgba(212,175,55,0.4) 0%, rgba(212,175,55,0) 70%); transform: translate(-50%, -50%); top: -1000px; left: -1000px;">
+    </div>
+
+    <!-- FIXED PREMIUM BACKGROUND PATTERN -->
+    <div class="fixed inset-0 pointer-events-none z-0 opacity-[0.03] mix-blend-overlay">
+        <div class="absolute inset-0 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:24px_24px]"></div>
+    </div>
+
+    <!-- ──────────────────────────────
+         AUTH SCREEN
+    ────────────────────────────── -->
+    <div id="authScreen" class="fixed inset-0 z-[3000] flex items-center justify-center p-4 bg-[#030712]/90 backdrop-blur-xl">
+        <div class="glass auth-card max-w-[440px] w-full p-8 sm:p-12 space-y-8 relative overflow-hidden border border-amber-500/25">
+            
+            <!-- Brand Identity -->
+            <div class="auth-logo text-center space-y-2">
+                <span class="auth-logo-title font-cinzel text-3xl font-light tracking-[0.2em] text-white">SYNAP<span class="text-amber-400 font-bold">X</span></span>
+                <span class="auth-logo-sub text-[8px] tracking-[0.35em] text-amber-500 font-bold block">PORTAIL CLIENT PRIVÉ</span>
+            </div>
+
+            <!-- Authentic Tabs -->
+            <div class="auth-tabs flex bg-white/5 border border-white/10 rounded-xl p-1">
+                <div class="auth-tab flex-1 text-center py-2.5 text-[9px] uppercase tracking-wider cursor-pointer rounded-lg text-amber-400 bg-amber-500/10 font-bold" id="tabLogin" onclick="switchAuth('login')">Se Connecter</div>
+                <div class="auth-tab flex-1 text-center py-2.5 text-[9px] uppercase tracking-wider cursor-pointer rounded-lg text-slate-400 font-semibold transition" id="tabSignup" onclick="switchAuth('signup')">Créer un Compte</div>
+            </div>
+
+            <!-- Login Form -->
+            <div id="formLogin" class="space-y-6">
+                <div class="text-center space-y-1">
+                    <h2 class="font-cinzel text-xl font-light text-white">Ravi de vous revoir</h2>
+                    <p class="text-xs text-slate-400 font-light">Accédez à votre espace algorithmique de prestige</p>
+                </div>
+                <div class="space-y-3">
+                    <input type="email" id="loginEmail" class="input-field" placeholder="Adresse email" value="vip@synapx.com">
+                    <input type="password" id="loginPass" class="input-field" placeholder="Mot de passe" value="prestige2026">
+                </div>
+                <button class="btn-gold" onclick="handleLogin()">Se connecter</button>
+                
+
+            </div>
+
+            <!-- Signup Form -->
+            <div id="formSignup" class="space-y-6 hidden">
+                <div class="text-center space-y-1">
+                    <h2 class="font-cinzel text-xl font-light text-white">Créer un Compte</h2>
+                    <p class="text-xs text-slate-400 font-light">Bâtissons ensemble l'avenir de vos rendements</p>
+                </div>
+                <div class="space-y-3">
+                    <input type="text" id="signFirst" class="input-field" placeholder="Prénom">
+                    <input type="text" id="signLast" class="input-field" placeholder="Nom">
+                    <input type="email" id="signEmail" class="input-field" placeholder="Adresse email">
+                    <input type="password" id="signPass" class="input-field" placeholder="Mot de passe">
+                    <input type="text" id="signRefCode" class="input-field" placeholder="Code de parrainage (Optionnel)" value="">
+                </div>
+                <button class="btn-gold" onclick="handleSignup()">Créer mon compte</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Modal for choosing custom referral code -->
+    <div id="mitsuPromptModal" class="mitsu-modal-overlay fixed inset-0 z-[5000] bg-black/80 backdrop-blur-xl hidden items-center justify-center p-4">
+        <div class="glass mitsu-modal-card max-w-[440px] w-full p-8 text-center space-y-6 border border-amber-500/25">
+            <h3 class="font-cinzel text-xl text-amber-400 font-medium">Créez votre code</h3>
+            <p class="text-xs text-slate-400 font-light leading-relaxed">
+                Choisissez un code personnalisé de <strong>4 à 8 caractères</strong> (lettres et chiffres uniquement). Ce code servira pour vos liens de parrainage.
+            </p>
+            <input type="text" id="customReferralCodeInput" class="input-field text-center text-lg font-bold tracking-widest text-amber-400 uppercase" placeholder="Ex: MONBOT1" value="MONBOT1" maxlength="8">
+            <div class="flex gap-3 justify-center">
+                <button class="btn-gold py-3 px-6 w-auto" id="btnConfirmCustomCode" onclick="submitCustomReferralCode()">Valider et Activer</button>
+                <button class="px-6 py-3 border border-white/10 hover:bg-white/5 text-white text-xs uppercase tracking-widest font-semibold rounded-xl transition" onclick="closeCustomCodeModal()">Annuler</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Modal for Welcome Dialog -->
+    <div id="mitsuWelcomeModal" class="mitsu-modal-overlay fixed inset-0 z-[5000] bg-black/80 backdrop-blur-xl hidden items-center justify-center p-4">
+        <div class="glass mitsu-modal-card welcome-card max-w-[480px] w-full p-8 text-center space-y-8 relative overflow-hidden border border-amber-500/30">
+            <div class="absolute top-0 left-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl"></div>
+            
+            <div class="welcome-logo space-y-1">
+                <span class="font-cinzel text-2xl font-light tracking-widest text-white">SYNAP<span class="text-amber-400 font-bold">X</span></span>
+                <span class="text-[8px] uppercase tracking-[0.3em] text-amber-500/80 font-bold block">EXPERTISE ALGORITHMIQUE</span>
+            </div>
+            
+            <div class="avatar-welcome w-20 h-20 rounded-full bg-gradient-to-br from-amber-500/20 to-transparent border border-amber-500/40 flex items-center justify-center mx-auto shadow-lg">
+                <span id="welcomeAvatar" class="font-serif text-3xl font-light text-amber-400">P</span>
+            </div>
+            
+            <div class="space-y-2">
+                <h3 class="font-cinzel text-2xl font-light text-white">Bonjour, <span id="welcomeUserName" class="text-amber-400 font-medium">Client Prestige</span> !</h3>
+                <p class="text-xs text-slate-400 leading-relaxed font-light">
+                    Toute l'équipe de <strong>SynapX Systems</strong> est ravie de vous accueillir dans votre Espace VIP. Votre architecture algorithmique haut de gamme est prête à propulser vos ambitions financières sur l'Or.<br><br>
+                    <span class="italic font-serif">Bâtissons ensemble l'avenir de votre patrimoine.</span>
+                </p>
+            </div>
+            
+            <button class="btn-gold py-4" onclick="closeWelcomeModal()">
+                Entrer dans l'Espace VIP
+            </button>
+        </div>
+    </div>
+
+    <!-- SynapX Premium Toast Container -->
+    <div id="mitsuToastContainer" class="mitsu-toast-container fixed top-6 left-1/2 -translate-x-1/2 z-[9999] flex flex-col gap-2 w-[90%] max-w-[420px]"></div>
+
+    <!-- ══════════════════════════════════════
+         DASHBOARD SYSTEM
+    ══════════════════════════════════════ -->
+    <div id="dashContent" class="min-h-screen relative z-10 flex flex-col">
+
+        <!-- MOBILE TOPBAR (iOS style Glass) -->
+        <div class="mobile-topbar fixed top-0 left-0 right-0 h-14 bg-[#030712]/80 backdrop-blur-xl border-b border-white/10 flex items-center justify-between px-5 z-[1900] md:hidden">
+            <button onclick="toggleTheme()" class="p-2 border border-white/10 hover:border-amber-400/60 text-amber-400 hover:bg-white/5 rounded-full transition">
+                <i data-lucide="sun" class="w-4 h-4" id="theme-toggle-mob-icon"></i>
+            </button>
+            <span class="font-cinzel text-lg tracking-widest text-white">SYNAP<span class="text-amber-400 font-bold">X</span></span>
+            <button class="mobile-logout-btn text-slate-400 hover:text-white transition" onclick="logout()">
+                <i data-lucide="log-out" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- FLOATING DOCK HEADER (Desktop / Responsive unified concept) -->
+        <header class="fixed top-6 left-1/2 -translate-x-1/2 w-[92%] max-w-6xl z-40 hidden md:block">
+            <div class="rounded-full py-3 px-8 flex items-center justify-between bg-[#030712]/30 backdrop-blur-3xl border border-white/10 shadow-2xl glossy-header" id="header-bar">
+                
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-full border border-amber-400/40 bg-slate-950 flex items-center justify-center">
+                        <span class="font-cinzel text-sm text-amber-400">S</span>
+                    </div>
+                    <div>
+                        <span class="font-cinzel text-sm tracking-widest text-white block">SYNAP<span class="text-amber-400 font-bold">X</span></span>
+                        <span class="text-[7px] uppercase tracking-[0.25em] text-amber-500 font-semibold block">VIP PLATFORM</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Dock Nav Pill -->
+                <nav class="flex items-center space-x-1 bg-white/5 border border-white/10 rounded-full p-1" id="desktopDock">
+                    <button class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-amber-400 bg-white/10 active" id="navDashboard" onclick="switchView('dashboard')">Tableau de Bord</button>
+                    <button class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition" id="navBot" onclick="switchView('bot')">Bots</button>
+                    <button class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition" id="navConfig" onclick="switchView('config')">Configuration</button>
+                    <button class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition" id="navCommunity" onclick="switchView('community')">Communauté</button>
+                    <button class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition" id="navAffiliation" onclick="switchView('affiliation')">Affiliation</button>
+                </nav>
+
+                <!-- Profile summary -->
+                <div class="flex items-center gap-3">
+                    <!-- Advanced Theme Switcher -->
+                    <button onclick="toggleTheme()" class="p-2 border border-white/10 hover:border-amber-400/60 text-amber-400 hover:bg-white/5 rounded-full transition" id="theme-toggle-btn">
+                        <i data-lucide="sun" class="w-4 h-4"></i>
+                    </button>
+                    
+                    <div class="flex items-center gap-3 bg-white/5 border border-white/10 rounded-full py-1.5 px-4 backdrop-blur-md">
+                        <div class="w-6 h-6 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center font-bold text-xs" id="headerAvatarLetter">P</div>
+                        <div class="text-xs font-bold text-white" id="headerUserName">Client Prestige</div>
+                        <button class="text-rose-400 hover:text-rose-300 ml-2" onclick="logout()">
+                            <i data-lucide="log-out" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </header>
+
+        <!-- FLOATING BOTTOM NAVIGATION BAR (Mobile style Concept iOS 26.5) -->
+        <nav class="mobile-bottom-nav fixed bottom-6 left-6 right-6 h-16 bg-[#030712]/40 backdrop-blur-3xl border border-white/10 rounded-3xl justify-around items-center z-[2000] px-4 shadow-2xl flex md:hidden" id="bottomDock">
+            <button class="mob-nav-btn active flex flex-col items-center justify-center text-amber-400 transition p-2 rounded-xl" id="navMobDashboard" onclick="switchView('dashboard')">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+            </button>
+            <button class="mob-nav-btn flex flex-col items-center justify-center text-slate-400 hover:text-white transition p-2 rounded-xl" id="navMobBot" onclick="switchView('bot')">
+                <i data-lucide="cpu" class="w-5 h-5"></i>
+            </button>
+            <button class="mob-nav-btn flex flex-col items-center justify-center text-slate-400 hover:text-white transition p-2 rounded-xl" id="navMobConfig" onclick="switchView('config')">
+                <i data-lucide="sliders" class="w-5 h-5"></i>
+            </button>
+            <button class="mob-nav-btn flex flex-col items-center justify-center text-slate-400 hover:text-white transition p-2 rounded-xl" id="navMobCommunity" onclick="switchView('community')">
+                <i data-lucide="messages-square" class="w-5 h-5"></i>
+            </button>
+            <button class="mob-nav-btn flex flex-col items-center justify-center text-slate-400 hover:text-white transition p-2 rounded-xl" id="navMobAffiliation" onclick="switchView('affiliation')">
+                <i data-lucide="users-2" class="w-5 h-5"></i>
+            </button>
+        </nav>
+
+        <!-- MAIN WORKSPACE -->
+        <main class="workspace flex-1 max-w-6xl w-full mx-auto px-4 md:px-8 pt-20 md:pt-32 pb-24 md:pb-20 space-y-8">
+
+            <!-- PAGE HEADER -->
+            <div class="page-header pb-6 border-b border-amber-500/10 space-y-2">
+                <h1 class="page-title text-3xl sm:text-4xl font-light font-cinzel text-white" id="pageTitle">Tableau de <span class="gold-luxury-text font-medium">Bord</span></h1>
+                <p class="page-sub text-xs text-slate-400 font-light tracking-widest uppercase" id="pageSubtitle">Moniteur de performance en temps réel</p>
+                <div id="accountTabs" class="flex gap-2 flex-wrap">
+                    <span class="text-xs bg-amber-500/10 border border-amber-500/30 text-amber-400 rounded-lg px-3 py-1 font-mono">Compte Principal MT5 (#948194)</span>
+                </div>
+            </div>
+
+            <!-- ── VIEW: DASHBOARD ── -->
+            <div id="viewDashboard" class="view active relative min-h-[500px]">
+
+                <!-- Vantage PAMM Portal Redirection Overlay -->
+                <div id="vantagePammOverlay" class="absolute inset-0 z-50 flex items-center justify-center p-4">
+                    <div class="glass max-w-[540px] w-full p-8 text-center space-y-6 border border-amber-500/30 shadow-2xl rounded-3xl bg-[#030712]/90 backdrop-blur-2xl">
+                        <div class="w-16 h-16 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-400">
+                            <i data-lucide="external-link" class="w-8 h-8"></i>
+                        </div>
+                        <div class="space-y-2">
+                            <h2 class="font-cinzel text-2xl text-white font-bold">Portail Investisseur PAMM Vantage</h2>
+                            <p class="text-xs text-slate-300 leading-relaxed font-light">
+                                Le suivi détaillé de vos performances, la gestion de votre capital et vos retraits s'effectuent directement sur le portail officiel de notre courtier partenaire <strong>Vantage Markets</strong>.
+                            </p>
+                        </div>
+
+                        <div class="p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl text-left space-y-2">
+                            <div class="flex items-center gap-2 text-amber-400 font-semibold text-xs uppercase tracking-wider">
+                                <i data-lucide="info" class="w-4 h-4 flex-shrink-0"></i>
+                                <span>Instruction de Connexion</span>
+                            </div>
+                            <p class="text-xs text-slate-300 leading-relaxed font-light">
+                                Connectez-vous sur l'espace PAMM Vantage en utilisant le <strong>Login du compte PAMM MT5</strong> et le mot de passe transmis par email lors de la validation.
+                            </p>
+                        </div>
+
+                        <div class="pt-2">
+                            <a href="https://pamm16.vantagemarkets.com/app/auth/investor" target="_blank" rel="noopener noreferrer" class="btn-gold py-3.5 px-6 w-full text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg hover:scale-[1.02] transition-transform">
+                                <span>Accéder à mon espace PAMM Vantage</span>
+                                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                        <p class="text-[10px] text-slate-500 italic">Connexion sécurisée 24/7 sur pamm16.vantagemarkets.com</p>
+                    </div>
+                </div>
+
+                <!-- Hidden Lock Overlay for legacy compatibility -->
+                <div id="dashboardLockOverlay" class="hidden"></div>
+
+                <!-- Content grid (blurred) -->
+                <div id="dashboardRealContent" class="space-y-8" style="filter: blur(20px) opacity(0.35); pointer-events: none; user-select: none;">
+                    
+                    <!-- Performance KPIs Row -->
+                    <div class="stats-row grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="glass stat-card p-6 text-center space-y-1" id="tutoStatBalance">
+                            <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Solde PAMM</span>
+                            <div class="stat-val text-xl sm:text-2xl font-bold font-mono text-white" id="statBalance">$24,840.50</div>
+                        </div>
+                        <div class="glass stat-card p-6 text-center space-y-1" id="tutoStatProfit">
+                            <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Gains Brut</span>
+                            <div class="stat-val text-xl sm:text-2xl font-bold font-mono text-amber-400" id="statProfit">+$7,452.12</div>
+                        </div>
+                        <div class="glass stat-card p-6 text-center space-y-1" id="tutoStatProfitNet">
+                            <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Gains Net (-30% PAMM)</span>
+                            <div class="stat-val text-xl sm:text-2xl font-bold font-mono text-emerald-400" id="statProfitNet">+$5,216.48</div>
+                        </div>
+                        <div class="glass stat-card p-6 text-center space-y-1" id="tutoStatToday">
+                            <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Gain du Jour</span>
+                            <div class="stat-val text-xl sm:text-2xl font-bold font-mono text-white" id="statToday">+$342.10</div>
+                        </div>
+                    </div>
+
+                    <!-- Performance Chart & Widget -->
+                    <div class="dash-grid grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <!-- Chart -->
+                        <div class="glass chart-card p-6 lg:col-span-8 space-y-6" id="tutoChartCard">
+                            <div class="chart-header flex flex-col sm:flex-row justify-between items-center gap-4">
+                                <h3 class="font-cinzel text-lg text-white">Croissance de l'Équité</h3>
+                                <div class="tf-btns flex gap-1.5 bg-white/5 border border-white/10 rounded-lg p-1">
+                                    <button class="btn-tf px-3 py-1.5 rounded text-[10px] font-bold text-slate-400 hover:text-white" onclick="updateTimeframe('1D')">1J</button>
+                                    <button class="btn-tf px-3 py-1.5 rounded text-[10px] font-bold text-slate-400 hover:text-white" onclick="updateTimeframe('1W')">1S</button>
+                                    <button class="btn-tf px-3 py-1.5 rounded text-[10px] font-bold text-amber-400 bg-amber-500/10" onclick="updateTimeframe('1M')">1M</button>
+                                    <button class="btn-tf px-3 py-1.5 rounded text-[10px] font-bold text-slate-400 hover:text-white" onclick="updateTimeframe('3M')">3M</button>
+                                </div>
+                            </div>
+                            <div class="h-[280px] sm:h-[360px] relative">
+                                <canvas id="performanceChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- 30 Derniers Jours -->
+                        <div class="glass history-card p-6 lg:col-span-4 space-y-4 flex flex-col justify-between" style="max-height: 480px;">
+                            <div>
+                                <h3 class="font-cinzel text-lg text-white">📊 30 Derniers Jours</h3>
+                                <p class="text-xs text-slate-400 font-light leading-relaxed mb-3">Gains nets et performances consolidées.</p>
+                            </div>
+                            <div class="table-wrap overflow-y-auto" style="flex: 1; max-height: 340px;">
+                                <div class="table-inner divide-y divide-white/5">
+                                    <div class="grid grid-cols-3 gap-2 py-2.5 text-[9px] uppercase tracking-widest text-slate-400 font-bold border-b border-white/5 sticky top-0 bg-[#030712]/80 backdrop-blur z-10">
+                                        <span>Date</span>
+                                        <span class="text-right">Gains</span>
+                                        <span class="text-right">Perf</span>
+                                    </div>
+                                    <div id="dailyHistoryTableBody" class="divide-y divide-white/5">
+                                        <!-- Dynamically populated -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ── VIEW: BOT ── -->
+            <div id="viewBot" class="view hidden">
+                <!-- Stage A: Selection of available Bots -->
+                <div id="botSelectionStage" class="space-y-6">
+                    <h2 class="font-cinzel text-2xl sm:text-3xl text-center text-white">Nos Solutions <span class="gold-luxury-text font-medium">Algorithmiques</span></h2>
+                    <p class="text-xs text-slate-400 text-center max-w-xl mx-auto leading-relaxed">Sélectionnez le robot de trading adapté à vos objectifs financiers pour accéder à sa configuration.</p>
+                    
+                    <div class="stage-a-grid grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <!-- Column Left: Available Bots Stack -->
+                        <div class="lg:col-span-8 space-y-6">
+                            <h3 class="bot-selection-header font-cinzel text-lg text-white">🤖 Robots Disponibles</h3>
+                            
+                            <div class="space-y-4" id="tutoBotList">
+                                <!-- SynapX Card -->
+                                <div class="glass bot-selection-card p-6 md:p-8 relative overflow-hidden border border-white/10 hover:border-amber-500/30 cursor-pointer transition flex flex-col justify-between h-auto md:h-[320px] rounded-3xl" id="tutoSynapXCard" onclick="selectBot('rubix')">
+                                    <div class="panda-glow absolute inset-0 bg-radial-gradient from-amber-500/5 to-transparent pointer-events-none"></div>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center md:h-full z-10 relative">
+                                        <!-- Left Side: Large visual icon/graphic (col-span-4) -->
+                                        <div class="md:col-span-4 flex flex-col items-center justify-center text-center border-b md:border-b-0 md:border-r border-white/10 pb-6 md:pb-0 md:pr-8 md:h-full">
+                                            <div class="relative mb-3 group">
+                                                <div class="absolute -inset-2 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 opacity-20 blur-lg group-hover:opacity-40 transition duration-500"></div>
+                                                <img src="icon.png" alt="SynapX" class="bot-logo-img w-24 h-24 rounded-3xl object-contain border border-white/15 bg-[#0a0f1d] p-4 shadow-xl relative z-10 transition-transform duration-300 group-hover:scale-105" onerror="this.src='https://placehold.co/150x150/101015/d4af37?text=SynapX'">
+                                            </div>
+                                            <h3 class="font-cinzel text-xl font-bold tracking-widest text-white mt-2">SynapX</h3>
+                                            <span class="active-badge mt-2 inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">Disponible</span>
+                                        </div>
+                                        
+                                        <!-- Right Side: Detailed Features & Action (col-span-8) -->
+                                        <div class="md:col-span-8 flex flex-col justify-between md:h-full pl-0 md:pl-2 text-left">
+                                            <div class="space-y-4">
+                                                <p class="bot-desc text-xs text-slate-300 font-light leading-relaxed">
+                                                    Algorithme phare de l'écosystème Mitsuyoshi. Il combine une croissance stable de l'équité, une couverture adaptative dynamique et une gestion de risque ultra-précise pour sécuriser vos gains.
+                                                </p>
+                                                
+                                                <!-- Premium Grid of features -->
+                                                <div class="grid grid-cols-2 gap-x-6 gap-y-3 pt-2">
+                                                    <div class="flex items-center gap-2.5 text-xs text-slate-300">
+                                                        <span class="w-5 h-5 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-[10px]">✓</span>
+                                                        <span class="font-light">Couverture (Hedging)</span>
+                                                    </div>
+                                                    <div class="flex items-center gap-2.5 text-xs text-slate-300">
+                                                        <span class="w-5 h-5 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-[10px]">✓</span>
+                                                        <span class="font-light">Protection de capital</span>
+                                                    </div>
+                                                    <div class="flex items-center gap-2.5 text-xs text-slate-300">
+                                                        <span class="w-5 h-5 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-[10px]">✓</span>
+                                                        <span class="font-light">Gestion 100% passive</span>
+                                                    </div>
+                                                    <div class="flex items-center gap-2.5 text-xs text-slate-300">
+                                                        <span class="w-5 h-5 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-[10px]">✓</span>
+                                                        <span class="font-light">Drawdown contrôlé</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Bottom Action Area -->
+                                            <div class="border-t border-white/5 pt-4 mt-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+                                                <span class="text-[10px] text-slate-400 font-light uppercase tracking-wider">Modes : Conservateur | Modéré | Débridé</span>
+                                                <button class="btn-gold py-2.5 px-6 w-auto text-xs font-bold uppercase tracking-widest shadow-lg shadow-amber-500/10">Configurer ce Robot</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+
+                            </div>
+                        </div>
+
+                        <!-- Video Presentation Card -->
+                        <div class="lg:col-span-4 space-y-6">
+                            <h3 class="bot-selection-header font-cinzel text-lg text-white">🎬 Présentation</h3>
+                            <div class="glass p-5 space-y-4 rounded-3xl border border-white/10">
+                                <div class="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-lg">
+                                    <iframe class="w-full h-full" src="https://www.youtube.com/embed/BrjA8SqutFw" title="Présentation SynapX" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                </div>
+                                <div class="text-left space-y-1">
+                                    <h4 class="font-cinzel text-sm font-bold text-white uppercase tracking-wider">Académie SynapX</h4>
+                                    <p class="text-xs text-slate-400 font-light leading-relaxed">Découvrez le fonctionnement complet de l'algorithme SynapX et ses stratégies de trading adaptatives.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stage B1: SynapX Configurator -->
+                <div id="rubixConfiguratorStage" class="space-y-6 hidden">
+
+                            <!-- Hidden Accounts counts & recap stubs for Mitsu/SynapX Bot -->
+                            <div style="display: none !important;">
+                                <input type="number" id="mitsuAccountsCount" value="1">
+                                <span id="mitsuAccountsAddLabel"></span>
+                                <span id="mitsuSummaryAccountsPrice"></span>
+                                <span id="mitsuPartnerLinks"></span>
+                                <strong id="recapMitsuAccounts">-</strong>
+                                <strong id="recapMitsuMonthlyPrice">-</strong>
+                                <div id="mitsuPropShareRow"></div>
+                            </div>
+
+                    <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4">
+                        <button class="px-5 py-2.5 border border-white/10 hover:bg-white/5 text-white text-xs uppercase tracking-widest font-semibold rounded-xl transition w-max" onclick="goBackToSelection()">
+                            ← Retour aux Robots
+                        </button>
+                        <h3 class="font-cinzel text-xl text-white">Configuration : SynapX</h3>
+                    </div>
+
+                    <div class="config-split grid grid-cols-1 lg:grid-cols-12 gap-6" id="mitsuConfigSplit">
+                        <!-- Left: Form -->
+                        <div class="glass configurator-card p-6 lg:col-span-7 space-y-6">
+                            <div class="flex justify-between items-center gap-4 flex-wrap">
+                                <h4 class="font-cinzel text-lg text-amber-400 font-medium">Options de licence</h4>
+                                <!-- Hidden Region Switcher to prevent script crash -->
+                                <div class="flex bg-white/5 border border-white/10 rounded-lg p-1" style="display: none !important;">
+                                    <button id="btnRegionEU" onclick="setMitsuRegion('EU')" class="px-3 py-1.5 rounded text-[10px] font-bold text-amber-400 bg-amber-500/10">Europe (€)</button>
+                                    <button id="btnRegionAF" onclick="setMitsuRegion('AF')" class="px-3 py-1.5 rounded text-[10px] font-bold text-slate-400 hover:text-white">Afrique ($)</button>
+                                </div>
+                            </div>
+
+                            <!-- Plan cards: Low Cost, Normal, Extreme -->
+                            <div class="space-y-2">
+                                <span class="config-label text-[10px] uppercase tracking-widest text-slate-400 font-bold block">Choix du plan</span>
+                                <div class="grid grid-cols-3 gap-3">
+                                    <div id="cardMitsuLow" class="glass plan-card p-4 rounded-xl cursor-pointer border border-emerald-500 text-center bg-emerald-500/5 active" onclick="selectMitsuPlan('low')">
+                                        <div class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-1">Conservateur</div>
+                                        <div class="text-xs sm:text-sm font-bold font-mono text-white" id="valMitsuLowPrice">Conservateur</div>
+                                        <div class="text-[9px] text-emerald-400 font-semibold mt-1" id="valMitsuLowAdd">Gratuit</div>
+                                    </div>
+                                    <div id="cardMitsuNormal" class="glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center" onclick="selectMitsuPlan('normal')">
+                                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Modéré</div>
+                                        <div class="text-xs sm:text-sm font-bold font-mono text-white" id="valMitsuNormalPrice">Modéré</div>
+                                        <div class="text-[9px] text-slate-400 mt-1" id="valMitsuNormalAdd">Gratuit</div>
+                                    </div>
+                                    <div id="cardMitsuExtreme" class="glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center" onclick="selectMitsuPlan('extreme')">
+                                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Débridé</div>
+                                        <div class="text-xs sm:text-sm font-bold font-mono text-white" id="valMitsuExtremePrice">Débridé</div>
+                                        <div class="text-[9px] text-slate-400 mt-1" id="valMitsuExtremeAdd">Gratuit</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Plan Details Box -->
+                            <div id="mitsuPlanDetailsBox" class="p-4 rounded-2xl bg-amber-500/5 border border-amber-500/20 space-y-2 text-left">
+                                <div class="text-xs font-bold text-amber-400 flex items-center gap-2">
+                                    <span id="mitsuDetailIcon">🛡️</span> <span id="mitsuDetailTitle" class="font-cinzel">Plan Low Cost (Perso)</span>
+                                </div>
+                                <ul id="mitsuDetailList" class="text-xs text-slate-400 pl-4 list-disc space-y-1">
+                                    <li>Objectif de profit mensuel : <strong>~25.0%</strong> par mois</li>
+                                    <li>Objectif de profit hebdomadaire : <strong>~5.7%</strong> par semaine</li>
+                                    <li>Niveau de risque statistique : <strong>Prudent & Modéré</strong></li>
+                                    <li>🎯 <strong>Avantage</strong> : Idéal pour sécuriser un capital régulier avec un drawdown minimal et un risque contrôlé.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Hidden Broker Partner selection to prevent script crash -->
+                            <div class="space-y-2 text-left" style="display: none !important;">
+                                <span class="config-label text-[10px] uppercase tracking-widest text-slate-400 font-bold block">Courtier de trading</span>
+                                <select id="mitsuBrokerChoice" class="select-field text-left" onchange="updateMitsuCalculator()">
+                                    <option value="partner_vantage" selected>Vantage Markets (Partenaire)</option>
+                                    <option value="partner_puprime">PU Prime (Partenaire)</option>
+                                    <option value="nonpartner">Autre courtier (Non partenaire)</option>
+                                </select>
+                            </div>
+
+                            <!-- Capital input for simulation -->
+                            <div class="space-y-2 text-left">
+                                <span id="mitsuSimLabelTitle" class="config-label text-[10px] uppercase tracking-widest text-slate-400 font-bold block">Capital initial (Broker) pour simulation</span>
+                                <div class="flex items-center gap-4">
+                                    <div class="custom-stepper">
+                                        <button class="stepper-btn minus" onclick="stepDown('mitsuSimCapital', 500, 10000, 100); return false;">−</button>
+                                        <input type="number" id="mitsuSimCapital" class="w-16 border-none bg-transparent text-center font-bold font-mono text-white" value="1000" min="500" max="10000" step="100" oninput="updateMitsuCalculator()">
+                                        <button class="stepper-btn plus" onclick="stepUp('mitsuSimCapital', 500, 10000, 100); return false;">+</button>
+                                    </div>
+                                    <span id="mitsuSimLabelDesc" class="text-xs text-slate-400 font-light">€/$ déposés chez votre broker</span>
+                                </div>
+                            </div>
+
+                            <!-- Summary box -->
+                            <div class="summary-box p-4 rounded-xl bg-white/5 border border-white/10 space-y-2 text-left">
+                                <h5 class="text-xs font-cinzel text-amber-400">Récapitulatif de l'offre</h5>
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-slate-400">Prix de la licence :</span>
+                                    <span id="mitsuSummaryBasePrice" class="font-bold text-white font-mono">300.00 €</span>
+                                </div>
+                                <div class="flex justify-between text-sm font-bold border-t border-white/10 pt-3">
+                                    <span>PRIX UNIQUE :</span>
+                                    <span id="mitsuSummaryTotalPrice" class="text-amber-400 font-mono text-lg">300.00 €</span>
+                                </div>
+                            </div>
+
+                             <button class="btn-gold" onclick="openActivationWizard()">
+                                 Activer
+                             </button>
+                        </div>
+
+                        <!-- Right: Simulation -->
+                        <div class="glass configurator-card p-6 lg:col-span-5 flex flex-col justify-between space-y-6">
+                            <div class="space-y-4 text-left">
+                                <h4 class="font-cinzel text-lg text-white">Simulation de rentabilité</h4>
+                                <p class="text-xs text-slate-400 font-light leading-relaxed">Projection théorique sur 12 mois de votre capital (intérêts composés, hors retraits).</p>
+                                
+                                <div class="h-[240px] relative">
+                                    <canvas id="mitsuSimulationChart"></canvas>
+                                </div>
+
+                                <div class="p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20 text-center font-semibold text-xs text-emerald-400">
+                                    📈 Capital final théorique à 12 mois : <strong id="mitsuSimFinalCapital" class="text-white text-sm font-mono font-bold">1,240.50 €/$</strong>
+                                </div>
+                            </div>
+                            
+                            <!-- Recap Card (Large Premium dossier format) -->
+                            <div class="glass p-6 rounded-2xl border border-white/10 bg-[#060a16]/50 flex flex-col justify-between space-y-4 text-left">
+                                <h5 class="font-cinzel text-xs text-amber-400">📋 Récapitulatif de Configuration</h5>
+                                <div class="space-y-2 text-xs divide-y divide-white/5">
+                                    <div class="flex justify-between py-2">
+                                        <span class="text-slate-400">Capital de Départ :</span>
+                                        <strong class="text-white font-mono" id="recapMitsuCapital">1,000.00 €</strong>
+                                    </div>
+                                    <div class="flex justify-between py-2">
+                                        <span class="text-slate-400">Cible Mensuelle :</span>
+                                        <strong class="text-emerald-400 font-mono" id="recapMitsuMonthlyGain">~25.0%</strong>
+                                    </div>
+                                    <div class="flex justify-between py-2">
+                                        <span class="text-slate-400">Licence d'Accès :</span>
+                                        <strong class="text-white font-mono" id="recapMitsuUniquePrice">GRATUIT</strong>
+                                    </div>
+                                    <div class="flex justify-between py-2">
+                                        <span class="text-slate-400">Partage des profits :</span>
+                                        <strong class="text-amber-400 font-mono">30% sur gains</strong>
+                                    </div>
+                                    <div class="flex justify-between py-2">
+                                        <span class="text-slate-400">Type de Capital :</span>
+                                        <strong class="text-white uppercase" id="recapMitsuCapType">Perso</strong>
+                                    </div>
+                                </div>
+                                
+                                <div class="p-3 bg-amber-500/5 border border-amber-500/10 rounded-xl text-[10px] text-slate-400 leading-relaxed space-y-1">
+                                    <span class="text-amber-400 font-bold font-cinzel block">Inclus dans votre Licence :</span>
+                                    • Liaison API sécurisée & exécution ultra-rapide.<br>
+                                    • Protection intégrée contre les sur-expositions.<br>
+                                    • Support technique prioritaire 7j/7 par nos ingénieurs.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <!-- ── VIEW: CONFIG ── -->
+            <div id="viewConfig" class="view hidden space-y-6">
+                <div class="config-tabs-mobile flex gap-2 bg-white/5 border border-white/10 rounded-xl p-1 md:hidden" id="configTabsMobile">
+                    <button class="config-tab-btn flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wider text-amber-400 bg-amber-500/10 active font-bold" id="btnConfigTabTrading" onclick="switchConfigMobileTab('trading')">Trading</button>
+                    <button class="config-tab-btn flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wider text-slate-400 hover:text-white" id="btnConfigTabSecurity" onclick="switchConfigMobileTab('security')">Sécurité</button>
+                </div>
+                
+                
+                <!-- Suspension banner (admin) -->
+                <div class="flex gap-3 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs items-center" id="suspensionBanner" style="display: none; margin-bottom: 16px;">
+                    <i data-lucide="alert-triangle" class="w-5 h-5 flex-shrink-0"></i>
+                    <p>Votre compte a été <strong>suspendu par l'administration</strong>. Le trading automatique est temporairement interrompu. Contactez le support pour plus d'informations.</p>
+                </div>
+
+                <div class="config-grid grid grid-cols-1 md:grid-cols-2 gap-6 show-trading" id="configGrid">
+                    
+                    <!-- Paramètres de Trading -->
+                    <div class="glass config-card p-6 md:p-8 space-y-6 relative overflow-hidden" id="tutoConfigCard">
+
+                    <!-- Lock Overlay for Trading Params -->
+                    <div id="configLockMask" class="absolute inset-0 z-50 flex flex-col items-center justify-center p-6 text-center bg-[#030712]/90 backdrop-blur-md border border-amber-500/10 rounded-2xl" style="display: none;">
+                        <div class="w-12 h-12 rounded-full bg-amber-500/5 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-4">
+                            <i data-lucide="key-round" class="w-6 h-6" id="configLockIcon"></i>
+                        </div>
+                        <h4 class="font-cinzel text-base text-amber-400 font-medium mb-2" id="configLockTitle">Liaison MT5 Requise</h4>
+                        <p class="text-[11px] text-slate-400 max-w-[240px] leading-relaxed mb-4" id="configLockDesc">
+                            Veuillez d'abord lier votre compte de trading MetaTrader 5 (MT5) pour pouvoir ajuster les paramètres de trading automatique.
+                        </p>
+                        <button class="btn-gold py-2.5 px-6 w-auto text-xs font-semibold" id="configLockButton" onclick="switchView('bot')">Configurer mon Bot</button>
+                    </div>
+
+                    <!-- Lock Overlay for Trading Params (Centralized copy-trading) -->
+                    <div id="centralizedConfigMask" class="absolute inset-0 z-50 flex flex-col items-center justify-center p-6 text-center bg-[#030712]/95 backdrop-blur-md border border-amber-500/10 rounded-2xl" style="display: none;">
+                        <div class="w-12 h-12 rounded-full bg-amber-500/5 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-4">
+                            <i data-lucide="info" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="font-cinzel text-base text-amber-400 font-medium mb-2">Gestion Centralisée</h4>
+                        <p class="text-[11px] text-slate-400 max-w-[240px] leading-relaxed">
+                            Votre compte de trading est configuré en mode d'adhésion automatique. Les paramètres de lot size, d'exposition et de gestion du risque sont pilotés de manière optimale et centralisée selon le profil choisi (<span id="centralizedModeLabel" class="text-white font-semibold">Conservateur</span>).
+                        </p>
+                    </div>
+
+                        <div class="space-y-4">
+                            <h3 class="config-section-title font-cinzel text-lg text-white">Paramètres de Trading</h3>
+                            <p class="config-section-sub text-xs text-slate-400 font-light">Ajustez les paramètres de votre algorithme.</p>
+
+                            <!-- Client toggle -->
+                            <div class="toggle-wrapper flex justify-between items-center p-4 rounded-xl bg-white/5 border border-white/10" id="clientToggleWrapper">
+                                <div class="flex flex-col gap-0.5 text-left">
+                                    <span class="toggle-title text-xs font-semibold text-white">Trading Actif</span>
+                                    <span class="toggle-sub text-[10px] text-slate-400">Activer ou suspendre votre trading</span>
+                                </div>
+                                <label class="switch relative inline-block w-12 h-6">
+                                    <input type="checkbox" id="checkClientEnabled" class="opacity-0 w-0 h-0" checked>
+                                    <span class="slider absolute inset-0 cursor-pointer rounded-full bg-white/10 before:absolute before:left-1 before:top-1 before:w-4 before:h-4 before:rounded-full before:bg-white before:transition-transform"></span>
+                                </label>
+                            </div>
+
+                            <div class="space-y-1 text-left">
+                                <span class="config-label text-[10px] uppercase tracking-widest text-slate-400 font-bold block">Multiplicateur de Lot</span>
+                                <input type="number" id="inputLotMult" class="input-field" step="0.01" min="0.1" value="1.00" placeholder="1.00">
+                            </div>
+
+                            <div class="space-y-1 text-left" style="display: none !important;">
+                                <div class="flex justify-between items-baseline">
+                                    <span class="config-label text-[10px] uppercase tracking-widest text-slate-400 font-bold block">Objectif de Profit Journalier ($)</span>
+                                    <span id="dailyProfitLimitLabel" class="text-[9px] text-slate-400">Limite autorisée : $500.00</span>
+                                </div>
+                                <input type="number" id="inputDailyProfitTarget" class="input-field" step="0.01" value="300.00" placeholder="Objectif en $">
+                            </div>
+                        </div>
+
+                        <button class="btn-gold py-3.5" onclick="saveConfig()">Appliquer les Paramètres</button>
+                    </div>
+
+                    <!-- Sécurité & Profil -->
+                    <div class="glass config-card p-6 md:p-8 space-y-6 flex flex-col justify-between" id="tutoSecurityCard">
+                        <div class="space-y-4 text-left">
+                            <h3 class="config-section-title font-cinzel text-lg text-white">Sécurité & Accès</h3>
+                            <p class="config-section-sub text-xs text-slate-400 font-light">Mettez à jour votre mot de passe d'accès.</p>
+
+                            <div class="space-y-1">
+                                <span class="config-label text-[10px] uppercase tracking-widest text-slate-400 font-bold block">Ancien Mot de Passe</span>
+                                <input type="password" id="oldPass" class="input-field" placeholder="Mot de passe actuel">
+                            </div>
+
+                            <div class="space-y-1">
+                                <span class="config-label text-[10px] uppercase tracking-widest text-slate-400 font-bold block">Nouveau Mot de Passe</span>
+                                <input type="password" id="newPass" class="input-field" placeholder="Nouveau mot de passe">
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-3">
+                            <button class="btn-gold py-3.5" onclick="changePassword()">Valider le Changement</button>
+                        </div>
+                    </div>
+
+                
+                    <!-- Stripe Billing Card Stub -->
+                    <div id="stripeBillingCard" style="display: none !important;">
+                        <span id="configActiveMonthlyPrice"></span>
+                        <span id="stripeStatusBadge"></span>
+                        <button id="btnStripeCheckout"></button>
+                        <button id="btnStripePortal"></button>
+                        <div id="stripeTestModeContainer"></div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ── VIEW: COMMUNITY ── -->
+            <div id="viewCommunity" class="view hidden space-y-8">
+                <div class="community-header text-center max-w-xl mx-auto space-y-3">
+                    <h2 class="font-cinzel text-2xl sm:text-3xl text-white">Rejoignez la <span class="gold-luxury-text font-medium">Communauté</span></h2>
+                    <p class="text-xs text-slate-400 font-light leading-relaxed">Suivez les performances SynapX en temps réel, partagez vos résultats et interagissez avec l'écosystème d'investisseurs.</p>
+                </div>
+
+                <!-- Live Cumulative Profits widget -->
+                <div class="max-w-2xl mx-auto">
+                    <div class="glass community-gains-card p-8 text-center space-y-4 border border-emerald-500/20 rounded-3xl bg-emerald-500/5">
+                        <div class="flex justify-center items-center gap-2">
+                            <span class="community-live-dot w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span class="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Live · Temps Réel</span>
+                        </div>
+                        <h3 class="font-cinzel text-base text-white">Bénéfice Cumulé Communauté</h3>
+                        <div id="communityTotalGains" class="text-3xl sm:text-4xl font-bold font-mono text-amber-400 font-prestige">+$1,484,103.20</div>
+                    </div>
+                </div>
+
+                <div class="community-grid grid grid-cols-1 max-w-md mx-auto gap-6" id="tutoCommunityGrid">
+                    <!-- Telegram -->
+                    <div class="glass community-card telegram p-6 md:p-8 flex flex-col justify-between space-y-6">
+                        <div class="space-y-4 text-left">
+                            <div class="cc-icon telegram w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
+                                <i data-lucide="send" class="w-6 h-6"></i>
+                            </div>
+                            <span class="cc-tag telegram inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-sky-500/10 text-sky-400 border border-sky-500/20">Telegram</span>
+                            <h3 class="cc-title font-cinzel text-lg text-white">Canal Annonces SynapX</h3>
+                            <p class="cc-desc text-xs text-slate-400 font-light leading-relaxed">Les analyses de marché, notes du trader et suivis des opérations de l'algorithme.</p>
+                        </div>
+                        <a href="https://t.me/ysestp" target="_blank" class="cc-btn btn-gold py-3 text-center">Rejoindre Telegram</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── VIEW: AFFILIATION ── -->
+            <div id="viewAffiliation" class="view hidden space-y-8">
+                <!-- Top Rank Card -->
+                <div class="glass p-6 md:p-8 rounded-3xl border border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
+                    <div class="space-y-3 text-left w-full md:w-2/3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-2xl" id="affRankBadge">🥉</span>
+                            <h2 class="font-cinzel text-xl text-white font-semibold uppercase tracking-wider" id="affRankTitle">Ambassadeur Bronze</h2>
+                        </div>
+                        <p class="text-xs text-slate-400 font-light leading-relaxed">
+                            Félicitations pour votre engagement ! Vous gagnez actuellement <strong class="text-amber-400" id="affCommRateLabel">4%</strong> des revenus de vos filleuls. Augmentez votre volume de fonds levés pour débloquer les commissions Silver et Gold.
+                        </p>
+                        <!-- Progress Bar -->
+                        <div class="space-y-1.5 pt-2">
+                            <div class="flex justify-between text-[10px] uppercase tracking-widest text-slate-400 font-bold">
+                                <span>Progression Palier Suivant</span>
+                                <span id="affProgressText">400$ / 10 000$</span>
+                            </div>
+                            <div class="w-full h-2 rounded-full bg-white/5 border border-white/10 overflow-hidden">
+                                <div id="affProgressBar" class="h-full bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full transition-all duration-500" style="width: 4%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass p-4 rounded-xl border border-amber-500/10 bg-[#030712]/50 text-center flex flex-col justify-center min-w-[200px] w-full md:w-auto h-full">
+                        <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block mb-1">Commissions de la Semaine</span>
+                        <span class="font-mono text-3xl font-bold text-amber-400" id="affWeeklyCommission">$0.00</span>
+                        <span class="text-[9px] text-slate-500 font-light block mt-1">Retrait automatique chaque vendredi</span>
+                    </div>
+                </div>
+
+                <!-- KPIs row -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <div class="glass p-6 rounded-2xl border border-white/10 text-left space-y-2">
+                        <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block">Fonds Levés Totaux</span>
+                        <span class="font-mono text-2xl font-bold text-white" id="affTotalCapitalBrought">$0.00</span>
+                        <p class="text-[10px] text-slate-500 leading-none">Capital investi cumulé de vos filleuls</p>
+                    </div>
+                    <div class="glass p-6 rounded-2xl border border-white/10 text-left space-y-2">
+                        <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block">Nombre de Filleuls</span>
+                        <span class="font-mono text-2xl font-bold text-white" id="affReferredCount">0</span>
+                        <p class="text-[10px] text-slate-500 leading-none">Partenaires actifs enregistrés</p>
+                    </div>
+                    <div class="glass p-6 rounded-2xl border border-white/10 text-left space-y-2">
+                        <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block">Partage des Gains</span>
+                        <span class="font-mono text-2xl font-bold text-amber-400" id="affCommissionPercentage">4.00%</span>
+                        <p class="text-[10px] text-slate-500 leading-none">Votre taux de commission actuel</p>
+                    </div>
+                </div>
+
+                <!-- Ranks Breakdown Grid -->
+                <div class="glass p-6 md:p-8 rounded-3xl border border-white/10 space-y-4">
+                    <div class="text-left">
+                        <h3 class="font-cinzel text-base text-white font-semibold uppercase tracking-wider">🏆 Grille des Rangs & Commissions</h3>
+                        <p class="text-xs text-slate-400 font-light">Le pourcentage de commission s'applique chaque semaine sur les profits réels générés par vos filleuls directs.</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+                        <!-- Bronze Card -->
+                        <div class="glass p-5 rounded-2xl border border-amber-800/40 bg-amber-900/10 text-left space-y-3 relative overflow-hidden transition-all duration-300" id="tierCardBronze">
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl">🥉</span>
+                                <span id="tierBadgeBronze" class="text-[9px] uppercase tracking-widest font-bold px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">0 à 25k$</span>
+                            </div>
+                            <div>
+                                <h4 class="font-cinzel text-sm font-bold text-white uppercase">Bronze</h4>
+                                <p class="text-[11px] text-slate-400 font-light">De 0 $ à 25 000 $ de fonds levés</p>
+                            </div>
+                            <div class="pt-2 border-t border-white/10 flex justify-between items-baseline">
+                                <span class="text-[10px] text-slate-400 uppercase tracking-wider">Commission :</span>
+                                <span class="font-mono text-xl font-bold text-amber-400">2 %</span>
+                            </div>
+                        </div>
+
+                        <!-- Silver Card -->
+                        <div class="glass p-5 rounded-2xl border border-slate-500/40 bg-slate-500/10 text-left space-y-3 relative overflow-hidden transition-all duration-300" id="tierCardSilver">
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl">🥈</span>
+                                <span id="tierBadgeSilver" class="text-[9px] uppercase tracking-widest font-bold px-2.5 py-0.5 rounded-full bg-slate-300/10 text-slate-300 border border-slate-300/20">25k$ à 70k$</span>
+                            </div>
+                            <div>
+                                <h4 class="font-cinzel text-sm font-bold text-white uppercase">Silver</h4>
+                                <p class="text-[11px] text-slate-400 font-light">De 25 000 $ à 70 000 $ levés</p>
+                            </div>
+                            <div class="pt-2 border-t border-white/10 flex justify-between items-baseline">
+                                <span class="text-[10px] text-slate-400 uppercase tracking-wider">Commission :</span>
+                                <span class="font-mono text-xl font-bold text-slate-200">4 %</span>
+                            </div>
+                        </div>
+
+                        <!-- Gold Card -->
+                        <div class="glass p-5 rounded-2xl border border-yellow-500/40 bg-yellow-500/10 text-left space-y-3 relative overflow-hidden transition-all duration-300" id="tierCardGold">
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl">🥇</span>
+                                <span id="tierBadgeGold" class="text-[9px] uppercase tracking-widest font-bold px-2.5 py-0.5 rounded-full bg-yellow-400/20 text-yellow-300 border border-yellow-400/30">70k$ à 200k$</span>
+                            </div>
+                            <div>
+                                <h4 class="font-cinzel text-sm font-bold text-white uppercase">Gold</h4>
+                                <p class="text-[11px] text-slate-400 font-light">De 70 000 $ à 200 000 $ levés</p>
+                            </div>
+                            <div class="pt-2 border-t border-white/10 flex justify-between items-baseline">
+                                <span class="text-[10px] text-slate-400 uppercase tracking-wider">Commission :</span>
+                                <span class="font-mono text-xl font-bold text-yellow-400">7 %</span>
+                            </div>
+                        </div>
+
+                        <!-- Diamond Card -->
+                        <div class="glass p-5 rounded-2xl border border-cyan-500/40 bg-cyan-500/10 text-left space-y-3 relative overflow-hidden transition-all duration-300" id="tierCardDiamond">
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl">💎</span>
+                                <span id="tierBadgeDiamond" class="text-[9px] uppercase tracking-widest font-bold px-2.5 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 border border-cyan-400/30">Plus de 200k$</span>
+                            </div>
+                            <div>
+                                <h4 class="font-cinzel text-sm font-bold text-white uppercase">Diamant</h4>
+                                <p class="text-[11px] text-slate-400 font-light">Plus de 200 000 $ de fonds levés</p>
+                            </div>
+                            <div class="pt-2 border-t border-white/10 flex justify-between items-baseline">
+                                <span class="text-[10px] text-slate-400 uppercase tracking-wider">Commission :</span>
+                                <span class="font-mono text-xl font-bold text-cyan-300">10 %</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Referral Code / Link & Crypto Address -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Parrainage -->
+                    <div class="glass p-6 md:p-8 rounded-2xl border border-white/10 space-y-4 text-left">
+                        <h3 class="font-cinzel text-base text-white font-semibold uppercase tracking-wider">Parrainage Direct</h3>
+                        <p class="text-xs text-slate-400 leading-relaxed font-light">Partagez votre code ou votre lien d'inscription unique pour lier vos filleuls à votre réseau de parrainage.</p>
+                        
+                        <div class="space-y-3 pt-2">
+                            <div class="space-y-1">
+                                <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block">Votre Code de Parrainage</span>
+                                <div class="flex gap-2">
+                                    <input type="text" id="affReferralCodeInput" class="input-field font-mono font-bold text-amber-400 text-sm" readonly value="SYNAPX-XXXX" style="margin-bottom:0;">
+                                    <button class="btn-gold px-4 text-xs font-semibold py-0 flex-shrink-0" onclick="copyReferralCode()" style="width:auto;">Copier</button>
+                                </div>
+                            </div>
+                            <div class="space-y-1">
+                                <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block">Lien d'Inscription Affilié</span>
+                                <div class="flex gap-2">
+                                    <input type="text" id="affReferralLinkInput" class="input-field font-mono text-slate-300 text-xs" readonly value="https://synapx.com/?ref=XXXX" style="margin-bottom:0;">
+                                    <button class="btn-gold px-4 text-xs font-semibold py-0 flex-shrink-0" onclick="copyReferralLink()" style="width:auto;">Copier</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Retrait Crypto -->
+                    <div class="glass p-6 md:p-8 rounded-2xl border border-white/10 space-y-4 text-left flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-cinzel text-base text-white font-semibold uppercase tracking-wider">Moyen & Adresse de Retrait</h3>
+                            <p class="text-xs text-slate-400 leading-relaxed font-light">
+                                Sélectionnez votre réseau de retrait et renseignez votre adresse de portefeuille crypto pour recevoir vos commissions de parrainage.
+                            </p>
+                        </div>
+                        
+                        <div class="space-y-3 pt-2">
+                            <div class="space-y-1">
+                                <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block">Crypto / Réseau de Retrait</span>
+                                <select id="affCryptoNetworkSelect" class="input-field font-mono text-white text-xs bg-slate-900/90" style="margin-bottom:0; cursor:pointer;">
+                                    <option value="USDT-TRC20">USDT-TRC20</option>
+                                    <option value="USDT-ERC20">USDT-ERC20</option>
+                                    <option value="USDT-BEP20">USDT-BEP20</option>
+                                    <option value="USDT-POLYGON (MATIC)">USDT-POLYGON (MATIC)</option>
+                                    <option value="USDT-SOLANA">USDT-SOLANA</option>
+                                    <option value="USDT-ARBITRUM">USDT-ARBITRUM</option>
+                                    <option value="USDT-AVALANCHE-C">USDT-AVALANCHE-C</option>
+                                    <option value="USDC-ERC20">USDC-ERC20</option>
+                                    <option value="USDC-Arbitrum One">USDC-Arbitrum One</option>
+                                    <option value="Crypto-USDCBEP20">Crypto-USDCBEP20</option>
+                                    <option value="USDC-Solana">USDC-Solana</option>
+                                    <option value="BTC">BTC</option>
+                                    <option value="ETH">ETH</option>
+                                    <option value="SOL-SOLANA">SOL-SOLANA</option>
+                                    <option value="SOL-BEP20">SOL-BEP20</option>
+                                </select>
+                            </div>
+                            <div class="space-y-1">
+                                <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block">Adresse du Portefeuille</span>
+                                <input type="text" id="affCryptoAddressInput" class="input-field font-mono text-white text-xs" placeholder="Saisissez votre adresse crypto" style="margin-bottom:0;">
+                            </div>
+                            <button class="btn-gold py-2.5 text-xs font-semibold" onclick="saveAffiliateCryptoAddress()">Enregistrer le Moyen de Retrait</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Referred List Table -->
+                <div class="glass p-6 md:p-8 rounded-2xl border border-white/10 space-y-6">
+                    <div class="text-left">
+                        <h3 class="font-cinzel text-base text-white font-semibold uppercase tracking-wider">Liste de vos Filleuls</h3>
+                        <p class="text-xs text-slate-400 font-light">Suivi en direct du capital de vos filleuls et de vos revenus associés.</p>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-white/10 pb-3 text-slate-400 uppercase tracking-widest text-[9px] font-bold">
+                                    <th class="pb-3">Membre Filleul</th>
+                                    <th class="pb-3">Capital Investi</th>
+                                    <th class="pb-3">Performance (Semaine)</th>
+                                    <th class="pb-3 text-right">Vos Gains (Semaine)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="affReferredTableBody" class="divide-y divide-white/5 text-xs text-slate-300 font-light">
+                                <!-- Populated dynamically -->
+                                <tr>
+                                    <td colspan="4" class="py-6 text-center text-slate-500">Aucun filleul actif pour le moment. Parrainez des membres pour débloquer cette section.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Payouts History -->
+                <div class="glass p-6 md:p-8 rounded-2xl border border-white/10 space-y-6">
+                    <div class="text-left">
+                        <h3 class="font-cinzel text-base text-white font-semibold uppercase tracking-wider">Historique de vos Gains et Retraits</h3>
+                        <p class="text-xs text-slate-400 font-light">Historique des versements automatiques effectués sur votre adresse crypto.</p>
+                    </div>
+
+                        <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-white/10 pb-3 text-slate-400 uppercase tracking-widest text-[9px] font-bold">
+                                    <th class="pb-3">ID Transaction</th>
+                                    <th class="pb-3">Date de Versement</th>
+                                    <th class="pb-3">Adresse USDT TRC20</th>
+                                    <th class="pb-3 text-right">Montant Reçu</th>
+                                </tr>
+                            </thead>
+                            <tbody id="affPayoutsHistoryTableBody" class="divide-y divide-white/5 text-xs text-slate-300 font-light">
+                                <!-- Populated dynamically -->
+                                <tr>
+                                    <td colspan="4" class="py-6 text-center text-slate-500">Aucun historique de retrait disponible.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </main>
+    </div>
+
+    <!-- TUTORIAL VIDEO POPUP -->
+    <div id="tutoVideoModal" class="tuto-video-overlay fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md hidden justify-center items-center p-4">
+        <div class="tuto-video-card glass max-w-2xl w-full rounded-3xl overflow-hidden border border-amber-500/20 shadow-2xl">
+            <div class="tuto-video-card-header p-6 border-b border-white/10 flex justify-between items-center">
+                <h3 class="text-white font-cinzel text-lg flex items-center gap-2"><span class="text-amber-400">🎬</span> Présentation SynapX</h3>
+                <button class="tuto-video-close text-slate-400 hover:text-white text-2xl" onclick="closeTutoVideoModal()">&times;</button>
+            </div>
+            <div class="p-6 bg-[#030712] space-y-4">
+                <div class="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+                    <iframe id="tutoVideoIframe" class="w-full h-full" src="https://www.youtube.com/embed/BrjA8SqutFw" title="Présentation SynapX" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+                <p class="text-xs text-slate-400 text-center font-light leading-relaxed">
+                    Visionnez cette vidéo de présentation pour découvrir le fonctionnement complet de votre écosystème de trading SynapX.
+                </p>
+            </div>
+            <div class="tuto-video-card-footer p-6 border-t border-white/10 flex justify-center items-center">
+                <button class="tuto-video-cta w-full py-3 bg-amber-500 text-black font-semibold text-xs rounded-full uppercase tracking-widest hover:bg-amber-400 transition text-center" onclick="closeTutoVideoModal()">Accéder au Dashboard</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUTONOMOUS ACTIVATION WIZARD MODAL -->
+    <div id="activationWizardModal" class="tuto-video-overlay fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md hidden justify-center items-center p-4">
+        <div class="tuto-video-card glass max-w-md w-full rounded-3xl overflow-hidden border border-amber-500/20 shadow-2xl flex flex-col">
+            <!-- Modal Header -->
+            <div class="tuto-video-card-header p-6 border-b border-white/10 flex justify-between items-center">
+                <h3 class="text-white font-cinzel text-base flex items-center gap-2"><span class="text-amber-400">⚡</span> Activation SynapX</h3>
+                <button class="tuto-video-close text-slate-400 hover:text-white text-2xl" onclick="closeActivationWizard()">&times;</button>
+            </div>
+            
+            <!-- Step 1: Download Setup Guide -->
+            <div id="activationStep1" class="p-8 space-y-6 flex-grow flex flex-col justify-between">
+                <div class="space-y-4 text-center">
+                    <div class="w-12 h-12 rounded-full bg-amber-500/5 border border-amber-500/20 flex items-center justify-center mx-auto text-amber-400">
+                        <i data-lucide="file-text" class="w-6 h-6"></i>
+                    </div>
+                    <h4 class="font-cinzel text-sm text-white tracking-wider uppercase">Guide de Mise en Place</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed font-light">
+                        Téléchargez d'abord notre guide officiel contenant toutes les instructions nécessaires pour lier votre compte de trading MetaTrader 5 (MT5) PAMM à notre écosystème algorithmique.
+                    </p>
+                </div>
+                
+                <div class="space-y-4">
+                    <a href="SynapX Join.pdf" download target="_blank" onclick="markPdfDownloaded()" class="w-full py-3 border border-amber-500/30 hover:border-amber-500/60 text-amber-400 hover:bg-amber-500/5 font-semibold text-xs rounded-full uppercase tracking-widest transition flex items-center justify-center gap-2">
+                        <i data-lucide="download" class="w-4 h-4"></i> Télécharger SynapX Join.pdf
+                    </a>
+                    
+                    <button id="btnActivationNext" disabled class="w-full py-3 bg-amber-500 text-black font-semibold text-xs rounded-full uppercase tracking-widest hover:bg-amber-400 transition text-center opacity-50 cursor-not-allowed" onclick="goToActivationStep2()">
+                        Suivant
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 2: Input MT5 PAMM Account Number -->
+            <div id="activationStep2" class="p-8 space-y-6 flex-grow flex flex-col justify-between hidden">
+                <div class="space-y-4 text-center">
+                    <div class="w-12 h-12 rounded-full bg-amber-500/5 border border-amber-500/20 flex items-center justify-center mx-auto text-amber-400">
+                        <i data-lucide="hash" class="w-6 h-6"></i>
+                    </div>
+                    <h4 class="font-cinzel text-sm text-white tracking-wider uppercase">Numéro de Compte MT5 PAMM</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed font-light">
+                        Veuillez renseigner le numéro de compte MT5 PAMM reçu dans votre e-mail de configuration après avoir suivi les étapes du guide.
+                    </p>
+                </div>
+                
+                <div class="space-y-4">
+                    <input type="text" id="activationMt5Number" class="input-field w-full text-center font-mono font-bold text-white text-lg tracking-widest" placeholder="Ex: 849194" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 14px; outline: none; margin-bottom: 0;">
+                    
+                    <div class="flex gap-2">
+                        <button class="flex-1 py-3 border border-white/10 text-white font-semibold text-xs rounded-full uppercase tracking-widest hover:bg-white/5 transition text-center" onclick="goToActivationStep1()">
+                            Retour
+                        </button>
+                        <button class="flex-1 py-3 bg-amber-500 text-black font-semibold text-xs rounded-full uppercase tracking-widest hover:bg-amber-400 transition text-center" onclick="submitActivationRequest()">
+                            Envoyer
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Success / Pending confirmation -->
+            <div id="activationStep3" class="p-8 space-y-6 flex-grow flex flex-col justify-between hidden">
+                <div class="space-y-4 text-center">
+                    <div class="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto text-emerald-400">
+                        <i data-lucide="check-circle-2" class="w-6 h-6 animate-pulse"></i>
+                    </div>
+                    <h4 class="font-cinzel text-sm text-white tracking-wider uppercase">Demande Reçue</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed font-light">
+                        Votre demande d'activation a été enregistrée avec succès. Notre équipe technique validera l'adhésion de votre compte sous <strong>48 heures maximum</strong>.
+                    </p>
+                </div>
+                
+                <button class="w-full py-3 bg-emerald-500 text-black font-semibold text-xs rounded-full uppercase tracking-widest hover:bg-emerald-400 transition text-center" onclick="closeActivationWizard()">
+                    Compris
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         SCRIPTS
+    ══════════════════════════════════════ -->
+    <script>
+        // MOBILE SIDEBAR
+        function openSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (sidebar) sidebar.classList.add('open');
+            if (overlay) overlay.classList.add('show');
+        }
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (sidebar) sidebar.classList.remove('open');
+            if (overlay) overlay.classList.remove('show');
+        }
+
+        // STEPPERS
+        function stepDown(id, min, max, step = 1) {
+            const input = document.getElementById(id);
+            if (input) {
+                const inputMin = input.hasAttribute('min') ? parseFloat(input.getAttribute('min')) : min;
+                const inputStep = input.hasAttribute('step') ? parseFloat(input.getAttribute('step')) : step;
+                let val = parseFloat(input.value) || inputMin;
+                val = Math.max(inputMin, val - inputStep);
+                input.value = val;
+                input.dispatchEvent(new Event('input'));
+            }
+        }
+        function stepUp(id, min, max, step = 1) {
+            const input = document.getElementById(id);
+            if (input) {
+                const inputMin = input.hasAttribute('min') ? parseFloat(input.getAttribute('min')) : min;
+                const inputMax = input.hasAttribute('max') ? parseFloat(input.getAttribute('max')) : max;
+                const inputStep = input.hasAttribute('step') ? parseFloat(input.getAttribute('step')) : step;
+                let val = parseFloat(input.value) || inputMin;
+                val = Math.min(inputMax, val + inputStep);
+                input.value = val;
+                input.dispatchEvent(new Event('input'));
+            }
+        }
+
+        // CUSTOM SELECTS
+        function initCustomSelects() {
+            const selects = document.querySelectorAll('select.select-field');
+            selects.forEach(select => {
+                if (select.nextElementSibling && select.nextElementSibling.classList.contains('custom-select-container')) {
+                    select.value = select.value;
+                    return;
+                }
+                
+                select.style.display = 'none';
+                
+                const container = document.createElement('div');
+                container.className = 'custom-select-container';
+                container.style.position = 'relative';
+                container.style.width = select.style.width || '100%';
+                
+                const trigger = document.createElement('div');
+                trigger.className = 'custom-select-trigger';
+                trigger.innerHTML = `
+                    <span>${select.options[select.selectedIndex]?.text || ''}</span>
+                    <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                `;
+                
+                const optionsList = document.createElement('div');
+                optionsList.className = 'custom-select-options glass';
+                
+                Array.from(select.options).forEach((opt, idx) => {
+                    const item = document.createElement('div');
+                    item.className = 'custom-select-option' + (idx === select.selectedIndex ? ' selected' : '');
+                    item.dataset.value = opt.value;
+                    item.innerHTML = `
+                        <span>${opt.text}</span>
+                        <svg class="check-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display: ${idx === select.selectedIndex ? 'block' : 'none'};">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    `;
+                    
+                    item.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        select.value = opt.value;
+                        trigger.querySelector('span').innerText = opt.text;
+                        optionsList.querySelectorAll('.custom-select-option').forEach(el => {
+                            el.classList.remove('selected');
+                            el.querySelector('.check-icon').style.display = 'none';
+                        });
+                        item.classList.add('selected');
+                        item.querySelector('.check-icon').style.display = 'block';
+                        container.classList.remove('open');
+                        select.dispatchEvent(new Event('change'));
+                    });
+                    optionsList.appendChild(item);
+                });
+                
+                trigger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    document.querySelectorAll('.custom-select-container').forEach(c => {
+                        if (c !== container) c.classList.remove('open');
+                    });
+                    container.classList.toggle('open');
+                });
+                
+                container.appendChild(trigger);
+                container.appendChild(optionsList);
+                select.parentNode.insertBefore(container, select.nextSibling);
+                
+                const descriptor = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value');
+                if (descriptor && descriptor.set) {
+                    const originalValueSetter = descriptor.set;
+                    Object.defineProperty(select, 'value', {
+                        set: function(val) {
+                            originalValueSetter.call(this, val);
+                            const triggerText = container.querySelector('.custom-select-trigger span');
+                            const list = container.querySelector('.custom-select-options');
+                            if (triggerText && list) {
+                                const selectedOpt = Array.from(this.options).find(o => o.value === val);
+                                if (selectedOpt) {
+                                    triggerText.innerText = selectedOpt.text;
+                                }
+                                list.querySelectorAll('.custom-select-option').forEach(el => {
+                                    if (el.dataset.value === val) {
+                                        el.classList.add('selected');
+                                        el.querySelector('.check-icon').style.display = 'block';
+                                    } else {
+                                        el.classList.remove('selected');
+                                        el.querySelector('.check-icon').style.display = 'none';
+                                    }
+                                });
+                            }
+                        },
+                        get: function() {
+                            return descriptor.get.call(this);
+                        },
+                        configurable: true
+                    });
+                }
+            });
+        }
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.custom-select-container').forEach(c => {
+                c.classList.remove('open');
+            });
+        });
+
+        // VIEW NAVIGATION
+        const VIEW_META = {
+            dashboard: { title: 'Tableau de <span class="gold-luxury-text font-medium">Bord</span>', sub: 'Moniteur de performance en temps réel' },
+            bot: { title: 'Espace <span class="gold-luxury-text font-medium">Bots</span>', sub: 'Gérez et configurez vos robots algorithmiques' },
+            config: { title: 'Configuration <span class="gold-luxury-text font-medium">Robot</span>', sub: 'Ajustez vos paramètres et objectifs' },
+            community: { title: 'Communauté <span class="gold-luxury-text font-medium">SynapX</span>', sub: 'Rejoignez nos cercles officiels' },
+            affiliation: { title: 'Espace <span class="gold-luxury-text font-medium">Affiliation</span>', sub: 'Pilotez votre réseau de partenaires et commissions' }
+        };
+        const VIEW_IDS = ['dashboard', 'config', 'community', 'bot', 'affiliation'];
+
+        function switchView(name) {
+            if (name === 'support') name = 'community';
+            
+            // Hide all views and remove active styles
+            VIEW_IDS.forEach(id => {
+                const el = document.getElementById('view' + capitalize(id));
+                if (el) {
+                    el.classList.remove('active');
+                    el.classList.add('hidden');
+                }
+
+                const nav = document.getElementById('nav' + capitalize(id));
+                if (nav) {
+                    nav.classList.remove('text-amber-400', 'bg-white/10');
+                    nav.classList.add('text-slate-400');
+                }
+
+                const navMob = document.getElementById('navMob' + capitalize(id));
+                if (navMob) {
+                    navMob.classList.remove('text-amber-400');
+                    navMob.classList.add('text-slate-400');
+                }
+            });
+
+            // Show target view
+            const target = document.getElementById('view' + capitalize(name));
+            if (target) {
+                target.classList.add('active');
+                target.classList.remove('hidden');
+            }
+
+            const navBtn = document.getElementById('nav' + capitalize(name));
+            if (navBtn) {
+                navBtn.classList.add('text-amber-400', 'bg-white/10');
+                navBtn.classList.remove('text-slate-400');
+            }
+
+            const navMobBtn = document.getElementById('navMob' + capitalize(name));
+            if (navMobBtn) {
+                navMobBtn.classList.add('text-amber-400');
+                navMobBtn.classList.remove('text-slate-400');
+            }
+
+            // Update header title/subtitle
+            const meta = VIEW_META[name];
+            if (meta) {
+                document.getElementById('pageTitle').innerHTML = meta.title;
+                document.getElementById('pageSubtitle').textContent = meta.sub;
+            }
+
+            closeSidebar();
+
+            if (name === 'community' && typeof loadCommunityData === 'function') {
+                loadCommunityData();
+            }
+            if (name === 'affiliation' && typeof loadAffiliationData === 'function') {
+                loadAffiliationData();
+            }
+            if (typeof initCustomSelects === 'function') {
+                initCustomSelects();
+            }
+        }
+
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // MOBILE CONFIG TABS TOGGLER
+        function switchConfigMobileTab(tab) {
+            const grid = document.getElementById('configGrid');
+            const btnTrading = document.getElementById('btnConfigTabTrading');
+            const btnSecurity = document.getElementById('btnConfigTabSecurity');
+            if (!grid) return;
+            
+            if (tab === 'trading') {
+                grid.classList.add('show-trading');
+                grid.classList.remove('show-security');
+                if (btnTrading) btnTrading.className = "config-tab-btn flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wider text-amber-400 bg-amber-500/10 active font-bold";
+                if (btnSecurity) btnSecurity.className = "config-tab-btn flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wider text-slate-400 hover:text-white";
+            } else {
+                grid.classList.add('show-security');
+                grid.classList.remove('show-trading');
+                if (btnTrading) btnTrading.className = "config-tab-btn flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wider text-slate-400 hover:text-white";
+                if (btnSecurity) btnSecurity.className = "config-tab-btn flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wider text-amber-400 bg-amber-500/10 active font-bold";
+            }
+        }
+
+        // AMBIENT MOUSE GLOW
+        window.addEventListener('mousemove', (e) => {
+            const glow = document.getElementById('ambient-glow');
+            if (glow) {
+                glow.style.left = `${e.clientX}px`;
+                glow.style.top = `${e.clientY}px`;
+            }
+        });
+
+        // THEME SWITCHER
+        function toggleTheme() {
+            const html = document.documentElement;
+            const body = document.body;
+            const themeBtn = document.getElementById('theme-toggle-btn');
+            const mobIcon = document.getElementById('theme-toggle-mob-icon');
+            
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                body.classList.add('light-theme');
+                localStorage.setItem('dashboard-theme', 'light');
+                if (themeBtn) themeBtn.innerHTML = '<i data-lucide="moon" class="w-4 h-4"></i>';
+                if (mobIcon) { mobIcon.setAttribute('data-lucide', 'moon'); }
+            } else {
+                html.classList.remove('light');
+                html.classList.add('dark');
+                body.classList.remove('light-theme');
+                localStorage.setItem('dashboard-theme', 'dark');
+                if (themeBtn) themeBtn.innerHTML = '<i data-lucide="sun" class="w-4 h-4"></i>';
+                if (mobIcon) { mobIcon.setAttribute('data-lucide', 'sun'); }
+            }
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            
+            // Sync checkbox toggle
+            const toggle = document.getElementById('themeModeToggle');
+            const label = document.getElementById('themeToggleLabel');
+            if (toggle) {
+                toggle.checked = !body.classList.contains('light-theme');
+                if (label) label.textContent = toggle.checked ? 'Mode Sombre Actif' : 'Mode Clair Actif';
+            }
+            
+            lucide.createIcons();
+        }
+
+        // VIDEO PRESENTATION MODALS
+        function openTutoVideoModal(url) {
+            const modal = document.getElementById('tutoVideoModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.style.display = 'flex';
+            }
+        }
+        function closeTutoVideoModal() {
+            const modal = document.getElementById('tutoVideoModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.style.display = 'none';
+            }
+            
+            // If they closed the tutorial video, save that it has been completed
+            if (typeof currentUser !== 'undefined' && currentUser && currentUser.email) {
+                const tutoCompletedKey = `mitsu_tutorial_completed_${currentUser.email}`;
+                localStorage.setItem(tutoCompletedKey, 'true');
+                localStorage.setItem('mitsu_tutorial_completed', 'true');
+                // Trigger actual backend data load since tutorial completed
+                if (typeof loadData === 'function') {
+                    loadData();
+                }
+            }
+        }
+
+        // AFFILIATE COPY LINK HELPER
+        function copyReferralLink() {
+            const input = document.getElementById('affReferralLinkInput');
+            if (input) {
+                input.select();
+                input.setSelectionRange(0, 99999);
+                navigator.clipboard.writeText(input.value);
+                showToast("Lien de parrainage copié dans le presse-papiers !", "success");
+            }
+        }
+
+        // DYNAMIC SYNC ON LOAD
+        window.addEventListener('load', () => {
+            const html = document.documentElement;
+            const body = document.body;
+            const themeBtn = document.getElementById('theme-toggle-btn');
+            
+            if (body.classList.contains('light-theme')) {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                if (themeBtn) themeBtn.innerHTML = '<i data-lucide="moon" class="w-4 h-4"></i>';
+            } else {
+                html.classList.remove('light');
+                html.classList.add('dark');
+                if (themeBtn) themeBtn.innerHTML = '<i data-lucide="sun" class="w-4 h-4"></i>';
+            }
+            
+            const toggle = document.getElementById('themeModeToggle');
+            const label = document.getElementById('themeToggleLabel');
+            if (toggle) {
+                toggle.checked = !body.classList.contains('light-theme');
+                if (label) label.textContent = toggle.checked ? 'Mode Sombre Actif' : 'Mode Clair Actif';
+            }
+            
+            lucide.createIcons();
+            if (typeof updateMitsuCalculator === 'function') updateMitsuCalculator();
+            if (typeof updateLionCalculator === 'function') updateLionCalculator();
+        });
+    </script>
+
+    <!-- WRAP toggleThemeMode to sync Tailwind HTML class -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof toggleThemeMode === 'function') {
+                const originalToggleThemeMode = toggleThemeMode;
+                toggleThemeMode = function() {
+                    originalToggleThemeMode();
+                    const html = document.documentElement;
+                    const body = document.body;
+                    const themeBtn = document.getElementById('theme-toggle-btn');
+                    if (body.classList.contains('light-theme')) {
+                        html.classList.remove('dark');
+                        html.classList.add('light');
+                        if (themeBtn) themeBtn.innerHTML = '<i data-lucide="moon" class="w-4 h-4"></i>';
+                    } else {
+                        html.classList.remove('light');
+                        html.classList.add('dark');
+                        if (themeBtn) themeBtn.innerHTML = '<i data-lucide="sun" class="w-4 h-4"></i>';
+                    }
+                    
+                    const toggle = document.getElementById('themeModeToggle');
+                    const label = document.getElementById('themeToggleLabel');
+                    if (toggle) {
+                        toggle.checked = !body.classList.contains('light-theme');
+                        if (label) label.textContent = toggle.checked ? 'Mode Sombre Actif' : 'Mode Clair Actif';
+                    }
+                    lucide.createIcons();
+                };
+            }
+        });
+    </script>
+
+    <script src="dashboard_logic.js?v=2.8.0"></script>
+</body>
+</html>

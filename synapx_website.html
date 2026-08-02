@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SynapX - Excellence Algorithmique Prestige</title>
+    
+    <!-- Fonts Google: Cinzel (Serif Premium) & Plus Jakarta Sans (Modern sans-serif) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        @keyframes luxuryGlow {
+            0%, 100% { filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.3)); }
+            50% { filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.6)); }
+        }
+        @keyframes spinSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes goldShimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        
+        .gold-luxury-text {
+            background: linear-gradient(135deg, #FFF9E6 0%, #F5D061 25%, #D4AF37 50%, #AA7C11 75%, #FFF9E6 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: goldShimmer 6s linear infinite;
+        }
+        
+        .glossy-header {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(30px) saturate(190%);
+            -webkit-backdrop-filter: blur(30px) saturate(190%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
+        }
+        
+        .glossy-header-light {
+            background: rgba(255, 255, 255, 0.60);
+            backdrop-filter: blur(30px) saturate(190%);
+            -webkit-backdrop-filter: blur(30px) saturate(190%);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.05), inset 0 1px 2px 0 rgba(255, 255, 255, 0.8);
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d4af37;
+            border-radius: 10px;
+        }
+        
+        /* Smooth transition for theme switches */
+        .theme-transition {
+            transition: background-color 0.7s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+        }
+    </style>
+</head>
+<body class="bg-[#030712] text-slate-100 font-jakarta selection:bg-amber-400 selection:text-black overflow-x-hidden relative theme-transition">
+
+    <!-- AMBIENT MOUSE GLOW EFFECT -->
+    <div id="ambient-glow" 
+         class="fixed pointer-events-none z-0 w-[450px] h-[450px] rounded-full blur-[120px] transition-transform duration-200 ease-out opacity-20"
+         style="background: radial-gradient(circle, rgba(212,175,55,0.4) 0%, rgba(212,175,55,0) 70%); transform: translate(-50%, -50%); top: -1000px; left: -1000px;">
+    </div>
+
+    <!-- FIXED PREMIUM BACKGROUND PATTERN -->
+    <div class="fixed inset-0 pointer-events-none z-0 opacity-[0.03] mix-blend-overlay">
+        <div class="absolute inset-0 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:24px_24px]"></div>
+    </div>
+
+    <!-- 1. QUIET LUXURY INTRO LOADER -->
+    <div id="intro-loader" class="fixed inset-0 bg-[#030712] z-50 flex flex-col items-center justify-center p-6 transition-all duration-1000">
+        <div class="max-w-md w-full space-y-12 text-center relative">
+            
+            <!-- Elegant Luxury Ring Loader -->
+            <div class="relative mx-auto w-28 h-28 flex items-center justify-center">
+                <div class="absolute inset-0 border border-amber-500/10 rounded-full"></div>
+                <div class="absolute inset-0 border-t-2 border-r border-amber-400 rounded-full animate-spinSlow [animation-duration:3s]"></div>
+                <div class="w-20 h-20 rounded-full bg-[#070b19] border border-amber-500/20 flex items-center justify-center shadow-[0_0_40px_rgba(212,175,55,0.15)]">
+                    <span class="font-cinzel text-3xl font-light text-transparent bg-clip-text bg-gradient-to-b from-amber-100 to-amber-500">S</span>
+                </div>
+            </div>
+
+            <!-- Quiet Luxury Titles -->
+            <div class="space-y-4">
+                <h1 class="font-cinzel text-3xl font-light tracking-[0.3em] text-white">
+                    SYNAP<span class="text-amber-400 font-medium">X</span>
+                </h1>
+                <div class="w-10 h-[1px] bg-amber-400/40 mx-auto"></div>
+                <p class="text-[9px] uppercase tracking-[0.4em] text-amber-500/90 font-bold">
+                    L'art de l'algorithme sur l'Or
+                </p>
+            </div>
+
+            <!-- Slim elegant Golden Loader bar -->
+            <div class="space-y-4 max-w-[280px] mx-auto">
+                <div class="w-full h-[1px] bg-slate-900 rounded-full overflow-hidden relative">
+                    <div id="loader-progress" class="absolute top-0 left-0 h-full bg-gradient-to-r from-amber-600 via-amber-400 to-amber-200 transition-all duration-300 ease-out" style="width: 0%;"></div>
+                </div>
+                
+                <div class="flex flex-col space-y-1">
+                    <span id="loader-percentage" class="text-[10px] text-slate-500 uppercase tracking-widest">
+                        Édition Prestige • 0%
+                    </span>
+                    <span id="loader-step-text" class="text-amber-400/80 font-serif text-[11px] italic transition-all duration-300">
+                        Alignement des données de l’Or...
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 2. GLOWING GOLDEN LUXURY DROPDOWN MENU -->
+    <div id="dropdown-menu" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-3xl hidden flex-col items-center justify-center p-4 transition-all duration-500 opacity-0">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-[140px] pointer-events-none"></div>
+        
+        <button id="close-menu-btn" class="absolute top-8 right-8 p-3 bg-white/5 border border-white/10 hover:border-amber-400/50 rounded-full text-amber-400 hover:text-white transition-all duration-300 hover:scale-105">
+            <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <div class="max-w-md w-full text-center space-y-12 relative z-10">
+            <div class="space-y-2">
+                <span class="font-cinzel text-3xl font-light tracking-[0.25em] text-white">
+                    SYNAP<span class="text-amber-400 font-bold">X</span>
+                </span>
+                <div class="w-16 h-[1px] bg-amber-500/50 mx-auto"></div>
+                <span class="text-[9px] uppercase tracking-[0.35em] text-amber-500 font-bold block">NAVIGATION PRESTIGE</span>
+            </div>
+
+            <nav class="flex flex-col space-y-2">
+                <button onclick="navigateTo('home')" class="group py-3 text-center transition-all duration-300 relative">
+                    <span class="absolute left-1/2 -translate-x-1/2 bottom-0 w-0 h-[1px] bg-gradient-to-r from-transparent via-amber-400 to-transparent transition-all duration-300 group-hover:w-32"></span>
+                    <span class="font-cinzel text-lg md:text-xl font-medium tracking-[0.15em] text-slate-300 group-hover:text-amber-400 dark:group-hover:text-amber-400 transition-all duration-300 block">Accueil D’exception</span>
+                </button>
+                <button onclick="navigateTo('pillars')" class="group py-3 text-center transition-all duration-300 relative">
+                    <span class="absolute left-1/2 -translate-x-1/2 bottom-0 w-0 h-[1px] bg-gradient-to-r from-transparent via-amber-400 to-transparent transition-all duration-300 group-hover:w-32"></span>
+                    <span class="font-cinzel text-lg md:text-xl font-medium tracking-[0.15em] text-slate-300 group-hover:text-amber-400 transition-all duration-300 block">Les 5 Piliers</span>
+                </button>
+                <button onclick="navigateTo('modes')" class="group py-3 text-center transition-all duration-300 relative">
+                    <span class="absolute left-1/2 -translate-x-1/2 bottom-0 w-0 h-[1px] bg-gradient-to-r from-transparent via-amber-400 to-transparent transition-all duration-300 group-hover:w-32"></span>
+                    <span class="font-cinzel text-lg md:text-xl font-medium tracking-[0.15em] text-slate-300 group-hover:text-amber-400 transition-all duration-300 block">Profils de Trading</span>
+                </button>
+                <button onclick="navigateTo('simulator')" class="group py-3 text-center transition-all duration-300 relative">
+                    <span class="absolute left-1/2 -translate-x-1/2 bottom-0 w-0 h-[1px] bg-gradient-to-r from-transparent via-amber-400 to-transparent transition-all duration-300 group-hover:w-32"></span>
+                    <span class="font-cinzel text-lg md:text-xl font-medium tracking-[0.15em] text-slate-300 group-hover:text-amber-400 transition-all duration-300 block">Simulateur Elite</span>
+                </button>
+                <button onclick="navigateTo('risks-protections')" class="group py-3 text-center transition-all duration-300 relative">
+                    <span class="absolute left-1/2 -translate-x-1/2 bottom-0 w-0 h-[1px] bg-gradient-to-r from-transparent via-amber-400 to-transparent transition-all duration-300 group-hover:w-32"></span>
+                    <span class="font-cinzel text-lg md:text-xl font-medium tracking-[0.15em] text-slate-300 group-hover:text-amber-400 transition-all duration-300 block">Sécurité & Drawdown</span>
+                </button>
+                <button onclick="navigateTo('blueprints')" class="group py-3 text-center transition-all duration-300 relative">
+                    <span class="absolute left-1/2 -translate-x-1/2 bottom-0 w-0 h-[1px] bg-gradient-to-r from-transparent via-amber-400 to-transparent transition-all duration-300 group-hover:w-32"></span>
+                    <span class="font-cinzel text-lg md:text-xl font-medium tracking-[0.15em] text-slate-300 group-hover:text-amber-400 transition-all duration-300 block">Fiches Spécifications</span>
+                </button>
+            </nav>
+
+            <div class="pt-8 border-t border-white/5 flex justify-center gap-10">
+                <div class="text-center">
+                    <span class="text-[9px] text-slate-500 block uppercase tracking-wider">Cours Actuel Or</span>
+                    <span class="font-serif text-sm text-white font-medium"><span class="gold-live-price">2384.50</span> $</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-[9px] text-slate-500 block uppercase tracking-wider">Limite Drawdown</span>
+                    <span class="font-serif text-sm text-red-400 font-medium">~ 30% d'exposition</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. LIGHTBOX MODAL FOR CERTIFIED SPECIFICATION SHEETS -->
+    <div id="lightbox-modal" class="fixed inset-0 bg-black/95 z-50 hidden flex-col items-center justify-center p-4 backdrop-blur-xl opacity-0 transition-opacity duration-300">
+        <button id="close-lightbox-btn" class="absolute top-8 right-8 p-3 bg-white/5 border border-white/10 hover:border-amber-400 rounded-full text-slate-300 hover:text-amber-400 transition-colors">
+            <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        
+        <div class="max-w-4xl w-full flex flex-col items-center">
+            <span class="text-amber-500 uppercase tracking-[0.3em] text-[10px] font-bold mb-2">Certification SynapX Technique</span>
+            <h3 id="lightbox-title" class="font-cinzel text-base text-white tracking-[0.2em] mb-6 text-center uppercase"></h3>
+            
+            <div class="relative border border-amber-500/20 rounded-xl overflow-hidden bg-slate-950 flex items-center justify-center shadow-2xl max-h-[70vh]">
+                <img id="lightbox-img" src="" alt="SynapX Certified Blueprint" class="object-contain max-h-[70vh] w-full">
+            </div>
+            <p class="text-[10px] text-slate-400 mt-4 text-center max-w-xl font-light tracking-wide leading-relaxed">
+                Ce document original constitue la référence technique certifiée de l'architecture logicielle de notre robot.
+            </p>
+        </div>
+    </div>
+
+    <!-- 4. IOS 26.5 GLASSY-MORPHIC HEADER BAR -->
+    <header class="fixed top-6 left-1/2 -translate-x-1/2 w-[92%] max-w-6xl z-40">
+        <div id="header-bar" class="rounded-full py-3 px-6 sm:px-8 flex items-center justify-between transition-all duration-500 glossy-header">
+            
+            <!-- Brand Identity / Logo -->
+            <div onclick="navigateTo('home')" class="flex items-center space-x-3 cursor-pointer group">
+                <div class="w-9 h-9 rounded-full border border-amber-400/40 bg-[#030712] flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.15)] group-hover:border-amber-400/80 transition-all duration-300">
+                    <span class="font-cinzel text-lg font-light text-amber-400">S</span>
+                </div>
+                <div class="text-left">
+                    <span class="font-cinzel text-base font-medium tracking-[0.2em] block group-hover:text-amber-400 dark:group-hover:text-amber-400 transition-colors text-slate-100 dark:text-slate-100 header-text-color">
+                        SYNAP<span class="text-amber-400 font-bold">X</span>
+                    </span>
+                    <span class="text-[7.5px] uppercase tracking-[0.3em] text-amber-500/90 block font-bold">PRECISION ALGORITHMIC TRADING</span>
+                </div>
+            </div>
+
+            <!-- Luxury Control Buttons inside pill -->
+            <div class="flex items-center space-x-3">
+                <!-- Live simulation pricing badge -->
+                <div class="hidden md:flex items-center space-x-2 px-3 py-1 bg-amber-400/5 rounded-full border border-amber-400/10">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="text-[10px] font-medium tracking-wider text-amber-500 uppercase">XAU/USD:</span>
+                    <span class="text-[10px] font-mono font-bold text-amber-400"><span class="gold-live-price">2384.50</span> $</span>
+                </div>
+
+                <!-- Custom Audio feedback control -->
+                <button id="sound-toggle-btn" class="p-2 rounded-full border border-white/10 dark:border-white/10 hover:border-white/30 text-slate-400 hover:text-white transition-all duration-300 hover:scale-105" title="Activer les sons de prestige">
+                    <i data-lucide="volume-x" class="w-3.5 h-3.5"></i>
+                </button>
+
+                <!-- Advanced Theme Switcher -->
+                <button id="theme-toggle-btn" class="p-2 rounded-full border border-white/10 hover:border-amber-400/60 text-amber-400 hover:bg-white/5 transition-all duration-300 hover:scale-105" title="Passer au thème Champagne (Clair)">
+                    <i data-lucide="sun" class="w-3.5 h-3.5"></i>
+                </button>
+
+                <!-- Dynamic Menu Toggle Button -->
+                <button id="open-menu-btn" class="px-4 py-1.5 bg-gradient-to-r from-amber-600 via-amber-500 to-amber-400 text-black font-semibold text-[10px] uppercase tracking-widest rounded-full shadow-[0_4px_12px_rgba(212,175,55,0.2)] flex items-center space-x-1.5 transition-all duration-300 hover:scale-105 hover:shadow-[0_4px_16px_rgba(212,175,55,0.3)]">
+                    <i data-lucide="menu" class="w-3 h-3"></i>
+                    <span>EXPLORER</span>
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- 5. HERO SECTION -->
+    <section id="home" class="relative pt-36 pb-20 md:pt-48 md:pb-28 overflow-hidden flex flex-col justify-center min-h-[92vh]">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Hero text branding -->
+                <div class="lg:col-span-7 space-y-8 text-left">
+                    <div class="inline-flex items-center space-x-2.5 px-3.5 py-1.5 bg-amber-400/10 border border-amber-500/20 rounded-full text-amber-500 text-[10px] uppercase tracking-[0.2em] font-semibold">
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                        <span>VALEUR REFUGE SOUVERAINE</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h1 class="font-cinzel text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight leading-[1.15] text-slate-100 dark:text-slate-100 title-text-color">
+                            L'INTELLIGENCE <br>
+                            <span class="gold-luxury-text font-medium">SUR LE MARCHÉ DE L'OR</span>
+                        </h1>
+                        <p class="hero-paragraph text-slate-400 dark:text-slate-400 text-xs sm:text-sm md:text-base max-w-xl font-light leading-relaxed">
+                            <strong class="text-white dark:text-white strong-text-color">SynapX</strong> est une architecture algorithmique de prestige, développée exclusivement pour l’Or (XAU/USD). Notre mission est de marier croissance durable du capital, gestion scientifique et réduction contrôlée du drawdown.
+                        </p>
+                    </div>
+
+                    <!-- Ratios row directly inspired from diagrams -->
+                    <div class="grid grid-cols-3 gap-6 py-5 border-y border-amber-500/15">
+                        <div>
+                            <div class="font-cinzel text-amber-500 text-lg md:text-2xl font-light">100%</div>
+                            <div class="text-[9px] text-slate-500 uppercase tracking-widest font-semibold mt-0.5">Automatisé</div>
+                        </div>
+                        <div>
+                            <div class="font-cinzel text-amber-500 text-lg md:text-2xl font-light">XAU / USD</div>
+                            <div class="text-[9px] text-slate-500 uppercase tracking-widest font-semibold mt-0.5">Marché Unique</div>
+                        </div>
+                        <div>
+                            <div class="font-cinzel text-amber-500 text-lg md:text-2xl font-light">~ 30%</div>
+                            <div class="text-[9px] text-slate-500 uppercase tracking-widest font-semibold mt-0.5">Drawdown Limité</div>
+                        </div>
+                    </div>
+
+                    <!-- Call to actions -->
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
+                        <button onclick="navigateTo('simulator')" class="px-8 py-3.5 bg-gradient-to-r from-amber-600 via-amber-500 to-amber-400 text-black font-semibold uppercase tracking-widest text-[10px] rounded-full transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_8px_24px_rgba(212,175,55,0.3)] text-center">
+                            SIMULER LES RENDEMENTS
+                        </button>
+                        <button onclick="navigateTo('blueprints')" id="blueprints-cta-btn" class="px-8 py-3.5 border border-white/10 hover:border-white/20 text-white hover:bg-white/5 font-semibold uppercase tracking-widest text-[10px] rounded-full transition-all duration-300 text-center">
+                            FICHES SPECIFICATIONS
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Interactive HUD Gold Medallion Screen -->
+                <div class="lg:col-span-5 relative flex justify-center">
+                    <div class="relative w-full max-w-[360px] aspect-square bg-gradient-to-tr from-amber-500/5 to-transparent rounded-full border border-amber-500/10 p-6 flex items-center justify-center">
+                        
+                        <!-- Rotating accent rings -->
+                        <div class="absolute inset-0 border border-dashed border-amber-500/10 rounded-full animate-spinSlow [animation-duration:60s]"></div>
+                        <div class="absolute inset-6 border border-amber-500/5 rounded-full"></div>
+                        
+                        <!-- Visual Glassmorphic Widget Container -->
+                        <div id="hud-card" class="w-full h-full rounded-3xl p-6 flex flex-col justify-between border relative overflow-hidden transition-colors duration-500 bg-[#060a16]/90 border-amber-500/25 shadow-2xl shadow-black/60">
+                            <!-- Decorative premium corners -->
+                            <div class="absolute top-3 left-3 w-2 h-2 border-t border-l border-amber-500/30"></div>
+                            <div class="absolute top-3 right-3 w-2 h-2 border-t border-r border-amber-500/30"></div>
+                            <div class="absolute bottom-3 left-3 w-2 h-2 border-b border-l border-amber-500/30"></div>
+                            <div class="absolute bottom-3 right-3 w-2 h-2 border-b border-r border-amber-500/30"></div>
+
+                            <!-- Header widget info -->
+                            <div class="flex justify-between items-center pb-3 border-b border-amber-500/10">
+                                <span class="text-[8px] tracking-widest font-mono text-slate-500">STATUT : OPERATIONNEL</span>
+                                <span class="flex items-center space-x-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                    <span class="text-[8.5px] font-semibold text-emerald-500 tracking-wider">LIVE FEED</span>
+                                </span>
+                            </div>
+
+                            <!-- Robot & Slogan Graphic -->
+                            <div class="py-6 flex flex-col items-center justify-center space-y-3.5">
+                                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-amber-500/10 to-amber-500/5 border border-amber-500/30 flex items-center justify-center relative shadow-[inset_0_0_15px_rgba(212,175,55,0.1)]">
+                                    <i data-lucide="coins" class="w-8 h-8 text-amber-400"></i>
+                                </div>
+                                <div class="text-center space-y-1">
+                                    <div class="font-cinzel text-base tracking-[0.2em] font-medium hud-card-title text-slate-100">SYNAPX SYSTEM</div>
+                                    <div class="text-[7px] tracking-[0.3em] text-amber-500/95 font-bold uppercase">ALGORITHMIC EXCELLENCE</div>
+                                </div>
+                            </div>
+
+                            <!-- Mini-live ticker widget -->
+                            <div id="hud-ticker" class="p-3 rounded-xl space-y-1.5 border bg-slate-950/60 border-slate-800">
+                                <div class="flex justify-between items-center text-[9px] tracking-wider text-slate-500">
+                                    <span>Position active</span>
+                                    <span class="text-emerald-500 font-bold">XAU/USD ACHAT</span>
+                                </div>
+                                <div class="flex justify-between items-end">
+                                    <div>
+                                        <span class="text-[8px] text-slate-500 block uppercase">Volume :</span>
+                                        <span class="text-xs font-bold font-mono hud-ticker-main-text text-white">1.50 Lots</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-[8px] text-slate-500 block uppercase">Gains latents :</span>
+                                        <span class="text-xs font-bold text-emerald-500 font-mono">+ 514.80 $</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Footer Widget -->
+                            <div class="flex justify-between text-[7px] text-slate-500 pt-2 border-t border-amber-500/10">
+                                <span>PILIER : ALGORITHMIQUE</span>
+                                <span>DRAWDOWN MAX : ~ 30%</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. THE 5 CORE PILLARS SECTION -->
+    <section id="pillars" class="py-24 border-t border-amber-500/10 bg-transparent relative">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            
+            <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
+                <span class="text-xs uppercase tracking-[0.35em] text-amber-500 font-bold">EXCELLENCE ARCHITECTURALE</span>
+                <h2 class="font-cinzel text-2xl md:text-4xl font-light tracking-wider page-section-title text-white">
+                    LES 5 PILIERS SYNAPX
+                </h2>
+                <div class="w-12 h-[1px] bg-amber-500 mx-auto"></div>
+                <p class="section-muted-text text-slate-400 text-xs font-light leading-relaxed">
+                    Une alliance parfaite entre l'intelligence des données mathématiques, l'automatisation rigoureuse et la clairvoyance de l'expertise humaine.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                <!-- Pillar 1 -->
+                <div class="pillar-card p-6 rounded-2xl border bg-slate-900/40 border-slate-800/80 hover:border-amber-500/40 hover:-translate-y-1 transition-all duration-300 group flex flex-col justify-between">
+                    <div class="space-y-4 text-left">
+                        <div class="w-8 h-8 rounded-full bg-amber-500/5 flex items-center justify-center text-amber-400 border border-amber-500/15 group-hover:bg-amber-500 group-hover:text-black transition-all">
+                            <i data-lucide="coins" class="w-4 h-4"></i>
+                        </div>
+                        <h3 class="font-cinzel font-bold text-xs tracking-wider uppercase pillar-title text-slate-200">
+                            Un Marché Porteur
+                        </h3>
+                        <p class="pillar-desc text-slate-400 text-[11px] font-light leading-relaxed">
+                            L'Or est une valeur refuge mondiale, influencée par des facteurs macroéconomiques et géopolitiques constants offrant de formidables opportunités.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Pillar 2 -->
+                <div class="pillar-card p-6 rounded-2xl border bg-slate-900/40 border-slate-800/80 hover:border-amber-500/40 hover:-translate-y-1 transition-all duration-300 group flex flex-col justify-between">
+                    <div class="space-y-4 text-left">
+                        <div class="w-8 h-8 rounded-full bg-amber-500/5 flex items-center justify-center text-amber-400 border border-amber-500/15 group-hover:bg-amber-500 group-hover:text-black transition-all">
+                            <i data-lucide="cpu" class="w-4 h-4"></i>
+                        </div>
+                        <h3 class="font-cinzel font-bold text-xs tracking-wider uppercase pillar-title text-slate-200">
+                            Automatisation Intelligente
+                        </h3>
+                        <p class="pillar-desc text-slate-400 text-[11px] font-light leading-relaxed">
+                            Les émotions humaines constituent le principal obstacle. SynapX exécute sa stratégie 24h/24 avec une discipline absolue et sans failles.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Pillar 3 -->
+                <div class="pillar-card p-6 rounded-2xl border bg-slate-900/40 border-slate-800/80 hover:border-amber-500/40 hover:-translate-y-1 transition-all duration-300 group flex flex-col justify-between">
+                    <div class="space-y-4 text-left">
+                        <div class="w-8 h-8 rounded-full bg-amber-500/5 flex items-center justify-center text-amber-400 border border-amber-500/15 group-hover:bg-amber-500 group-hover:text-black transition-all">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                        </div>
+                        <h3 class="font-cinzel font-bold text-xs tracking-wider uppercase pillar-title text-slate-200">
+                            Surveillance Humaine
+                        </h3>
+                        <p class="pillar-desc text-slate-400 text-[11px] font-light leading-relaxed">
+                            La technologie est au cœur, mais l'analyse critique de nos ingénieurs experts reste essentielle lors des événements de marché exceptionnels.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Pillar 4 -->
+                <div class="pillar-card p-6 rounded-2xl border bg-slate-900/40 border-slate-800/80 hover:border-amber-500/40 hover:-translate-y-1 transition-all duration-300 group flex flex-col justify-between">
+                    <div class="space-y-4 text-left">
+                        <div class="w-8 h-8 rounded-full bg-amber-500/5 flex items-center justify-center text-amber-400 border border-amber-500/15 group-hover:bg-amber-500 group-hover:text-black transition-all">
+                            <i data-lucide="trending-up" class="w-4 h-4"></i>
+                        </div>
+                        <h3 class="font-cinzel font-bold text-xs tracking-wider uppercase pillar-title text-slate-200">
+                            Vision Long Terme
+                        </h3>
+                        <p class="pillar-desc text-slate-400 text-[11px] font-light leading-relaxed">
+                            Loin des mirages rapides, notre bot vise une valorisation constante et structurée de votre patrimoine financier sur la durée.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Pillar 5 -->
+                <div class="pillar-card p-6 rounded-2xl border bg-slate-900/40 border-slate-800/80 hover:border-amber-500/40 hover:-translate-y-1 transition-all duration-300 group flex flex-col justify-between">
+                    <div class="space-y-4 text-left">
+                        <div class="w-8 h-8 rounded-full bg-amber-500/5 flex items-center justify-center text-amber-400 border border-amber-500/15 group-hover:bg-amber-500 group-hover:text-black transition-all">
+                            <i data-lucide="sliders" class="w-4 h-4"></i>
+                        </div>
+                        <h3 class="font-cinzel font-bold text-xs tracking-wider uppercase pillar-title text-slate-200">
+                            Amélioration Continue
+                        </h3>
+                        <p class="pillar-desc text-slate-400 text-[11px] font-light leading-relaxed">
+                            Notre équipe optimise de manière constante les paramètres de l’algorithme pour l’adapter à l’évolution du carnet d’ordres de l’Or.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 7. THE 3 TRADING MODES SECTION -->
+    <section id="modes" class="py-24 border-t border-amber-500/10 bg-transparent relative">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            
+            <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
+                <span class="text-xs uppercase tracking-[0.35em] text-amber-500 font-bold">GESTION DU RISQUE ADAPTATIVE</span>
+                <h2 class="font-cinzel text-2xl md:text-4xl font-light tracking-wider page-section-title text-white">
+                    3 MODES • 3 PROFILS • 1 OBJECTIF
+                </h2>
+                <div class="w-12 h-[1px] bg-amber-500 mx-auto"></div>
+                <p class="section-muted-text text-slate-400 text-xs font-light leading-relaxed">
+                    Notre technologie adapte son exposition au marché de l'or en fonction de vos exigences de capitalisation et de votre profil psychologique.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Mode Conservateur -->
+                <div class="mode-card p-8 rounded-2xl border bg-slate-900/40 border-slate-800/80 border-l-4 border-l-emerald-500 flex flex-col justify-between hover:shadow-xl transition-all duration-300">
+                    <div class="space-y-6 text-left">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="px-2.5 py-0.5 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 text-[9px] font-bold uppercase rounded-full">
+                                    SECURITE MAXIMALE
+                                </span>
+                                <h3 class="font-cinzel text-xl font-medium mt-3 mode-card-title text-white">MODE CONSERVATEUR</h3>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-emerald-500/5 border border-emerald-500/20 flex items-center justify-center text-emerald-500">
+                                <i data-lucide="shield" class="w-5 h-5"></i>
+                            </div>
+                        </div>
+
+                        <div class="py-4 border-y border-amber-500/10">
+                            <span class="text-[10px] text-slate-500 uppercase block tracking-wider">Performance cible :</span>
+                            <div class="font-cinzel text-2xl font-bold text-emerald-500">
+                                7 % à 15 % <span class="text-[11px] font-light text-slate-400">/ mois</span>
+                            </div>
+                        </div>
+
+                        <ul class="space-y-3 text-[11px] text-slate-400">
+                            <li class="flex items-center space-x-2">
+                                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0"></i>
+                                <span>Exposition au risque minimale</span>
+                            </li>
+                            <li class="flex items-center space-x-2">
+                                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0"></i>
+                                <span>Sécurisation maximale du capital alloué</span>
+                            </li>
+                            <li class="flex items-center space-x-2">
+                                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0"></i>
+                                <span>Idéal pour une croissance lente et sereine</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-8 mt-6 border-t border-amber-500/10 text-left">
+                        <div class="flex justify-between items-center bg-emerald-500/5 px-3 py-2 rounded-lg text-xs mb-4">
+                            <span class="text-slate-500 text-[10px]">Exposition de risque :</span>
+                            <span class="text-emerald-500 font-bold text-[10px] uppercase">Faible</span>
+                        </div>
+                        <button onclick="selectProfile('conservateur')" class="w-full py-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 text-[10px] uppercase tracking-widest font-semibold rounded-lg transition-all">
+                            SELECTIONNER CE PROFIL
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mode Équilibré -->
+                <div class="mode-card p-8 rounded-2xl border bg-slate-900/40 border-slate-800/80 border-l-4 border-l-amber-500 flex flex-col justify-between hover:shadow-xl transition-all duration-300">
+                    <div class="space-y-6 text-left">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="px-2.5 py-0.5 bg-amber-500/10 text-amber-500 border border-amber-500/20 text-[9px] font-bold uppercase rounded-full">
+                                    LE JUSTE EQUILIBRE
+                                </span>
+                                <h3 class="font-cinzel text-xl font-medium mt-3 mode-card-title text-white">MODE ÉQUILIBRÉ</h3>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-amber-500/5 border border-amber-500/20 flex items-center justify-center text-amber-500">
+                                <i data-lucide="zap" class="w-5 h-5"></i>
+                            </div>
+                        </div>
+
+                        <div class="py-4 border-y border-amber-500/10">
+                            <span class="text-[10px] text-slate-500 uppercase block tracking-wider">Performance cible :</span>
+                            <div class="font-cinzel text-2xl font-bold text-amber-500">
+                                Jusqu'à 45 % <span class="text-[11px] font-light text-slate-400">/ mois</span>
+                            </div>
+                        </div>
+
+                        <ul class="space-y-3 text-[11px] text-slate-400">
+                            <li class="flex items-center space-x-2">
+                                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-amber-500 flex-shrink-0"></i>
+                                <span>Équilibre optimal rendement / sécurité</span>
+                            </li>
+                            <li class="flex items-center space-x-2">
+                                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-amber-500 flex-shrink-0"></i>
+                                <span>Gestion du risque optimisée au quotidien</span>
+                            </li>
+                            <li class="flex items-center space-x-2">
+                                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-amber-500 flex-shrink-0"></i>
+                                <span>Idéal pour une capitalisation robuste</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-8 mt-6 border-t border-amber-500/10 text-left">
+                        <div class="flex justify-between items-center bg-amber-500/5 px-3 py-2 rounded-lg text-xs mb-4">
+                            <span class="text-slate-500 text-[10px]">Exposition de risque :</span>
+                            <span class="text-amber-500 font-bold text-[10px] uppercase">Modéré</span>
+                        </div>
+                        <button onclick="selectProfile('equilibre')" class="w-full py-2.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 text-[10px] uppercase tracking-widest font-semibold rounded-lg transition-all">
+                            SELECTIONNER CE PROFIL
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mode Débridé -->
+                <div class="mode-card p-8 rounded-2xl border bg-slate-900/40 border-slate-800/80 border-l-4 border-l-rose-500 flex flex-col justify-between hover:shadow-xl transition-all duration-300">
+                    <div class="space-y-6 text-left">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="px-2.5 py-0.5 bg-rose-500/10 text-rose-500 border border-rose-500/20 text-[9px] font-bold uppercase rounded-full">
+                                    PERFORMANCE INTENSE
+                                </span>
+                                <h3 class="font-cinzel text-xl font-medium mt-3 mode-card-title text-white">MODE DÉBRIDÉ</h3>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-rose-500/5 border border-rose-500/20 flex items-center justify-center text-rose-500">
+                                <i data-lucide="trending-up" class="w-5 h-5"></i>
+                            </div>
+                        </div>
+
+                        <div class="py-4 border-y border-amber-500/10">
+                            <span class="text-[10px] text-slate-500 uppercase block tracking-wider">Performance cible :</span>
+                            <div class="font-cinzel text-2xl font-bold text-rose-500">
+                                Jusqu'à 100 % <span class="text-[11px] font-light text-slate-400">/ mois</span>
+                            </div>
+                        </div>
+
+                        <ul class="space-y-3 text-[11px] text-slate-400">
+                            <li class="flex items-center space-x-2">
+                                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-rose-500 flex-shrink-0"></i>
+                                <span>Recherche de rendement absolu</span>
+                            </li>
+                            <li class="flex items-center space-x-2">
+                                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-rose-500 flex-shrink-0"></i>
+                                <span>Exposition de volatilité supérieure</span>
+                            </li>
+                            <li class="flex items-center space-x-2">
+                                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-rose-500 flex-shrink-0"></i>
+                                <span>Réservé aux investisseurs qualifiés</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-8 mt-6 border-t border-amber-500/10 text-left">
+                        <div class="flex justify-between items-center bg-rose-500/5 px-3 py-2 rounded-lg text-xs mb-4">
+                            <span class="text-slate-500 text-[10px]">Exposition de risque :</span>
+                            <span class="text-rose-500 font-bold text-[10px] uppercase">Élevé</span>
+                        </div>
+                        <button onclick="selectProfile('debride')" class="w-full py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 text-[10px] uppercase tracking-widest font-semibold rounded-lg transition-all">
+                            SELECTIONNER CE PROFIL
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Golden quote flyer callout -->
+            <div class="mt-12 p-6 bg-amber-500/5 border border-amber-500/15 rounded-xl max-w-4xl mx-auto flex items-start space-x-4 text-left">
+                <i data-lucide="info" class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5"></i>
+                <div class="space-y-1">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-amber-500">Rationnel Mathématique de la Volatilité :</span>
+                    <p class="text-[11px] text-slate-400 leading-relaxed font-light">
+                        Plus l'objectif de performance mensuelle est configuré à un niveau élevé, plus le niveau de risque associé par loterie augmente mécaniquement. À l'inverse, en modérant vos objectifs mensuels, vous augmentez la robustesse de l'algorithme face aux fluctuations boursières.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 8. INTERACTIVE PREMIUM CALCULATOR -->
+    <section id="simulator" class="py-24 border-t border-amber-500/10 transition-colors duration-500 bg-slate-900/10 theme-transition">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Interactive texts info -->
+                <div class="lg:col-span-5 space-y-6 text-left">
+                    <span class="text-xs uppercase tracking-[0.35em] text-amber-500 font-bold">Simulateur d'Objectifs</span>
+                    <h2 class="font-cinzel text-2xl md:text-4xl font-light tracking-wider page-section-title text-white">
+                        PROJETER VOS <br>RENDEMENTS ELITES
+                    </h2>
+                    <div class="w-12 h-[1px] bg-amber-500"></div>
+                    <p class="section-muted-text text-slate-400 text-xs sm:text-sm font-light leading-relaxed">
+                        Simulez vos perspectives de capitalisation en couplant vos objectifs de fonds au profil d'exposition de l’algorithme.
+                    </p>
+                    
+                    <div id="sim-philosophy-box" class="p-4 rounded-xl space-y-2 border bg-slate-950/80 border-slate-800">
+                        <span class="text-[9px] text-amber-500 uppercase tracking-widest font-bold block">Philosophie de Conception :</span>
+                        <p class="text-[10.5px] text-slate-500 italic leading-relaxed font-light">
+                            "Notre but ultime n’est pas uniquement d'offrir des gains sporadiques, mais de bâtir une infrastructure algorithmique pérenne et haut de gamme."
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Interactive Calculator Block -->
+                <div id="calc-block" class="lg:col-span-7 border p-8 rounded-2xl shadow-xl relative bg-slate-950 border-slate-800">
+                    <div class="space-y-8">
+                        
+                        <!-- Mode Select -->
+                        <div class="space-y-3 text-left">
+                            <label class="text-[10px] uppercase tracking-wider text-slate-500 font-bold block">1. Choisir le Profil de Risque :</label>
+                            <div class="grid grid-cols-3 gap-3">
+                                <button id="btn-calc-conservateur" onclick="setCalcMode('conservateur')" class="py-3 text-[10px] font-bold uppercase border rounded-xl transition-all duration-300 bg-transparent border-slate-800 text-slate-500">
+                                    Conservateur
+                                </button>
+                                <button id="btn-calc-equilibre" onclick="setCalcMode('equilibre')" class="py-3 text-[10px] font-bold uppercase border rounded-xl transition-all duration-300 bg-amber-500/5 border-amber-500 text-amber-400 shadow-md">
+                                    Équilibré
+                                </button>
+                                <button id="btn-calc-debride" onclick="setCalcMode('debride')" class="py-3 text-[10px] font-bold uppercase border rounded-xl transition-all duration-300 bg-transparent border-slate-800 text-slate-500">
+                                    Débridé
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Capital Allocation -->
+                        <div class="space-y-3 text-left">
+                            <div class="flex justify-between items-center">
+                                <label class="text-[10px] uppercase tracking-wider text-slate-500 font-bold">2. Capital initial alloué :</label>
+                                <span class="font-mono text-base font-bold text-amber-400"><span id="calc-capital-display">15 000</span> $</span>
+                            </div>
+                            <input id="capital-range" type="range" min="1000" max="100000" step="1000" value="15000" oninput="updateCapital(this.value)" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500">
+                            <div class="flex justify-between text-[9px] text-slate-500 font-mono">
+                                <span>1 000 $</span>
+                                <span>50 000 $</span>
+                                <span>100 000 $</span>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic simulated outcomes -->
+                        <div id="sim-outcome-box" class="border rounded-xl p-6 space-y-4 text-left bg-slate-900/50 border-slate-800">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-1">
+                                    <span class="text-[9px] text-slate-500 uppercase block tracking-wider">Cible d'Intérêts Mensuels :</span>
+                                    <div class="font-cinzel text-xl font-bold text-white dark:text-white calc-text-color">
+                                        <span id="calc-monthly-min">2 250</span> $ à <span id="calc-monthly-max">6 750</span> $
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <span class="text-[9px] text-slate-500 uppercase block tracking-wider">Cumulé annuel estimatif :</span>
+                                    <div class="font-cinzel text-xl font-bold text-amber-500">
+                                        ~ <span id="calc-yearly">69 000</span> $
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pt-4 border-t border-slate-800 flex flex-wrap gap-4 items-center justify-between text-[11px] calc-border-color">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-slate-500">Risque du Profile :</span>
+                                    <span id="calc-risk-level" class="px-2 py-0.5 border rounded text-[8.5px] font-bold text-amber-500 bg-amber-500/10 border-amber-500/20">
+                                        MODÉRÉ
+                                    </span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-slate-500">Protection intégrée :</span>
+                                    <span id="calc-protection" class="text-slate-300 font-medium">Optimisation Rendement/Risque</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. RISKS, PROTECTIONS & REGULATORY ENGAGEMENTS -->
+    <section id="risks-protections" class="py-24 bg-transparent border-t border-amber-500/10 relative">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            
+            <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
+                <span class="text-xs uppercase tracking-[0.35em] text-red-500 font-bold">TRANSPARENCE ET CONTRÔLE</span>
+                <h2 class="font-cinzel text-2xl md:text-4xl font-light tracking-wider page-section-title text-white">
+                    RISQUES & PROTECTIONS INTÉGRÉES
+                </h2>
+                <div class="w-12 h-[1px] bg-red-500 mx-auto"></div>
+                <p class="section-muted-text text-slate-400 text-xs font-light leading-relaxed">
+                    La loyauté est l'un de nos engagements cardinaux. Nous détaillons ici tous les garde-fous de protection et les risques intrinsèques au trading algorithmique sur métaux précieux.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 text-left">
+                
+                <!-- Risks Card -->
+                <div class="risk-protect-card p-8 rounded-2xl border bg-slate-900/40 border-slate-800/80 border-t-2 border-t-rose-500 space-y-6 relative overflow-hidden">
+                    <div class="flex items-center space-x-3 text-rose-500">
+                        <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                        <h3 class="font-cinzel text-lg font-bold tracking-wider">COMPRENDRE LES RISQUES</h3>
+                    </div>
+                    <p class="risk-protect-p text-[11px] text-slate-400 font-light leading-relaxed">
+                        Le marché de l'or est volatile. Tout système de capitalisation comporte sa part d'inconnu. Voici les variables clés que nous gérons quotidiennement :
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex gap-3">
+                            <span class="font-cinzel text-rose-500 font-bold text-xs">01</span>
+                            <div class="space-y-0.5">
+                                <h4 class="text-[11px] font-bold uppercase tracking-wider risk-protect-title text-slate-100">Événements Économiques Exceptionnels</h4>
+                                <p class="text-slate-500 text-[10.5px] font-light leading-relaxed">Annonces de banques centrales, chocs géopolitiques imprévus induisant une nervosité soudaine sur le XAU/USD.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <span class="font-cinzel text-rose-500 font-bold text-xs">02</span>
+                            <div class="space-y-0.5">
+                                <h4 class="text-[11px] font-bold uppercase tracking-wider risk-protect-title text-slate-100">Dysfonctionnements de Courtiers (Broker)</h4>
+                                <p class="text-slate-500 text-[10.5px] font-light leading-relaxed">Micro-coupures de flux, augmentation de slippage ou interruptions techniques propres à l'intermédiaire financier.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <span class="font-cinzel text-rose-500 font-bold text-xs">03</span>
+                            <div class="space-y-0.5">
+                                <h4 class="text-[11px] font-bold uppercase tracking-wider risk-protect-title text-slate-100">Conditions de Marché Atypiques</h4>
+                                <p class="text-slate-500 text-[10.5px] font-light leading-relaxed">Absence de liquidité, resserrement excessif de spreads ou marchés sans tendances unilatérales complexes.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Protections Card -->
+                <div class="risk-protect-card p-8 rounded-2xl border bg-slate-900/40 border-slate-800/80 border-t-2 border-t-emerald-500 space-y-6 relative overflow-hidden">
+                    <div class="flex items-center space-x-3 text-emerald-500">
+                        <i data-lucide="lock" class="w-5 h-5"></i>
+                        <h3 class="font-cinzel text-lg font-bold tracking-wider">PROTECTIONS DE SÉCURITÉ</h3>
+                    </div>
+                    <p class="risk-protect-p text-[11px] text-slate-400 font-light leading-relaxed">
+                        La protection de votre trésorerie est intégrée au cœur du code source de SynapX avec les dispositifs suivants :
+                    </p>
+
+                    <div class="space-y-4">
+                        <div class="flex gap-3">
+                            <span class="font-cinzel text-emerald-500 font-bold text-xs">01</span>
+                            <div class="space-y-0.5">
+                                <h4 class="text-[11px] font-bold uppercase tracking-wider risk-protect-title text-slate-100">Régulateur Automatique de Drawdown</h4>
+                                <p class="text-slate-500 text-[10.5px] font-light leading-relaxed">Surveillance de l'équité en temps réel. Si la perte latente approche la limite fixée, l'algorithme stoppe son trading.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <span class="font-cinzel text-emerald-500 font-bold text-xs">02</span>
+                            <div class="space-y-0.5">
+                                <h4 class="text-[11px] font-bold uppercase tracking-wider risk-protect-title text-slate-100">Fermeture Forcée Automatique</h4>
+                                <p class="text-slate-500 text-[10.5px] font-light leading-relaxed">Déconnexion automatique de l’ensemble des lots en suspens si le seuil d'exposition maximale de ~ 30% est touché.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <span class="font-cinzel text-emerald-500 font-bold text-xs">03</span>
+                            <div class="space-y-0.5">
+                                <h4 class="text-[11px] font-bold uppercase tracking-wider risk-protect-title text-slate-100">Surveillance d'Ingénieurs Dédiés</h4>
+                                <p class="text-slate-500 text-[10.5px] font-light leading-relaxed">Intervention humaine journalière par notre équipe de techniciens pour ajuster le bot en cas d'annonce économique sensible.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Loss Protection callout -->
+            <div id="drawdown-callout" class="mt-12 bg-amber-500/5 border border-amber-500/20 rounded-xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 text-left shadow-md">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-500 flex-shrink-0">
+                        <i data-lucide="shield" class="w-6 h-6"></i>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="text-[9px] text-slate-500 uppercase tracking-widest block font-bold">Sécurisation d'Équité</span>
+                        <h4 class="font-cinzel text-base font-bold drawdown-callout-title text-white">ENVIRON 30% DU CAPITAL EN PROTECTION ULTIME</h4>
+                        <p class="drawdown-callout-p text-slate-500 text-[11px] font-light max-w-2xl leading-relaxed">
+                            Contrairement à de nombreux robots sur le marché qui risquent l'intégralité de vos fonds en cas de crise extrême, SynapX intègre un coupe-circuit définitif visant à sauvegarder environ 70% de votre capital net de tout risque.
+                        </p>
+                    </div>
+                </div>
+                <div id="drawdown-badge" class="text-right flex-shrink-0 border px-5 py-3 rounded-lg bg-slate-950 border-slate-800">
+                    <span class="text-[8px] text-slate-400 uppercase block tracking-wider font-bold">Divergent Légal</span>
+                    <span class="text-red-500 font-bold uppercase tracking-wider text-[10px]">Aucun rendement garanti</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 10. DAILY PRIVATE MEMBERS ACCOMPANIMENT -->
+    <section class="py-24 border-t border-amber-500/10 bg-transparent relative">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center text-left">
+                
+                <!-- Companion text info -->
+                <div class="lg:col-span-6 space-y-6">
+                    <span class="text-xs uppercase tracking-[0.35em] text-amber-500 font-bold">L'Écosystème des Membres</span>
+                    <h2 class="font-cinzel text-2xl md:text-4xl font-light tracking-wider page-section-title text-white">
+                        UN ACCOMPAGNEMENT QUOTIDIEN
+                    </h2>
+                    <div class="w-12 h-[1px] bg-amber-500"></div>
+                    <p class="section-muted-text text-slate-400 text-xs font-light leading-relaxed">
+                        Rejoindre SynapX vous donne un accès direct à un canal d'élite et de partage technique rigoureux, supervisé par les concepteurs du bot.
+                    </p>
+
+                    <div class="space-y-4">
+                        <div class="flex gap-3 items-start">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-amber-500 mt-1 flex-shrink-0"></i>
+                            <div>
+                                <h4 class="text-xs font-bold uppercase tracking-wider icon-list-title text-slate-100">Analyses Techniques Quotidiennes</h4>
+                                <p class="text-slate-500 text-[10.5px] font-light leading-relaxed">Notes de conjonctures du trader en chef sur le cours de l’or.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-amber-500 mt-1 flex-shrink-0"></i>
+                            <div>
+                                <h4 class="text-xs font-bold uppercase tracking-wider icon-list-title text-slate-100">Notifications de Positions</h4>
+                                <p class="text-slate-500 text-[10.5px] font-light leading-relaxed">Suivi chirurgical en direct de toutes les transactions initiées par le robot.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-amber-500 mt-1 flex-shrink-0"></i>
+                            <div>
+                                <h4 class="text-xs font-bold uppercase tracking-wider icon-list-title text-slate-100">Explications Didactiques</h4>
+                                <p class="text-slate-500 text-[10.5px] font-light leading-relaxed">Compréhension claire des configurations graphiques et fondamentales.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-amber-500 mt-1 flex-shrink-0"></i>
+                            <div>
+                                <h4 class="text-xs font-bold uppercase tracking-wider icon-list-title text-slate-100">Transparence des Paramètres</h4>
+                                <p class="text-slate-500 text-[10.5px] font-light leading-relaxed">Explications régulières sur les calibrations de lots et d’expositions.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Engagement highlights -->
+                <div class="lg:col-span-6 space-y-6">
+                    
+                    <div class="engagement-card p-6 border rounded-2xl bg-slate-900/40 border-slate-800/80 space-y-4">
+                        <h3 class="font-cinzel text-sm font-bold tracking-widest text-center uppercase engagement-title text-white">NOS QUATRE ENGAGEMENTS</h3>
+                        <div class="w-10 h-[1px] bg-amber-400 mx-auto"></div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                            <div class="engagement-inner-box p-3 rounded border bg-slate-950/60 border-slate-800 text-left space-y-1">
+                                <span class="text-[9px] font-bold text-amber-400 block uppercase">1. SÉCURISATION DU CAPITAL</span>
+                                <p class="text-[10px] text-slate-500 font-light leading-relaxed">Une architecture calibrée pour limiter drastiquement l’exposition à risque.</p>
+                            </div>
+                            <div class="engagement-inner-box p-3 rounded border bg-slate-950/60 border-slate-800 text-left space-y-1">
+                                <span class="text-[9px] font-bold text-amber-400 block uppercase">2. DISCIPLINE SCIENTIFIQUE</span>
+                                <p class="text-[10px] text-slate-500 font-light leading-relaxed">Des modèles éprouvés, dénués de tout arbitrage émotionnel.</p>
+                            </div>
+                            <div class="engagement-inner-box p-3 rounded border bg-slate-950/60 border-slate-800 text-left space-y-1">
+                                <span class="text-[9px] font-bold text-amber-400 block uppercase">3. ENTIÈRE TRANSPARENCE</span>
+                                <p class="text-[10px] text-slate-500 font-light leading-relaxed">Un suivi technique rigoureux et honnête partagé quotidiennement.</p>
+                            </div>
+                            <div class="engagement-inner-box p-3 rounded border bg-slate-950/60 border-slate-800 text-left space-y-1">
+                                <span class="text-[9px] font-bold text-amber-400 block uppercase">4. FIABILITÉ À LONG TERME</span>
+                                <p class="text-[10px] text-slate-500 font-light leading-relaxed">Une philosophie orientée vers la capitalisation pérenne sur l’Or.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Master Quote Banner -->
+                    <div class="bg-amber-500/5 border border-amber-500/20 p-6 rounded-xl text-center italic">
+                        <p class="font-cinzel text-xs text-slate-300 quote-banner-text tracking-wide leading-relaxed">
+                            "Notre objectif n'est pas de battre le marché un jour, mais de construire une technologie capable de performer durablement, tout en maîtrisant le risque et en protégeant votre capital sur le long terme."
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 11. CERTIFIED TECHNICAL DOCUMENTS GRID -->
+    <section id="blueprints" class="py-24 border-t border-amber-500/10 bg-transparent relative">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            
+            <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
+                <span class="text-xs uppercase tracking-[0.35em] text-amber-500 font-bold">Certification et Accréditation</span>
+                <h2 class="font-cinzel text-2xl md:text-4xl font-light tracking-wider page-section-title text-white">
+                    SCHÉMAS TECHNIQUES CERTIFIÉS
+                </h2>
+                <div class="w-12 h-[1px] bg-amber-500 mx-auto"></div>
+                <p class="section-muted-text text-slate-400 text-xs font-light leading-relaxed">
+                    Consultez les trois documents originaux de notre infrastructure algorithmique. Cliquez sur l'icône de zoom pour les agrandir en haute résolution.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+                
+                <!-- Doc 1 -->
+                <div class="blueprint-card border rounded-2xl overflow-hidden group shadow-lg bg-slate-900/40 border-slate-800/80 hover:border-amber-500/40 transition-all duration-300">
+                    <div class="relative aspect-[4/3] bg-slate-900 overflow-hidden flex items-center justify-center">
+                        <img src="image_6ff99a.jpg" alt="Infrastructure SynapX" class="object-cover w-full h-full opacity-80 group-hover:scale-105 group-hover:opacity-95 transition-all duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+                        <button onclick="openLightbox('image_6ff99a.jpg', 'Fiche Spécification 01 - Écosystème & Accompagnement')" class="absolute bottom-4 right-4 p-2 bg-amber-500 text-black rounded-full hover:bg-amber-400 hover:scale-110 transition-all duration-300" title="Agrandir en Plein Écran">
+                            <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                    <div class="p-5 space-y-1.5">
+                        <span class="text-[9px] text-amber-500 font-bold uppercase tracking-widest">Document Certifié 01</span>
+                        <h4 class="font-cinzel text-xs font-bold uppercase blueprint-text-title text-white">Écosystème & Accompagnement</h4>
+                        <p class="blueprint-desc text-slate-400 text-[10.5px] font-light leading-relaxed">
+                            Schéma directeur des 5 piliers de croissance et de l'encadrement exclusif des membres.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Doc 2 -->
+                <div class="blueprint-card border rounded-2xl overflow-hidden group shadow-lg bg-slate-900/40 border-slate-800/80 hover:border-amber-500/40 transition-all duration-300">
+                    <div class="relative aspect-[4/3] bg-slate-900 overflow-hidden flex items-center justify-center">
+                        <img src="image_6ff9b8.jpg" alt="Gestion des Risques SynapX" class="object-cover w-full h-full opacity-80 group-hover:scale-105 group-hover:opacity-95 transition-all duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+                        <button onclick="openLightbox('image_6ff9b8.jpg', 'Fiche Spécification 02 - Risques, Protections & Engagements')" class="absolute bottom-4 right-4 p-2 bg-amber-500 text-black rounded-full hover:bg-amber-400 hover:scale-110 transition-all duration-300" title="Agrandir en Plein Écran">
+                            <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                    <div class="p-5 space-y-1.5">
+                        <span class="text-[9px] text-amber-500 font-bold uppercase tracking-widest">Document Certifié 02</span>
+                        <h4 class="font-cinzel text-xs font-bold uppercase blueprint-text-title text-white">Sécurité, Risques & Limites</h4>
+                        <p class="blueprint-desc text-slate-400 text-[10.5px] font-light leading-relaxed">
+                            Cartographie complète du drawdown, de la limitation à 30% et du coupe-circuit automatique.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Doc 3 -->
+                <div class="blueprint-card border rounded-2xl overflow-hidden group shadow-lg bg-slate-900/40 border-slate-800/80 hover:border-amber-500/40 transition-all duration-300">
+                    <div class="relative aspect-[4/3] bg-slate-900 overflow-hidden flex items-center justify-center">
+                        <img src="image_6ff983.jpg" alt="Les 3 Modes SynapX" class="object-cover w-full h-full opacity-80 group-hover:scale-105 group-hover:opacity-95 transition-all duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+                        <button onclick="openLightbox('image_6ff983.jpg', 'Fiche Spécification 03 - Les 3 Modes & Ratios de Risques')" class="absolute bottom-4 right-4 p-2 bg-amber-500 text-black rounded-full hover:bg-amber-400 hover:scale-110 transition-all duration-300" title="Agrandir en Plein Écran">
+                            <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                    <div class="p-5 space-y-1.5">
+                        <span class="text-[9px] text-amber-500 font-bold uppercase tracking-widest">Document Certifié 03</span>
+                        <h4 class="font-cinzel text-xs font-bold uppercase blueprint-text-title text-white">Les 3 Modes Opérationnels</h4>
+                        <p class="blueprint-desc text-slate-400 text-[10.5px] font-light leading-relaxed">
+                            Comparateur des configurations d’exposition (Conservateur, Équilibré et Débridé).
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 12. PRESTIGE FOOTER -->
+    <footer class="bg-[#030712] border-t border-slate-900 text-slate-400 text-xs py-16 relative overflow-hidden theme-transition">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-12 relative z-10">
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-left">
+                <!-- Brand column -->
+                <div class="space-y-4 md:col-span-2">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-full border border-amber-400 bg-slate-950 flex items-center justify-center">
+                            <span class="font-cinzel text-sm font-bold text-amber-400">S</span>
+                        </div>
+                        <span class="font-cinzel text-base font-bold tracking-widest text-white">
+                            SYNAP<span class="text-amber-400">X</span>
+                        </span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 font-light max-w-sm leading-relaxed">
+                        Le système de trading algorithmique exclusif dédié à l’optimisation des performances sur l’Or (XAU/USD). Alliez la rationalité de la donnée financière à l’assurance d’une surveillance humaine d’élite.
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="space-y-4 text-left">
+                    <h4 class="font-cinzel text-xs font-bold text-white tracking-widest uppercase">Navigation</h4>
+                    <ul class="space-y-2 text-slate-500 text-[11px]">
+                        <li><button onclick="navigateTo('home')" class="hover:text-amber-400 transition-all">Accueil d'Exception</button></li>
+                        <li><button onclick="navigateTo('pillars')" class="hover:text-amber-400 transition-all">Les 5 Piliers</button></li>
+                        <li><button onclick="navigateTo('modes')" class="hover:text-amber-400 transition-all">Profils de Trading</button></li>
+                        <li><button onclick="navigateTo('simulator')" class="hover:text-amber-400 transition-all">Simulateur Elite</button></li>
+                    </ul>
+                </div>
+
+                <!-- Specs Links -->
+                <div class="space-y-4 text-left">
+                    <h4 class="font-cinzel text-xs font-bold text-white tracking-widest uppercase">Spécifications</h4>
+                    <ul class="space-y-2 text-slate-500 text-[11px]">
+                        <li><button onclick="navigateTo('blueprints')" class="hover:text-amber-400 transition-all">Fiches Certifiées</button></li>
+                        <li><button onclick="navigateTo('risks-protections')" class="hover:text-amber-400 transition-all">Drawdown & Limites</button></li>
+                        <li><span class="text-amber-500/80 font-bold block">Assistance Technique 24/7</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Explicit Legal Warning from Flyer -->
+            <div class="pt-8 border-t border-slate-900/80 text-[10px] text-slate-600 space-y-3 leading-relaxed text-left">
+                <p>
+                    AVERTISSEMENT EXPLICITE SUR LES RISQUES : Le trading de produits financiers, en particulier sur marge et spécifiquement sur le marché des métaux précieux comme l'Or (XAU/USD), comporte un niveau de risque élevé et peut ne pas convenir à tous les investisseurs. Les performances passées de l'algorithme SynapX ne préjugent pas de ses performances futures.
+                </p>
+                <p>
+                    En aucun cas le site SynapX ou ses développeurs ne sauraient être tenus responsables d'éventuelles pertes de capital découlant de l'utilisation de l'algorithme de trading. S'il vous plaît, tradez de manière responsable et uniquement avec des fonds que vous pouvez vous permettre de perdre en totalité.
+                </p>
+            </div>
+
+            <div class="pt-4 flex flex-col sm:flex-row justify-between items-center text-[10px] text-slate-600 gap-4">
+                <span>© 2026 SynapX Algorithmic Systems. Tous droits réservés. Édition de Prestige.</span>
+                <div class="flex space-x-6">
+                    <span class="hover:text-white cursor-pointer transition-all">Conditions de Service</span>
+                    <span class="hover:text-white cursor-pointer transition-all">Politique de Confidentialité</span>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // State management
+        let currentTheme = 'dark'; // 'dark' | 'light'
+        let goldPrice = 2384.50;
+        let calcCapital = 15000;
+        let calcMode = 'equilibre'; // 'conservateur' | 'equilibre' | 'debride'
+        let soundMuted = true;
+        
+        // Audio setup (using Web Audio API)
+        function playBeep(freq = 440, duration = 0.08) {
+            if (soundMuted) return;
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.type = 'sine';
+                oscillator.frequency.value = freq;
+                gainNode.gain.setValueAtTime(0.03, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log('Audio contextual failure or interaction guard active');
+            }
+        }
+
+        // Theme switching handler
+        function toggleTheme() {
+            playBeep(650, 0.12);
+            const html = document.documentElement;
+            const themeBtn = document.getElementById('theme-toggle-btn');
+            const headerBar = document.getElementById('header-bar');
+            
+            if (currentTheme === 'dark') {
+                currentTheme = 'light';
+                html.classList.remove('dark');
+                html.classList.add('light');
+                
+                // Swap icon in button
+                themeBtn.innerHTML = '<i data-lucide="moon" class="w-3.5 h-3.5"></i>';
+                themeBtn.setAttribute('title', 'Passer au thème Obsidienne (Sombre)');
+                themeBtn.className = "p-2 rounded-full border border-stone-200 hover:border-amber-600/60 text-amber-600 hover:bg-stone-100 transition-all duration-300 hover:scale-105";
+                
+                // Header Glass styling
+                headerBar.className = "rounded-full py-3 px-6 sm:px-8 flex items-center justify-between transition-all duration-500 glossy-header-light";
+                
+                // Document Body update
+                document.body.className = "bg-[#FAF9F5] text-[#1C1A17] font-jakarta selection:bg-amber-400 selection:text-black overflow-x-hidden relative theme-transition";
+                
+                // Update elements individually for pristine look
+                updateThemeColors('light');
+            } else {
+                currentTheme = 'dark';
+                html.classList.remove('light');
+                html.classList.add('dark');
+                
+                // Swap icon in button
+                themeBtn.innerHTML = '<i data-lucide="sun" class="w-3.5 h-3.5"></i>';
+                themeBtn.setAttribute('title', 'Passer au thème Champagne (Clair)');
+                themeBtn.className = "p-2 rounded-full border border-white/10 hover:border-amber-400/60 text-amber-400 hover:bg-white/5 transition-all duration-300 hover:scale-105";
+                
+                // Header Glass styling
+                headerBar.className = "rounded-full py-3 px-6 sm:px-8 flex items-center justify-between transition-all duration-500 glossy-header";
+                
+                // Document Body update
+                document.body.className = "bg-[#030712] text-slate-100 font-jakarta selection:bg-amber-400 selection:text-black overflow-x-hidden relative theme-transition";
+                
+                // Update elements individually
+                updateThemeColors('dark');
+            }
+            
+            // Re-render Lucide icons dynamically
+            lucide.createIcons();
+        }
+
+        // High fidelity CSS updates for dynamic elements
+        function updateThemeColors(theme) {
+            const isDark = theme === 'dark';
+            
+            // Header text colors mapping
+            const headerTexts = document.querySelectorAll('.header-text-color');
+            headerTexts.forEach(el => {
+                el.className = `font-cinzel text-base font-medium tracking-[0.2em] block group-hover:text-amber-400 transition-colors ${isDark ? 'text-slate-100' : 'text-[#1C1A17]'} header-text-color`;
+            });
+            
+            // Hero Title and Paragraph mapping
+            const titleTexts = document.querySelectorAll('.title-text-color');
+            titleTexts.forEach(el => {
+                el.className = `font-cinzel text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight leading-[1.15] ${isDark ? 'text-slate-100' : 'text-[#1C1A17]'} title-text-color`;
+            });
+            const strongTexts = document.querySelectorAll('.strong-text-color');
+            strongTexts.forEach(el => {
+                el.className = `${isDark ? 'text-white' : 'text-[#1C1A17]'} strong-text-color`;
+            });
+            const heroParagraphs = document.querySelectorAll('.hero-paragraph');
+            heroParagraphs.forEach(el => {
+                el.className = `${isDark ? 'text-slate-400' : 'text-stone-500'} text-xs sm:text-sm md:text-base max-w-xl font-light leading-relaxed hero-paragraph`;
+            });
+
+            // HUD Card mapping
+            const hudCard = document.getElementById('hud-card');
+            hudCard.className = `w-full h-full rounded-3xl p-6 flex flex-col justify-between border relative overflow-hidden transition-colors duration-500 ${isDark ? 'bg-[#060a16]/90 border-amber-500/25 shadow-2xl shadow-black/60' : 'bg-white border-stone-200 shadow-xl'}`;
+            const hudCardTitle = document.querySelector('.hud-card-title');
+            hudCardTitle.className = `font-cinzel text-base tracking-[0.2em] font-medium hud-card-title ${isDark ? 'text-slate-100' : 'text-[#1C1A17]'}`;
+            const hudTicker = document.getElementById('hud-ticker');
+            hudTicker.className = `p-3 rounded-xl space-y-1.5 border ${isDark ? 'bg-slate-950/60 border-slate-800' : 'bg-stone-50 border-stone-200'}`;
+            const hudTickerMainText = document.querySelector('.hud-ticker-main-text');
+            hudTickerMainText.className = `text-xs font-bold font-mono hud-ticker-main-text ${isDark ? 'text-white' : 'text-[#1C1A17]'}`;
+
+            // Sections Titles and Sub-titles
+            const secTitles = document.querySelectorAll('.page-section-title');
+            secTitles.forEach(el => {
+                el.className = `font-cinzel text-2xl md:text-4xl font-light tracking-wider page-section-title ${isDark ? 'text-white' : 'text-[#1C1A17]'}`;
+            });
+            const secMutedTexts = document.querySelectorAll('.section-muted-text');
+            secMutedTexts.forEach(el => {
+                el.className = `text-xs font-light leading-relaxed section-muted-text ${isDark ? 'text-slate-400' : 'text-stone-500'}`;
+            });
+
+            // Pillars Cards
+            const pillarCards = document.querySelectorAll('.pillar-card');
+            pillarCards.forEach(el => {
+                el.className = `pillar-card p-6 rounded-2xl border ${isDark ? 'bg-slate-900/40 border-slate-800/80' : 'bg-white border-stone-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.02)]'} hover:border-amber-500/40 hover:-translate-y-1 transition-all duration-300 group flex flex-col justify-between`;
+            });
+            const pillarTitles = document.querySelectorAll('.pillar-title');
+            pillarTitles.forEach(el => {
+                el.className = `font-cinzel font-bold text-xs tracking-wider uppercase pillar-title ${isDark ? 'text-slate-200' : 'text-[#1C1A17]'}`;
+            });
+            const pillarDescs = document.querySelectorAll('.pillar-desc');
+            pillarDescs.forEach(el => {
+                el.className = `text-[11px] font-light leading-relaxed pillar-desc ${isDark ? 'text-slate-400' : 'text-stone-500'}`;
+            });
+
+            // Modes Cards
+            const modeCards = document.querySelectorAll('.mode-card');
+            modeCards.forEach((el, index) => {
+                const borderColors = ['border-l-emerald-500', 'border-l-amber-500', 'border-l-rose-500'];
+                el.className = `mode-card p-8 rounded-2xl border ${isDark ? 'bg-slate-900/40 border-slate-800/80' : 'bg-white border-stone-200 shadow-[0_8px_30px_rgb(0,0,0,0.02)]'} border-l-4 ${borderColors[index]} flex flex-col justify-between hover:shadow-xl transition-all duration-300`;
+            });
+            const modeCardTitles = document.querySelectorAll('.mode-card-title');
+            modeCardTitles.forEach(el => {
+                el.className = `font-cinzel text-xl font-medium mt-3 mode-card-title ${isDark ? 'text-white' : 'text-[#1C1A17]'}`;
+            });
+
+            // Calculator block colors
+            const calcBlock = document.getElementById('calc-block');
+            calcBlock.className = `lg:col-span-7 border p-8 rounded-2xl shadow-xl relative ${isDark ? 'bg-slate-950 border-slate-800' : 'bg-white border-stone-200'}`;
+            const simOutcomeBox = document.getElementById('sim-outcome-box');
+            simOutcomeBox.className = `border rounded-xl p-6 space-y-4 text-left ${isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-stone-50 border-stone-200'}`;
+            const simPhilosophyBox = document.getElementById('sim-philosophy-box');
+            simPhilosophyBox.className = `p-4 rounded-xl space-y-2 border ${isDark ? 'bg-slate-950/80 border-slate-800' : 'bg-white border-stone-200'}`;
+            
+            // Simulator Mode Buttons Border Swap
+            ['conservateur', 'equilibre', 'debride'].forEach(m => {
+                const btn = document.getElementById(`btn-calc-${m}`);
+                if (calcMode === m) {
+                    btn.className = "py-3 text-[10px] font-bold uppercase border rounded-xl transition-all duration-300 bg-amber-500/5 border-amber-500 text-amber-400 shadow-md";
+                } else {
+                    btn.className = `py-3 text-[10px] font-bold uppercase border rounded-xl transition-all duration-300 bg-transparent ${isDark ? 'border-slate-800' : 'border-slate-200'} text-slate-500`;
+                }
+            });
+
+            // Risks & Protections
+            const riskProtectCards = document.querySelectorAll('.risk-protect-card');
+            riskProtectCards.forEach((el, index) => {
+                const borderColors = ['border-t-rose-500', 'border-t-emerald-500'];
+                el.className = `risk-protect-card p-8 rounded-2xl border ${isDark ? 'bg-slate-900/40 border-slate-800/80' : 'bg-white border-stone-200 shadow-[0_8px_30px_rgb(0,0,0,0.02)]'} border-t-2 ${borderColors[index]} space-y-6 relative overflow-hidden`;
+            });
+            const riskProtectPs = document.querySelectorAll('.risk-protect-p');
+            riskProtectPs.forEach(el => {
+                el.className = `risk-protect-p text-[11px] font-light leading-relaxed ${isDark ? 'text-slate-400' : 'text-stone-500'}`;
+            });
+            const riskProtectTitles = document.querySelectorAll('.risk-protect-title');
+            riskProtectTitles.forEach(el => {
+                el.className = `text-[11px] font-bold uppercase tracking-wider risk-protect-title ${isDark ? 'text-slate-100' : 'text-[#1C1A17]'}`;
+            });
+
+            // Drawdown callout banner
+            const drawdownCallout = document.getElementById('drawdown-callout');
+            drawdownCallout.className = `mt-12 border rounded-xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 text-left shadow-md ${isDark ? 'bg-amber-500/5 border-amber-500/20' : 'bg-amber-500/5 border-amber-500/20'}`;
+            const drawdownCalloutTitle = document.querySelector('.drawdown-callout-title');
+            drawdownCalloutTitle.className = `font-cinzel text-base font-bold drawdown-callout-title ${isDark ? 'text-white' : 'text-[#1C1A17]'}`;
+            const drawdownCalloutP = document.querySelector('.drawdown-callout-p');
+            drawdownCalloutP.className = `text-[11px] font-light max-w-2xl leading-relaxed drawdown-callout-p ${isDark ? 'text-slate-400' : 'text-stone-500'}`;
+            const drawdownBadge = document.getElementById('drawdown-badge');
+            drawdownBadge.className = `text-right flex-shrink-0 border px-5 py-3 rounded-lg ${isDark ? 'bg-slate-950 border-slate-800' : 'bg-white border-stone-200'}`;
+
+            // Community Accompaniment List Titles
+            const iconListTitles = document.querySelectorAll('.icon-list-title');
+            iconListTitles.forEach(el => {
+                el.className = `text-xs font-bold uppercase tracking-wider icon-list-title ${isDark ? 'text-slate-100' : 'text-[#1C1A17]'}`;
+            });
+
+            const engagementCard = document.querySelector('.engagement-card');
+            engagementCard.className = `engagement-card p-6 border rounded-2xl space-y-4 ${isDark ? 'bg-slate-900/40 border-slate-800/80' : 'bg-white border-stone-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.02)]'}`;
+            const engagementTitle = document.querySelector('.engagement-title');
+            engagementTitle.className = `font-cinzel text-sm font-bold tracking-widest text-center uppercase engagement-title ${isDark ? 'text-white' : 'text-[#1C1A17]'}`;
+
+            const engagementInnerBoxes = document.querySelectorAll('.engagement-inner-box');
+            engagementInnerBoxes.forEach(el => {
+                el.className = `engagement-inner-box p-3 rounded border text-left space-y-1 ${isDark ? 'bg-slate-950/60 border-slate-800' : 'bg-stone-50 border-stone-200'}`;
+            });
+
+            const quoteBannerText = document.querySelector('.quote-banner-text');
+            quoteBannerText.className = `font-cinzel text-xs tracking-wide leading-relaxed quote-banner-text ${isDark ? 'text-slate-300' : 'text-stone-700'}`;
+
+            // Blueprints
+            const bpCards = document.querySelectorAll('.blueprint-card');
+            bpCards.forEach(el => {
+                el.className = `blueprint-card border rounded-2xl overflow-hidden group shadow-lg ${isDark ? 'bg-slate-900/40 border-slate-800/80' : 'bg-white border-stone-200/80'} hover:border-amber-500/40 transition-all duration-300`;
+            });
+            const bpTextTitles = document.querySelectorAll('.blueprint-text-title');
+            bpTextTitles.forEach(el => {
+                el.className = `font-cinzel text-xs font-bold uppercase blueprint-text-title ${isDark ? 'text-white' : 'text-[#1C1A17]'}`;
+            });
+            const bpDescs = document.querySelectorAll('.blueprint-desc');
+            bpDescs.forEach(el => {
+                el.className = `blueprint-desc text-[10.5px] font-light leading-relaxed ${isDark ? 'text-slate-400' : 'text-stone-500'}`;
+            });
+            
+            // Hero Blueprints CTA btn border
+            const blueprintsCtaBtn = document.getElementById('blueprints-cta-btn');
+            blueprintsCtaBtn.className = `px-8 py-3.5 border font-semibold uppercase tracking-widest text-[10px] rounded-full transition-all duration-300 text-center ${isDark ? 'border-white/10 text-white hover:bg-white/5' : 'border-stone-200 text-stone-900 hover:bg-stone-50'}`;
+        }
+
+        // Ambient Cursor Tracking Effect
+        window.addEventListener('mousemove', (e) => {
+            const glow = document.getElementById('ambient-glow');
+            glow.style.left = `${e.clientX}px`;
+            glow.style.top = `${e.clientY}px`;
+        });
+
+        // Toggle Sound Mute
+        const soundBtn = document.getElementById('sound-toggle-btn');
+        soundBtn.addEventListener('click', () => {
+            soundMuted = !soundMuted;
+            playBeep(520, 0.08);
+            if (soundMuted) {
+                soundBtn.innerHTML = '<i data-lucide="volume-x" class="w-3.5 h-3.5"></i>';
+                soundBtn.setAttribute('title', 'Activer les sons de prestige');
+            } else {
+                soundBtn.innerHTML = '<i data-lucide="volume-2" class="w-3.5 h-3.5"></i>';
+                soundBtn.setAttribute('title', 'Désactiver les sons');
+            }
+            lucide.createIcons();
+        });
+
+        // Theme switch listener
+        document.getElementById('theme-toggle-btn').addEventListener('click', toggleTheme);
+
+        // Open & Close Menu Fullscreen Overlay
+        const openMenuBtn = document.getElementById('open-menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+
+        openMenuBtn.addEventListener('click', () => {
+            playBeep(450, 0.08);
+            dropdownMenu.classList.remove('hidden');
+            dropdownMenu.classList.add('flex');
+            setTimeout(() => {
+                dropdownMenu.classList.remove('opacity-0');
+            }, 10);
+        });
+
+        function closeMenu() {
+            playBeep(350, 0.05);
+            dropdownMenu.classList.add('opacity-0');
+            setTimeout(() => {
+                dropdownMenu.classList.add('hidden');
+                dropdownMenu.classList.remove('flex');
+            }, 500);
+        }
+
+        closeMenuBtn.addEventListener('click', closeMenu);
+
+        // Smooth Page Navigation via anchors
+        function navigateTo(sectionId) {
+            closeMenu();
+            playBeep(520, 0.1);
+            const target = document.getElementById(sectionId);
+            if (target) {
+                const yOffset = -90; // account for floating header pill
+                const y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+        }
+
+        // Live Fluctuating Simulated Gold Ticker
+        setInterval(() => {
+            const change = (Math.random() - 0.48) * 1.5;
+            goldPrice = +(goldPrice + change).toFixed(2);
+            
+            const goldDisplays = document.querySelectorAll('.gold-live-price');
+            goldDisplays.forEach(el => {
+                el.innerText = goldPrice.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            });
+        }, 4000);
+
+        // Interactive Premium Simulator Logic
+        function setCalcMode(mode) {
+            playBeep(580, 0.05);
+            calcMode = mode;
+            
+            // Visual Active State updates
+            ['conservateur', 'equilibre', 'debride'].forEach(m => {
+                const btn = document.getElementById(`btn-calc-${m}`);
+                if (m === mode) {
+                    btn.className = "py-3 text-[10px] font-bold uppercase border rounded-xl transition-all duration-300 bg-amber-500/5 border-amber-500 text-amber-400 shadow-md";
+                } else {
+                    btn.className = `py-3 text-[10px] font-bold uppercase border rounded-xl transition-all duration-300 bg-transparent ${currentTheme === 'dark' ? 'border-slate-800' : 'border-slate-200'} text-slate-500`;
+                }
+            });
+
+            calculateSimulator();
+        }
+
+        function updateCapital(val) {
+            calcCapital = Number(val);
+            document.getElementById('calc-capital-display').innerText = calcCapital.toLocaleString('fr-FR');
+            calculateSimulator();
+        }
+
+        function calculateSimulator() {
+            let minMonthly, maxMonthly, yearlyEst, riskLevel, riskColor, protection;
+            
+            if (calcMode === 'conservateur') {
+                minMonthly = Math.round(calcCapital * 0.07);
+                maxMonthly = Math.round(calcCapital * 0.15);
+                yearlyEst = Math.round(calcCapital * 1.95);
+                riskLevel = 'FAIBLE';
+                riskColor = 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20';
+                protection = 'Maximale (Drawdown limité)';
+            } else if (calcMode === 'equilibre') {
+                minMonthly = Math.round(calcCapital * 0.15);
+                maxMonthly = Math.round(calcCapital * 0.45);
+                yearlyEst = Math.round(calcCapital * 4.6);
+                riskLevel = 'MODÉRÉ';
+                riskColor = 'text-amber-500 bg-amber-500/10 border-amber-500/20';
+                protection = 'Optimisation Rendement/Risque';
+            } else if (calcMode === 'debride') {
+                minMonthly = Math.round(calcCapital * 0.40);
+                maxMonthly = Math.round(calcCapital * 1.00);
+                yearlyEst = Math.round(calcCapital * 11.5);
+                riskLevel = 'ÉLEVÉ';
+                riskColor = 'text-rose-500 bg-rose-500/10 border-rose-500/20';
+                protection = 'Limite Drawdown Max (30%)';
+            }
+
+            document.getElementById('calc-monthly-min').innerText = minMonthly.toLocaleString('fr-FR');
+            document.getElementById('calc-monthly-max').innerText = maxMonthly.toLocaleString('fr-FR');
+            document.getElementById('calc-yearly').innerText = yearlyEst.toLocaleString('fr-FR');
+            
+            const riskBadge = document.getElementById('calc-risk-level');
+            riskBadge.innerText = riskLevel;
+            riskBadge.className = `px-2 py-0.5 border rounded text-[8.5px] font-bold ${riskColor}`;
+            
+            document.getElementById('calc-protection').innerText = protection;
+        }
+
+        // Quick profile select from Cards
+        function selectProfile(profile) {
+            setCalcMode(profile);
+            navigateTo('simulator');
+        }
+
+        // Lightbox Modal functions
+        const lightboxModal = document.getElementById('lightbox-modal');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxTitle = document.getElementById('lightbox-title');
+        const closeLightboxBtn = document.getElementById('close-lightbox-btn');
+
+        function openLightbox(imgSrc, titleText) {
+            playBeep(620, 0.08);
+            lightboxImg.src = imgSrc;
+            lightboxTitle.innerText = titleText;
+            lightboxModal.classList.remove('hidden');
+            lightboxModal.classList.add('flex');
+            setTimeout(() => {
+                lightboxModal.classList.remove('opacity-0');
+            }, 10);
+        }
+
+        function closeLightbox() {
+            playBeep(330, 0.05);
+            lightboxModal.classList.add('opacity-0');
+            setTimeout(() => {
+                lightboxModal.classList.add('hidden');
+                lightboxModal.classList.remove('flex');
+            }, 300);
+        }
+
+        closeLightboxBtn.addEventListener('click', closeLightbox);
+
+        // Escape key listeners
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeLightbox();
+                closeMenu();
+            }
+        });
+
+        // Cinema prestige loader flow
+        window.addEventListener('load', () => {
+            const steps = [
+                'Alignement des données de l’Or...',
+                'Génération des profils de prestige...',
+                'Ajustement des ratios d’excellence...',
+                'Finalisation de l’expérience de marque...',
+                'Ouverture de votre espace d’exception...'
+            ];
+            
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += Math.floor(Math.random() * 6) + 3;
+                if (progress > 100) progress = 100;
+
+                document.getElementById('loader-progress').style.width = `${progress}%`;
+                document.getElementById('loader-percentage').innerText = `Édition Prestige • ${progress}%`;
+                
+                const stepIdx = Math.min(Math.floor(progress / 20), steps.length - 1);
+                document.getElementById('loader-step-text').innerText = steps[stepIdx];
+
+                if (progress === 100) {
+                    clearInterval(progressInterval);
+                    setTimeout(() => {
+                        const loader = document.getElementById('intro-loader');
+                        loader.classList.add('opacity-0');
+                        playBeep(880, 0.35);
+                        setTimeout(() => {
+                            loader.classList.add('hidden');
+                        }, 1000);
+                    }, 800);
+                }
+            }, 120);
+
+            // Initialize Lucide Icons
+            lucide.createIcons();
+            // Initial computation
+            calculateSimulator();
+        });
+    </script>
+</body>
+</html>
