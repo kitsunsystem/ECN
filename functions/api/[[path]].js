@@ -1712,7 +1712,7 @@ export async function onRequest(context) {
                     headers: { ...corsHeaders, 'Content-Type': 'application/json' }
                 });
             }
-            const { email, is_affiliate_active, is_community_tier, affiliate_rank_override, account_prices, account_modes, account_max_targets, account_monthly_prices, account_bypasses, account_propfirms, initialize_profit_targets } = reqData;
+            const { email, is_affiliate_active, is_community_tier, affiliate_rank_override, account_capitals, account_prices, account_modes, account_max_targets, account_monthly_prices, account_bypasses, account_propfirms, initialize_profit_targets } = reqData;
             
             // Check if user already has a referral code, generate one if active and missing
             const { data: user } = await supabase.from('users').select('referral_code, first_name').eq('email', email).maybeSingle();
@@ -1780,8 +1780,9 @@ export async function onRequest(context) {
                 }
             }
 
-            // 3. Update account modes, monthly prices, max target, bypass and propfirm config if provided
+            // 3. Update account modes, monthly prices, max target, bypass, propfirm and capital/invested_amount config if provided
             const allAccountIds = new Set([
+                ...Object.keys(account_capitals || {}),
                 ...Object.keys(account_modes || {}),
                 ...Object.keys(account_max_targets || {}),
                 ...Object.keys(account_monthly_prices || {}),
@@ -1811,8 +1812,11 @@ export async function onRequest(context) {
                         maxTarget = parseFloat(currentConfig.max_daily_profit_target_pct) || 1.25;
                     }
 
+                    const newCapital = (account_capitals && account_capitals[accountId] !== undefined) ? parseFloat(account_capitals[accountId]) || 0 : undefined;
+
                     const newConfig = {
                         ...currentConfig,
+                        ...(newCapital !== undefined ? { invested_amount: newCapital } : {}),
                         ...(account_modes && account_modes[accountId] !== undefined ? { mode: account_modes[accountId] } : {}),
                         max_daily_profit_target_pct: maxTarget,
                         ...(account_monthly_prices && account_monthly_prices[accountId] !== undefined ? { monthly_price: parseFloat(account_monthly_prices[accountId]) || 0 } : {}),
@@ -1827,9 +1831,15 @@ export async function onRequest(context) {
                         newConfig.daily_profit_target = maxAllowedDollars;
                     }
 
+                    const updatePayload = { config: newConfig };
+                    if (newCapital !== undefined) {
+                        updatePayload.balance = newCapital;
+                        updatePayload.equity = newCapital;
+                    }
+
                     await supabase
                         .from('accounts')
-                        .update({ config: newConfig })
+                        .update(updatePayload)
                         .eq('account_id', accountId)
                         .eq('email', email);
                 }
