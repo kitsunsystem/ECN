@@ -1084,7 +1084,7 @@ export async function onRequest(context) {
                 });
             }
 
-            const { account_id, email, action, invested_amount, mode } = reqData;
+            const { account_id, email, action, invested_amount, mode, pamm_allocations } = reqData;
             if (!account_id || !email || !action) {
                 return new Response(JSON.stringify({ status: 'error', message: 'Paramètres manquants.' }), {
                     status: 400,
@@ -1093,17 +1093,35 @@ export async function onRequest(context) {
             }
 
             if (action === 'approve') {
-                const investedAmt = parseFloat(invested_amount) || 0.0;
-                // Update to approved
+                const { data: existingAcc } = await supabase
+                    .from('accounts')
+                    .select('config, balance')
+                    .eq('account_id', String(account_id))
+                    .eq('email', email)
+                    .maybeSingle();
+
+                const prevConfig = (existingAcc && existingAcc.config) ? existingAcc.config : {};
+                let allocs = pamm_allocations || prevConfig.pamm_allocations || [];
+                let investedAmt = 0;
+                if (Array.isArray(allocs) && allocs.length > 0) {
+                    investedAmt = allocs.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
+                } else if (invested_amount !== undefined && invested_amount !== null && invested_amount !== '') {
+                    investedAmt = parseFloat(invested_amount) || 0.0;
+                } else {
+                    investedAmt = parseFloat(prevConfig.invested_amount) || parseFloat(existingAcc?.balance) || 0.0;
+                }
+
                 const { error: updateError } = await supabase
                     .from('accounts')
                     .update({
                         balance: investedAmt,
                         equity: investedAmt,
                         config: {
+                            ...prevConfig,
                             status: 'approved',
-                            mode: mode || 'low',
+                            mode: mode || prevConfig.requested_mode || prevConfig.mode || 'low',
                             invested_amount: investedAmt,
+                            pamm_allocations: allocs,
                             stripe_status: 'active',
                             bypass_payment: true,
                             enabled: true,
@@ -1122,7 +1140,6 @@ export async function onRequest(context) {
                     });
                 }
             } else if (action === 'reject') {
-                // Delete the pending account to let client request again
                 const { error: deleteError } = await supabase
                     .from('accounts')
                     .delete()
@@ -1142,6 +1159,137 @@ export async function onRequest(context) {
             return new Response(JSON.stringify({ status: 'success' }), {
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' }
             });
+        }
+
+        // --- 8.6B. ADMIN UPDATE USER PAMM ALLOCATIONS & CAPITAL ---
+        if (path === '/api/admin/update-user-pamms' && request.method === 'POST') {
+            const reqData = await request.json();
+            const auth = await checkAdminAuth(reqData, 'POST', null, false);
+            if (!auth.authorized) {
+                return new Response(JSON.stringify({ status: 'error', message: auth.message }), {
+                    status: auth.status,
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
+
+            const { email, account_id, pamm_allocations, invested_amount } = reqData;
+            if (!email || !account_id) {
+                return new Response(JSON.stringify({ status: 'error', message: 'Email et account_id requis.' }), {
+                    status: 400,
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
+
+            const { data: acc } = await supabase
+                .from('accounts')
+                .select('*')
+                .eq('account_id', String(account_id))
+                .eq('email', email)
+                .maybeSingle();
+
+            if (!acc) {
+                return new Response(JSON.stringify({ status: 'error', message: 'Compte introuvable.' }), {
+                    status: 404,
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
+
+            let allocs = Array.isArray(pamm_allocations) ? pamm_allocations : [];
+            let totalCapital = 0;
+            if (allocs.length > 0) {
+                totalCapital = allocs.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
+            } else {
+                totalCapital = parseFloat(invested_amount) || 0;
+            }
+
+            const newConfig = {
+                ...(acc.config || {}),
+                status: 'approved',
+                invested_amount: totalCapital,
+                pamm_allocations: allocs,
+                updated_by_admin_at: new Date().toISOString()
+            };
+
+            const { error: updErr } = await supabase
+                .from('accounts')
+                .update({
+                    balance: totalCapital,
+                    equity: totalCapital,
+                    config: newConfig,
+                    last_update: new Date().toISOString()
+                })
+                .eq('account_id', String(account_id))
+                .eq('email', email);
+
+            if (updErr) {
+                return new Response(JSON.stringify({ status: 'error', message: updErr.message }), {
+                    status: 500,
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
+
+            return new Response(JSON.stringify({ status: 'success', totalCapital, pamm_allocations: allocs }), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            });
+        }
+
+        // --- 8.6C. ADMIN PAMM MONTHLY PERFORMANCES (GET/POST) ---
+        if (path === '/api/admin/pamm-performances') {
+            if (request.method === 'GET') {
+                const { data: settingRow } = await supabase
+                    .from('admin_settings')
+                    .select('value')
+                    .eq('key', 'pamm_monthly_returns')
+                    .maybeSingle();
+
+                let returns = {
+                    v1_modere: 3.5,
+                    v1_casino: 18.0,
+                    v2_safe: 7.5,
+                    v2_normal: 22.0,
+                    v2_debride: 45.0,
+                    tpsl_safe: 14.0,
+                    tpsl_normal: 28.0
+                };
+                if (settingRow && settingRow.value) {
+                    try {
+                        returns = { ...returns, ...JSON.parse(settingRow.value) };
+                    } catch (e) {
+                        console.error("Parse pamm_monthly_returns error:", e);
+                    }
+                }
+                return new Response(JSON.stringify({ status: 'success', returns }), {
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
+
+            if (request.method === 'POST') {
+                const reqData = await request.json();
+                const auth = await checkAdminAuth(reqData, 'POST', null, false);
+                if (!auth.authorized) {
+                    return new Response(JSON.stringify({ status: 'error', message: auth.message }), {
+                        status: auth.status,
+                        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                    });
+                }
+
+                const { returns } = reqData;
+                if (!returns || typeof returns !== 'object') {
+                    return new Response(JSON.stringify({ status: 'error', message: 'Données de rendement invalides.' }), {
+                        status: 400,
+                        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                    });
+                }
+
+                await supabase.from('admin_settings').upsert({
+                    key: 'pamm_monthly_returns',
+                    value: JSON.stringify(returns)
+                });
+
+                return new Response(JSON.stringify({ status: 'success', message: 'Performances mensuelles PAMM enregistrées.' }), {
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
         }
 
         // --- 8.7. ADMIN MASTER SETTINGS (GET/POST) ---
@@ -1481,84 +1629,78 @@ export async function onRequest(context) {
                 nextTier = { limit: bronzeLimit, pct: silverPct };
             }
             
-            // Retrieve master accounts to compute weekly returns
-            const masterSafeId = settings['master_acc_safe'];
-            const masterNormalId = settings['master_acc_normal'];
-            const masterDebridId = settings['master_acc_debrid'];
-            
-            const masterIds = [masterSafeId, masterNormalId, masterDebridId].filter(Boolean);
-            let masterAccounts = [];
-            if (masterIds.length > 0) {
-                const { data: mAccs } = await supabase
-                    .from('accounts')
-                    .select('*')
-                    .in('account_id', masterIds.map(String));
-                masterAccounts = mAccs || [];
-            }
-            
-            const masterSafe = masterAccounts.find(m => String(m.account_id) === String(masterSafeId));
-            const masterNormal = masterAccounts.find(m => String(m.account_id) === String(masterNormalId));
-            const masterDebrid = masterAccounts.find(m => String(m.account_id) === String(masterDebridId));
-            
-            const getMasterWeeklyReturnPct = (master) => {
-                if (!master || !master.history) return 0.0;
-                const now = Date.now();
-                const oneWeekAgo = now - 7 * 24 * 60 * 60 * 1000;
-                
-                let weeklyProfit = 0.0;
-                (master.history || []).forEach(h => {
-                    const tradeDateStr = h.time || h.date;
-                    if (!tradeDateStr) return;
-                    const tradeDate = new Date(tradeDateStr);
-                    if (tradeDate.getTime() >= oneWeekAgo) {
-                        const rawProfitStr = String(h.resultStr || '').replace('$', '').replace('+', '');
-                        const profit = parseFloat(rawProfitStr) || 0.0;
-                        weeklyProfit += profit;
-                    }
-                });
-                
-                const masterTotalProfit = parseFloat(master.total_result) || 0.0;
-                const masterBalance = parseFloat(master.balance) || 1.0;
-                const masterInitialBalance = masterBalance - masterTotalProfit;
-                const initialRef = masterInitialBalance <= 0 ? masterBalance : masterInitialBalance;
-                
-                return weeklyProfit / initialRef;
+            // Retrieve PAMM monthly returns from settings
+            let pammReturns = {
+                v1_modere: 3.5,
+                v1_casino: 18.0,
+                v2_safe: 7.5,
+                v2_normal: 22.0,
+                v2_debride: 45.0,
+                tpsl_safe: 14.0,
+                tpsl_normal: 28.0
             };
-            
-            const pctSafe = getMasterWeeklyReturnPct(masterSafe);
-            const pctNormal = getMasterWeeklyReturnPct(masterNormal);
-            const pctDebrid = getMasterWeeklyReturnPct(masterDebrid);
-            
-            let totalWeeklyCommission = 0;
+            if (settings['pamm_monthly_returns']) {
+                try {
+                    pammReturns = { ...pammReturns, ...JSON.parse(settings['pamm_monthly_returns']) };
+                } catch (e) {
+                    console.error("Parse pamm_monthly_returns error:", e);
+                }
+            }
+
+            let totalMonthlyCommission = 0;
             const finalReferredList = finalReferredListRaw.map(r => {
-                let ruWeeklyProfit = 0;
-                let ruCommission = 0;
+                let ruMonthlyProfit = 0;
+                let userAllocations = [];
                 
                 r.accounts.forEach(a => {
                     if (a.config && a.config.status === 'approved') {
-                        const cap = parseFloat(a.config.invested_amount) || 0;
-                        const mode = a.config.mode || 'low';
-                        let mPct = pctSafe;
-                        if (mode === 'normal') mPct = pctNormal;
-                        else if (mode === 'extreme') mPct = pctDebrid;
-                        
-                        const netWeeklyProfit = cap * mPct * 0.70;
-                        ruWeeklyProfit += netWeeklyProfit;
-                        
-                        // Sponsors only earn on positive returns
-                        const comm = Math.max(0, netWeeklyProfit) * (commissionRate / 100);
-                        ruCommission += comm;
+                        const allocs = a.config.pamm_allocations;
+                        if (Array.isArray(allocs) && allocs.length > 0) {
+                            allocs.forEach(al => {
+                                const amt = parseFloat(al.amount) || 0;
+                                const pId = al.pamm_id || 'v2_safe';
+                                const rate = (parseFloat(pammReturns[pId]) || 15.0) / 100;
+                                const netProf = amt * rate * 0.70;
+                                ruMonthlyProfit += netProf;
+                                userAllocations.push({
+                                    pamm_id: pId,
+                                    name: al.name || pId,
+                                    amount: amt,
+                                    rate: (rate * 100).toFixed(1) + '%',
+                                    monthly_profit: parseFloat(netProf.toFixed(2))
+                                });
+                            });
+                        } else {
+                            const cap = parseFloat(a.config.invested_amount) || 0;
+                            const mode = a.config.mode || 'low';
+                            let rate = (pammReturns.v2_safe || 7.5) / 100;
+                            if (mode === 'normal') rate = (pammReturns.v2_normal || 22.0) / 100;
+                            else if (mode === 'extreme' || mode === 'debride') rate = (pammReturns.v2_debride || 45.0) / 100;
+                            const netProf = cap * rate * 0.70;
+                            ruMonthlyProfit += netProf;
+                            userAllocations.push({
+                                pamm_id: mode,
+                                name: mode === 'normal' ? 'SynapX Normal' : mode === 'extreme' ? 'SynapX Débridé' : 'SynapX Safe',
+                                amount: cap,
+                                rate: (rate * 100).toFixed(1) + '%',
+                                monthly_profit: parseFloat(netProf.toFixed(2))
+                            });
+                        }
                     }
                 });
                 
-                totalWeeklyCommission += ruCommission;
+                const ruCommission = Math.max(0, ruMonthlyProfit) * (commissionRate / 100);
+                totalMonthlyCommission += ruCommission;
                 
                 return {
                     fullName: r.fullName,
                     email: r.email,
                     capital: r.capital,
-                    weekly_profit: ruWeeklyProfit,
-                    commission: ruCommission
+                    monthly_profit: parseFloat(ruMonthlyProfit.toFixed(2)),
+                    weekly_profit: parseFloat((ruMonthlyProfit / 4.33).toFixed(2)),
+                    commission: parseFloat(ruCommission.toFixed(2)),
+                    weekly_commission: parseFloat((ruCommission / 4.33).toFixed(2)),
+                    allocations: userAllocations
                 };
             });
             
@@ -1570,9 +1712,11 @@ export async function onRequest(context) {
                 commission_rate: commissionRate,
                 total_capital: totalCapitalBrought,
                 referred_count: finalReferredList.length,
-                weekly_commission: totalWeeklyCommission,
+                monthly_commission: parseFloat(totalMonthlyCommission.toFixed(2)),
+                weekly_commission: parseFloat((totalMonthlyCommission / 4.33).toFixed(2)),
                 crypto_address: userCryptoAddress,
                 next_tier: nextTier,
+                pamm_returns: pammReturns,
                 referred_list: finalReferredList,
                 payout_history: payoutHistory
             }), {

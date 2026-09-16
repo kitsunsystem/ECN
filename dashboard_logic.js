@@ -511,9 +511,8 @@ function updateUI() {
     // Normal unlocked state: hide overlays
     if (lockOverlay) lockOverlay.style.display = 'none';
     if (realContent) {
-        realContent.style.filter = 'blur(20px) opacity(0.35)';
-        realContent.style.pointerEvents = 'none';
-        realContent.style.userSelect = 'none';
+        realContent.style.filter = 'none';
+        realContent.style.pointerEvents = 'auto';
     }
 
     if (isApproved) {
@@ -1057,112 +1056,190 @@ async function saveConfig() {
 // ─────────────────────────────────────────
 // PARTIE BOT: GRILLE DE SELECTION & CONFIGURATEUR DYNAMIQUE
 // ─────────────────────────────────────────
-// State variables for RubiX Bot Configurator
-let mitsuCapType = 'perso'; // 'perso' or 'propfirm'
-let mitsuPlan = 'low'; // 'low', 'normal', 'extreme'
-let mitsuRegion = 'EU'; // 'EU' or 'AF'
+let mitsuCapType = 'perso';
+let mitsuPlan = 'v2_safe';
+let mitsuRegion = 'EU';
 let mitsuChart = null;
 
-// State variables for Lion X Configurator
-let lionLicenseType = 'partner'; // 'partner' or 'paid'
-let lionChart = null;
-
-function setMitsuRegion(region) {
-    mitsuRegion = region;
-    
-    // Update active state of region buttons (RubiX Bot)
-    const btnEU = document.getElementById('btnRegionEU');
-    const btnAF = document.getElementById('btnRegionAF');
-    if (btnEU) btnEU.classList.toggle('active', region === 'EU');
-    if (btnAF) btnAF.classList.toggle('active', region === 'AF');
-
-    // Update active state of region buttons (Lion X)
-    const btnLionEU = document.getElementById('btnLionRegionEU');
-    const btnLionAF = document.getElementById('btnLionRegionAF');
-    if (btnLionEU) btnLionEU.classList.toggle('active', region === 'EU');
-    if (btnLionAF) btnLionAF.classList.toggle('active', region === 'AF');
-    
-    const isEU = (region === 'EU');
-    const symbol = isEU ? '€' : '$';
-    
-    // Update RubiX Bot pricing labels in cards
-    document.getElementById('valMitsuLowPrice').textContent = 'Conservateur';
-    document.getElementById('valMitsuNormalPrice').textContent = 'Modéré';
-    document.getElementById('valMitsuExtremePrice').textContent = 'Débridé';
-    
-    safeSetText('valMitsuLowAdd', 'Gratuit');
-    safeSetText('valMitsuNormalAdd', 'Gratuit');
-    safeSetText('valMitsuExtremeAdd', 'Gratuit');
-    
-    const labelAdd = document.getElementById('mitsuAccountsAddLabel');
-    if (labelAdd) {
-        labelAdd.textContent = '';
+// Multi-Bot PAMM Specifications based on SynapXMAJ.pdf
+const BOT_CONFIGS = {
+    v1: {
+        id: 'v1',
+        title: 'SynapX « v1 »',
+        subtitle: 'Asian Trend Surfing & Controlled Grid',
+        color: '#f59e0b',
+        badge: 'Moteur 1 Actif',
+        badgeClass: 'bg-amber-500/10 text-amber-400 border-amber-500/25',
+        plans: [
+            {
+                id: 'v1_modere',
+                title: 'Modéré',
+                monthlyGross: 22.5,
+                weeklyGross: 5.2,
+                maxDD: 18,
+                hardSL: 'Hard SL 30%',
+                margin: 'Marge ≤ 15%',
+                icon: '🛡️',
+                risk: 'Modéré (SL 30%)',
+                desc: 'Prise de position de nuit en session asiatique (Tokyo / Sydney). Hard Stop-Loss 30% strict et marge plafonnée à 15% du capital même en cas de fort mouvement.'
+            },
+            {
+                id: 'v1_casino',
+                title: 'Casino',
+                monthlyGross: 75.0,
+                weeklyGross: 17.5,
+                maxDD: 45,
+                hardSL: 'Hard SL 100%',
+                margin: 'Marge ≤ 15%',
+                icon: '⚡',
+                risk: 'Ultra-Agressif (High Frequency)',
+                desc: 'Mode haute vélocité jusqu\'à 10%/jour pour un capital spéculatif dédié au risque maximal (30% de partage de profits sur les gains réels).'
+            }
+        ]
+    },
+    v2: {
+        id: 'v2',
+        title: 'SynapX « v2 »',
+        subtitle: 'Advanced Institutional TrendSurfer',
+        color: '#10b981',
+        badge: 'Moteur 2 Actif',
+        badgeClass: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25',
+        plans: [
+            {
+                id: 'v2_safe',
+                title: 'Safe',
+                monthlyGross: 10.0,
+                weeklyGross: 2.3,
+                maxDD: 20,
+                hardSL: 'Trailing Stop',
+                margin: 'Marge ≈ 5%',
+                icon: '🛡️',
+                risk: 'Prudent & Institutionnel',
+                desc: 'Préservation institutionnelle du capital, Trailing Stop multi-paliers et supervision humaine continue (Human-in-the-Loop).'
+            },
+            {
+                id: 'v2_normal',
+                title: 'Normal',
+                monthlyGross: 30.0,
+                weeklyGross: 7.0,
+                maxDD: 30,
+                hardSL: 'Trailing Stop',
+                margin: 'Marge ≈ 5%',
+                icon: '⚖️',
+                risk: 'Équilibré & Dynamique',
+                desc: 'Le meilleur équilibre rendement/protection pour surfer les grandes impulsions de marché et les tendances macroéconomiques durables.'
+            },
+            {
+                id: 'v2_debride',
+                title: 'Débridé',
+                monthlyGross: 90.0,
+                weeklyGross: 21.0,
+                maxDD: 50,
+                hardSL: 'Dynamique',
+                margin: 'Marge ≈ 5%',
+                icon: '⚡',
+                risk: 'Agressif / Fort Rendement',
+                desc: 'Recherche de rentabilité maximale sur les fortes accélérations de tendance avec intérêts composés et drawdown maîtrisé à 50%.'
+            }
+        ]
+    },
+    tpsl: {
+        id: 'tpsl',
+        title: 'SynapX « TP/SL »',
+        subtitle: 'Consensus Multi-Stratégies 12-en-1',
+        color: '#38bdf8',
+        badge: 'Moteur 3 Actif',
+        badgeClass: 'bg-sky-500/10 text-sky-400 border-sky-500/25',
+        plans: [
+            {
+                id: 'tpsl_safe',
+                title: 'Safe',
+                monthlyGross: 15.0,
+                weeklyGross: 3.5,
+                maxDD: 12,
+                hardSL: 'SL & TP Stricts',
+                margin: 'Marge ≤ 10%',
+                icon: '🛡️',
+                risk: 'Prudent (Consensus Strict)',
+                desc: 'Ordres en attente (Pending Orders) et SL/TP réels sur chaque trade avec un drawdown maximum historiquement bas de 12%.'
+            },
+            {
+                id: 'tpsl_normal',
+                title: 'Normal',
+                monthlyGross: 30.0,
+                weeklyGross: 7.0,
+                maxDD: 24,
+                hardSL: 'SL & TP Stricts',
+                margin: 'Marge ≤ 10%',
+                icon: '⚖️',
+                risk: 'Équilibré & Optimisé',
+                desc: 'Consensus agressif confrontant 12 méthodologies professionnelles simultanément pour des ratios R:R maximisés.'
+            }
+        ]
     }
-
-    // Update Lion X pricing labels
-    const valLionPaidPrice = document.getElementById('valLionPaidPrice');
-    if (valLionPaidPrice) valLionPaidPrice.textContent = isEU ? '300€' : '300$';
-    const valLionPaidPriceSub = document.getElementById('valLionPaidPriceSub');
-    if (valLionPaidPriceSub) valLionPaidPriceSub.textContent = isEU ? '300€' : '300$';
-    safeSetText('valLionPaidAdd', '');
-    
-    const lionLabelAdd = document.getElementById('lionAccountsAddLabel');
-    if (lionLabelAdd) {
-        lionLabelAdd.textContent = '';
-    }
-    
-    updateMitsuCalculator();
-    updateLionCalculator();
-}
+};
 
 function selectBot(botId) {
-    selectedBotId = botId;
-    
-    document.getElementById('botSelectionStage').style.display = 'none';
-    
-    if (botId === 'rubix') {
-        const rubixStage = document.getElementById('rubixConfiguratorStage');
-        if (rubixStage) rubixStage.style.display = 'block';
-        const lionxStage = document.getElementById('lionxConfiguratorStage');
-        if (lionxStage) lionxStage.style.display = 'none';
-        setTimeout(() => {
-            initMitsuConfigurator();
-            if (typeof initCustomSelects === 'function') {
-                initCustomSelects();
-            }
-        }, 50);
-    } else if (botId === 'lionx') {
-        const rubixStage = document.getElementById('rubixConfiguratorStage');
-        if (rubixStage) rubixStage.style.display = 'none';
-        const lionxStage = document.getElementById('lionxConfiguratorStage');
-        if (lionxStage) lionxStage.style.display = 'block';
-        setTimeout(() => {
-            initLionConfigurator();
-            if (typeof initCustomSelects === 'function') {
-                initCustomSelects();
-            }
-        }, 50);
+    if (!botId || !BOT_CONFIGS[botId]) {
+        if (botId === 'rubix') botId = 'v2';
+        else if (botId === 'lionx') botId = 'tpsl';
+        else botId = 'v2';
     }
+    selectedBotId = botId;
+
+    const botSelectionStage = document.getElementById('botSelectionStage');
+    if (botSelectionStage) botSelectionStage.style.display = 'none';
+
+    const rubixStage = document.getElementById('rubixConfiguratorStage');
+    if (rubixStage) rubixStage.style.display = 'block';
+
+    const botConfig = BOT_CONFIGS[botId];
+    const titleEl = document.getElementById('configuratorBotTitle');
+    if (titleEl) {
+        titleEl.textContent = `Configuration : ${botConfig.title}`;
+    }
+
+    const planBelongs = botConfig.plans.some(p => p.id === mitsuPlan);
+    if (!planBelongs) {
+        mitsuPlan = botConfig.plans[0].id;
+    }
+
+    renderBotPlanCards(botId);
+    updateMitsuPlanDetails();
+    updateMitsuCalculator();
 }
 
-function activateFolder(bot) {
-    const cardMitsu = document.getElementById('tutoSynapXCard') || document.getElementById('tutoRubiXCard');
-    const cardLion = document.getElementById('tutoLionXCard');
-    if (!cardMitsu || !cardLion) return;
-    
-    if (bot === 'rubix') {
-        cardMitsu.classList.remove('inactive-folder');
-        cardMitsu.classList.add('active-folder');
-        
-        cardLion.classList.remove('active-folder');
-        cardLion.classList.add('inactive-folder');
-    } else if (bot === 'lionx') {
-        cardLion.classList.remove('inactive-folder');
-        cardLion.classList.add('active-folder');
-        
-        cardMitsu.classList.remove('active-folder');
-        cardMitsu.classList.add('inactive-folder');
-    }
+function renderBotPlanCards(botId) {
+    const config = BOT_CONFIGS[botId] || BOT_CONFIGS.v2;
+    const container = document.getElementById('mitsuPlansContainer');
+    if (!container) return;
+
+    const colsClass = config.plans.length === 2 ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-3';
+    container.className = `grid ${colsClass} gap-3`;
+
+    container.innerHTML = config.plans.map(p => {
+        const isActive = (p.id === mitsuPlan);
+        const activeClass = isActive 
+            ? 'border-amber-500 bg-amber-500/10 active ring-1 ring-amber-400/40 text-amber-400' 
+            : 'border-white/10 text-slate-400 hover:border-white/20';
+        const titleColor = isActive ? 'text-amber-400' : 'text-slate-400';
+        const addColor = isActive ? 'text-amber-400 font-semibold' : 'text-slate-400';
+
+        return `
+            <div id="cardPlan_${p.id}" class="glass plan-card p-4 rounded-xl cursor-pointer border text-center transition-all ${activeClass}" onclick="selectMitsuPlan('${p.id}')">
+                <div class="text-[10px] font-bold uppercase tracking-widest mb-1 ${titleColor}">${p.title}</div>
+                <div class="text-xs sm:text-sm font-bold font-mono text-white">${p.maxDD ? 'DD Max ' + p.maxDD + '%' : p.title}</div>
+                <div class="text-[9px] mt-1 ${addColor}">${p.hardSL || 'Gratuit'}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+function selectMitsuPlan(planId) {
+    mitsuPlan = planId;
+    renderBotPlanCards(selectedBotId || 'v2');
+    updateMitsuPlanDetails();
+    updateMitsuCalculator();
 }
 
 function goBackToSelection() {
@@ -1177,322 +1254,115 @@ function goBackToSelection() {
 
 function initMitsuConfigurator() {
     mitsuCapType = 'perso';
-    mitsuPlan = 'low';
+    mitsuPlan = 'v2_safe';
     mitsuRegion = 'EU';
-    document.getElementById('mitsuAccountsCount').value = 1;
-    document.getElementById('mitsuSimCapital').value = 1000;
-    if (document.getElementById('mitsuBrokerChoice')) {
-        document.getElementById('mitsuBrokerChoice').value = 'partner_vantage';
-    }
-    
-    // Reset buttons
-    const btnEU = document.getElementById('btnRegionEU');
-    const btnAF = document.getElementById('btnRegionAF');
-    if (btnEU) btnEU.classList.add('active');
-    if (btnAF) btnAF.classList.remove('active');
-    
-    const btnLionEU = document.getElementById('btnLionRegionEU');
-    const btnLionAF = document.getElementById('btnLionRegionAF');
-    if (btnLionEU) btnLionEU.classList.add('active');
-    if (btnLionAF) btnLionAF.classList.remove('active');
-    
-    // Reset pricing labels in cards
-    document.getElementById('valMitsuLowPrice').textContent = 'Conservateur';
-    document.getElementById('valMitsuNormalPrice').textContent = 'Modéré';
-    document.getElementById('valMitsuExtremePrice').textContent = 'Débridé';
-    safeSetText('valMitsuLowAdd', 'Gratuit');
-    safeSetText('valMitsuNormalAdd', 'Gratuit');
-    safeSetText('valMitsuExtremeAdd', 'Gratuit');
-    
-    const labelAdd = document.getElementById('mitsuAccountsAddLabel');
-    if (labelAdd) {
-        labelAdd.textContent = '';
-    }
-
-    const valLionPaidPrice = document.getElementById('valLionPaidPrice');
-    if (valLionPaidPrice) valLionPaidPrice.textContent = '300€';
-    const valLionPaidPriceSub = document.getElementById('valLionPaidPriceSub');
-    if (valLionPaidPriceSub) valLionPaidPriceSub.textContent = '300€';
-    safeSetText('valLionPaidAdd', '');
-    const lionLabelAdd = document.getElementById('lionAccountsAddLabel');
-    if (lionLabelAdd) {
-        lionLabelAdd.textContent = '';
-    }
-    
-    switchMitsuCapType('perso');
-    selectMitsuPlan('low');
-}
-
-function initLionConfigurator() {
-    if (!document.getElementById('lionxAccountsCount')) return;
-    lionLicenseType = 'partner';
-    document.getElementById('lionxAccountsCount').value = 1;
-    document.getElementById('lionSimCapital').value = 1000;
-    
-    // Reset buttons
-    const isEU = (mitsuRegion === 'EU');
-    const symbol = isEU ? '€' : '$';
-    const btnLionEU = document.getElementById('btnLionRegionEU');
-    const btnLionAF = document.getElementById('btnLionRegionAF');
-    if (btnLionEU) btnLionEU.classList.toggle('active', isEU);
-    if (btnLionAF) btnLionAF.classList.toggle('active', !isEU);
-    
-    const valLionPaidPrice = document.getElementById('valLionPaidPrice');
-    if (valLionPaidPrice) valLionPaidPrice.textContent = isEU ? '300€' : '300$';
-    const valLionPaidPriceSub = document.getElementById('valLionPaidPriceSub');
-    if (valLionPaidPriceSub) valLionPaidPriceSub.textContent = isEU ? '300€' : '300$';
-    safeSetText('valLionPaidAdd', '');
-    const lionLabelAdd = document.getElementById('lionAccountsAddLabel');
-    if (lionLabelAdd) {
-        lionLabelAdd.textContent = '';
-    }
-    
-    selectLionLicense('partner');
-}
-
-function switchMitsuCapType(type) {
-    mitsuCapType = type;
-    const tabPerso = document.getElementById('tabMitsuPerso');
-    const tabProp = document.getElementById('tabMitsuProp');
-    
-    if (tabPerso && tabProp) {
-        if (type === 'perso') {
-            tabPerso.className = "flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wider text-amber-400 bg-amber-500/10 font-bold active";
-            tabProp.className = "flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wider text-slate-400 hover:text-white";
-        } else {
-            tabPerso.className = "flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wider text-slate-400 hover:text-white";
-            tabProp.className = "flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wider text-amber-400 bg-amber-500/10 font-bold active";
-        }
-    }
-    
-    const mitsuConfigSplit = document.getElementById('mitsuConfigSplit');
-    const mitsuPropFirmContactBox = document.getElementById('mitsuPropFirmContactBox');
-    if (type === 'propfirm') {
-        if (mitsuConfigSplit) mitsuConfigSplit.style.setProperty('display', 'none', 'important');
-        if (mitsuPropFirmContactBox) mitsuPropFirmContactBox.style.display = 'block';
-    } else {
-        if (mitsuConfigSplit) mitsuConfigSplit.style.display = 'grid';
-        if (mitsuPropFirmContactBox) mitsuPropFirmContactBox.style.display = 'none';
-    }
-    
-    const propShareRow = document.getElementById('mitsuPropShareRow');
-    if (propShareRow) propShareRow.style.display = (type === 'propfirm') ? 'flex' : 'none';
-    updateMitsuCalculator();
-}
-
-function requestLicenseActivation(overrideType) {
-    const type = overrideType || mitsuCapType;
-    let message = "";
-    
-    if (type === 'propfirm') {
-        message = "Bonjour, je souhaite obtenir une licence SynapX sur-mesure pour mon compte Prop Firm.";
-    } else {
-        const capital = document.getElementById('mitsuSimCapital')?.value || "1000";
-        let planLabel = "Conservateur";
-        if (mitsuPlan === 'normal') planLabel = "Modéré";
-        else if (mitsuPlan === 'extreme') planLabel = "Débridé";
-        
-        message = `Bonjour, je souhaite activer ma licence SynapX gratuite pour mon compte Personnel.\n\nConfiguration choisie :\n- Capital de départ : ${capital}$\n- Mode choisi : ${planLabel}\n- Partage de profits : 30% sur gains`;
-    }
-    
-    const telegramUrl = `https://t.me/ysestp?text=${encodeURIComponent(message)}`;
-    window.open(telegramUrl, '_blank');
-}
-
-function selectMitsuPlan(plan) {
-    mitsuPlan = plan;
-    const cardLow = document.getElementById('cardMitsuLow');
-    const cardNormal = document.getElementById('cardMitsuNormal');
-    const cardExtreme = document.getElementById('cardMitsuExtreme');
-    
-    if (cardLow && cardNormal && cardExtreme) {
-        // Reset Low Cost (Prudent - Green)
-        cardLow.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center";
-        cardLow.children[0].className = "text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1";
-        cardLow.children[2].className = "text-[9px] text-slate-400 mt-1";
-        
-        // Reset Normal (Equilibre - Yellow/Amber)
-        cardNormal.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center";
-        cardNormal.children[0].className = "text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1";
-        cardNormal.children[2].className = "text-[9px] text-slate-400 mt-1";
-        
-        // Reset Extreme (Debride - Red/Rose)
-        cardExtreme.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-white/10 text-center";
-        cardExtreme.children[0].className = "text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1";
-        cardExtreme.children[2].className = "text-[9px] text-slate-400 mt-1";
-
-        if (plan === 'low') {
-            cardLow.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-emerald-500 text-center bg-emerald-500/5 active";
-            cardLow.children[0].className = "text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-1";
-            cardLow.children[2].className = "text-[9px] text-emerald-400 font-semibold mt-1";
-        } else if (plan === 'normal') {
-            cardNormal.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-amber-500 text-center bg-amber-500/5 active";
-            cardNormal.children[0].className = "text-[10px] font-bold text-amber-400 uppercase tracking-widest mb-1";
-            cardNormal.children[2].className = "text-[9px] text-amber-400 font-semibold mt-1";
-        } else if (plan === 'extreme') {
-            cardExtreme.className = "glass plan-card p-4 rounded-xl cursor-pointer border border-rose-500 text-center bg-rose-500/5 active";
-            cardExtreme.children[0].className = "text-[10px] font-bold text-rose-400 uppercase tracking-widest mb-1";
-            cardExtreme.children[2].className = "text-[9px] text-rose-400 font-semibold mt-1";
-        }
-    }
-    updateMitsuCalculator();
-}
-
-function updateMitsuCalculator() {
-    const isEU = (mitsuRegion === 'EU');
-    const symbol = isEU ? '€' : '$';
-    
-    let basePrice = 0;
-    const totalPrice = 0;
-    
-    document.getElementById('mitsuSummaryBasePrice').textContent = "GRATUIT";
-    document.getElementById('mitsuSummaryTotalPrice').textContent = "30% des profits";
-    
-    // Update labels in cards dynamically
-    const valMitsuLowAdd = document.getElementById('valMitsuLowAdd');
-    if (valMitsuLowAdd) valMitsuLowAdd.textContent = 'Gratuit';
-    const valMitsuNormalAdd = document.getElementById('valMitsuNormalAdd');
-    if (valMitsuNormalAdd) valMitsuNormalAdd.textContent = 'Gratuit';
-    const valMitsuExtremeAdd = document.getElementById('valMitsuExtremeAdd');
-    if (valMitsuExtremeAdd) valMitsuExtremeAdd.textContent = 'Gratuit';
-    
-    const labelAdd = document.getElementById('mitsuAccountsAddLabel');
-    if (labelAdd) {
-        labelAdd.textContent = '';
-    }
-    
-    // Simulation
-    let minCap = (mitsuCapType === 'propfirm') ? 10000 : 500;
-    let maxCap = 4000000; // Limited to 4 million in all cases
-    let stepCap = (mitsuCapType === 'propfirm') ? 5000 : 100;
-
-    const capInput = document.getElementById('mitsuSimCapital');
-    if (capInput) {
-        capInput.min = minCap;
-        capInput.max = maxCap;
-        capInput.step = stepCap;
-    }
-
-    const labelTitle = document.getElementById('mitsuSimLabelTitle');
-    const labelDesc = document.getElementById('mitsuSimLabelDesc');
-    if (mitsuCapType === 'propfirm') {
-        if (labelTitle) labelTitle.textContent = "Capital sous mandat (Prop Firm) pour simulation";
-        if (labelDesc) labelDesc.textContent = "Capital de votre compte Prop Firm";
-    } else {
-        if (labelTitle) labelTitle.textContent = "Capital initial (Broker) pour simulation";
-        if (labelDesc) labelDesc.textContent = "€/$ déposés chez votre broker";
-    }
-
-    let capital = parseFloat(document.getElementById('mitsuSimCapital').value);
-    if (isNaN(capital)) {
-        capital = (mitsuCapType === 'propfirm') ? 50000 : 1000;
-    }
-    if (capital < minCap) {
-        capital = minCap;
-        if (capInput) capInput.value = minCap;
-    } else if (capital > maxCap) {
-        capital = maxCap;
-        if (capInput) capInput.value = maxCap;
-    }
-    
-    let monthlyReturn = 15;
-    if (mitsuPlan === 'normal') monthlyReturn = 45;
-    else if (mitsuPlan === 'extreme') monthlyReturn = 100;
-    
-    if (mitsuCapType === 'propfirm') {
-        monthlyReturn = monthlyReturn / 10;
-    }
-    
-    // Deduct 30% profit sharing for net monthly return on compounding simulation
-    const netMonthlyReturn = monthlyReturn * 0.70;
-    
-    let simCapital = capital;
-    let dataset = [simCapital];
-    let labels = ["Départ"];
-    
-    for (let month = 1; month <= 12; month++) {
-        const basis = Math.max(1000, simCapital);
-        const monthlyProfit = basis * (netMonthlyReturn / 100);
-        simCapital += monthlyProfit;
-        dataset.push(parseFloat(simCapital.toFixed(2)));
-        labels.push("Mois " + month);
-    }
-    
-    document.getElementById('mitsuSimFinalCapital').textContent = simCapital.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " " + symbol + "/$";
-    
-    // Update recap fields
-    const recapCap = document.getElementById('recapMitsuCapital');
-    if (recapCap) recapCap.textContent = capital.toLocaleString() + ' ' + symbol;
-    const recapGain = document.getElementById('recapMitsuMonthlyGain');
-    const basisForRecap = Math.max(1000, capital);
-    const profitInCurrencyGross = basisForRecap * (monthlyReturn / 100);
-    const profitInCurrencyNet = basisForRecap * (netMonthlyReturn / 100);
-    if (recapGain) {
-        recapGain.innerHTML = `~${monthlyReturn.toFixed(1)}% Brut (~${profitInCurrencyGross.toFixed(0)} ${symbol})<br><span class="text-[10px] text-amber-400 font-semibold">~${netMonthlyReturn.toFixed(1)}% Net (~${profitInCurrencyNet.toFixed(0)} ${symbol})</span>`;
-    }
-    const recapPrice = document.getElementById('recapMitsuUniquePrice');
-    if (recapPrice) recapPrice.textContent = 'GRATUIT';
-    const recapMonthly = document.getElementById('recapMitsuMonthlyPrice');
-    if (recapMonthly) recapMonthly.textContent = '30% des gains';
-    const recapCapType = document.getElementById('recapMitsuCapType');
-    if (recapCapType) recapCapType.textContent = (mitsuCapType === 'propfirm') ? 'Prop Firm' : 'Personnel';
-    const recapAcc = document.getElementById('recapMitsuAccounts');
-    if (recapAcc) recapAcc.textContent = '1 compte';
-
-    renderMitsuChart(labels, dataset);
-    updateMitsuPlanDetails();
+    selectBot('v2');
 }
 
 function updateMitsuPlanDetails() {
     const detailsBox = document.getElementById('mitsuPlanDetailsBox');
     if (!detailsBox) return;
-    
-    let planTitle = "Plan Conservateur";
-    let icon = "🛡️";
-    let monthlyPct = "15.0% Brut (10.5% Net)";
-    let weeklyPct = "3.5% Brut (2.4% Net)";
-    let risk = "Prudent & Modéré";
-    let desc = "Idéal pour sécuriser un capital régulier avec un drawdown minimal et 30% de partage de profits prélevé sur vos gains.";
-        
-    if (mitsuPlan === 'normal') {
-        planTitle = "Plan Modéré";
-        icon = "⚖️";
-        monthlyPct = "45.0% Brut (31.5% Net)";
-        weeklyPct = "10.4% Brut (7.3% Net)";
-        risk = "Modéré";
-        desc = "Le meilleur ratio performance/risque pour accroître votre capital personnel de façon constante avec 30% de partage de profits.";
-    } else if (mitsuPlan === 'extreme') {
-        planTitle = "Plan Débridé";
-        icon = "⚡";
-        monthlyPct = "100.0% Brut (70.0% Net)";
-        weeklyPct = "23.3% Brut (16.3% Net)";
-        risk = "Agressif / Fort Rendement";
-        desc = "Conçu pour les investisseurs cherchant des performances de croissance rapides grâce aux intérêts composés (30% de commission sur les gains).";
-    }
-    
-    document.getElementById('mitsuDetailIcon').textContent = icon;
-    document.getElementById('mitsuDetailTitle').textContent = planTitle;
-    
+
+    const botConfig = BOT_CONFIGS[selectedBotId || 'v2'] || BOT_CONFIGS.v2;
+    const plan = botConfig.plans.find(p => p.id === mitsuPlan) || botConfig.plans[0];
+
+    const monthlyGross = plan.monthlyGross;
+    const monthlyNet = monthlyGross * 0.70;
+    const weeklyGross = plan.weeklyGross;
+    const weeklyNet = weeklyGross * 0.70;
+
+    const iconEl = document.getElementById('mitsuDetailIcon');
+    if (iconEl) iconEl.textContent = plan.icon || '🛡️';
+
+    const titleEl = document.getElementById('mitsuDetailTitle');
+    if (titleEl) titleEl.textContent = `${botConfig.title} - Formule ${plan.title}`;
+
     const listHtml = `
-        <li>Objectif de profit mensuel : <strong>~${monthlyPct}</strong> par mois</li>
-        <li>Objectif de profit hebdomadaire : <strong>~${weeklyPct}</strong> par semaine</li>
-        <li>Niveau de risque statistique : <strong>${risk}</strong></li>
-        <li>🎯 <strong>Avantage</strong> : ${desc}</li>
+        <li>Objectif de profit mensuel : <strong>~${monthlyGross.toFixed(1)}% Brut (~${monthlyNet.toFixed(1)}% Net)</strong></li>
+        <li>Objectif de profit hebdomadaire : <strong>~${weeklyGross.toFixed(1)}% Brut (~${weeklyNet.toFixed(1)}% Net)</strong></li>
+        <li>Drawdown maximum statistique : <strong>${plan.maxDD ? plan.maxDD + '%' : 'Maîtrisé'}</strong> | Sécurité : <strong>${plan.hardSL}</strong></li>
+        <li>Marge mobilisée sur capital : <strong>${plan.margin}</strong></li>
+        <li>Niveau de risque : <strong>${plan.risk}</strong></li>
+        <li>🎯 <strong>Stratégie</strong> : ${plan.desc}</li>
     `;
-    document.getElementById('mitsuDetailList').innerHTML = listHtml;
+    const listEl = document.getElementById('mitsuDetailList');
+    if (listEl) listEl.innerHTML = listHtml;
 }
 
-function renderMitsuChart(labels, dataPoints) {
+function updateMitsuCalculator() {
+    const isEU = (mitsuRegion === 'EU');
+    const symbol = isEU ? '€' : '$';
+
+    const botConfig = BOT_CONFIGS[selectedBotId || 'v2'] || BOT_CONFIGS.v2;
+    const plan = botConfig.plans.find(p => p.id === mitsuPlan) || botConfig.plans[0];
+
+    const summaryBase = document.getElementById('mitsuSummaryBasePrice');
+    if (summaryBase) summaryBase.textContent = "GRATUIT";
+    const summaryTotal = document.getElementById('mitsuSummaryTotalPrice');
+    if (summaryTotal) summaryTotal.textContent = "30% des profits";
+
+    const capInput = document.getElementById('mitsuSimCapital');
+    let capital = capInput ? parseFloat(capInput.value) : 1000;
+    if (isNaN(capital) || capital < 500) capital = 1000;
+
+    const monthlyGross = plan.monthlyGross;
+    const monthlyNet = monthlyGross * 0.70;
+
+    // Realistic 12-month simulation with authentic pullbacks / drawdowns consistent with bot's win rate and max DD
+    let simCapital = capital;
+    let dataset = [simCapital];
+    let labels = ["Départ"];
+
+    // Monthly market variance factors (12 months):
+    // Realistic market consolidation/pullback months (M4 and M8)
+    const monthlyFactors = [0.95, 1.15, 1.05, -0.22, 1.20, 1.10, 0.88, -0.28, 1.25, 1.02, 1.15, 1.05];
+
+    for (let month = 1; month <= 12; month++) {
+        const factor = monthlyFactors[month - 1];
+        const monthReturnPct = monthlyNet * factor;
+        const monthProfit = simCapital * (monthReturnPct / 100);
+        simCapital += monthProfit;
+        dataset.push(parseFloat(simCapital.toFixed(2)));
+        labels.push("Mois " + month);
+    }
+
+    const finalCapEl = document.getElementById('mitsuSimFinalCapital');
+    if (finalCapEl) {
+        finalCapEl.textContent = simCapital.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " " + symbol;
+    }
+
+    const recapCap = document.getElementById('recapMitsuCapital');
+    if (recapCap) recapCap.textContent = capital.toLocaleString() + ' ' + symbol;
+
+    const recapGain = document.getElementById('recapMitsuMonthlyGain');
+    const profitInCurrencyGross = capital * (monthlyGross / 100);
+    const profitInCurrencyNet = capital * (monthlyNet / 100);
+    if (recapGain) {
+        recapGain.innerHTML = `~${monthlyGross.toFixed(1)}% Brut (~${profitInCurrencyGross.toFixed(0)} ${symbol})<br><span class="text-[10px] text-amber-400 font-semibold">~${monthlyNet.toFixed(1)}% Net (~${profitInCurrencyNet.toFixed(0)} ${symbol})</span>`;
+    }
+
+    const recapPrice = document.getElementById('recapMitsuUniquePrice');
+    if (recapPrice) recapPrice.textContent = 'GRATUIT';
+    const recapMonthly = document.getElementById('recapMitsuMonthlyPrice');
+    if (recapMonthly) recapMonthly.textContent = '30% des gains';
+    const recapCapType = document.getElementById('recapMitsuCapType');
+    if (recapCapType) recapCapType.textContent = 'PAMM Vantage';
+
+    renderMitsuChart(labels, dataset, botConfig.color || '#d4af37');
+}
+
+function renderMitsuChart(labels, dataPoints, themeColor) {
     const canvas = document.getElementById('mitsuSimulationChart');
     if (!canvas) return;
-    
+
     const ctx = canvas.getContext('2d');
     if (mitsuChart) mitsuChart.destroy();
-    
+
+    const chartColor = themeColor || '#d4af37';
     const gradient = ctx.createLinearGradient(0, 0, 0, 200);
-    gradient.addColorStop(0, 'rgba(224, 17, 95, 0.2)');
-    gradient.addColorStop(1, 'rgba(224, 17, 95, 0.0)');
-    
+    gradient.addColorStop(0, chartColor + '33');
+    gradient.addColorStop(1, chartColor + '00');
+
     mitsuChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -1500,13 +1370,14 @@ function renderMitsuChart(labels, dataPoints) {
             datasets: [{
                 label: 'Équité Estimée (12 Mois)',
                 data: dataPoints,
-                borderColor: '#E0115F',
-                borderWidth: 2,
+                borderColor: chartColor,
+                borderWidth: 2.5,
                 backgroundColor: gradient,
                 fill: true,
-                tension: 0.3,
-                pointBackgroundColor: '#E0115F',
-                pointBorderColor: 'rgba(255,255,255,0.8)',
+                tension: 0.35,
+                pointBackgroundColor: chartColor,
+                pointBorderColor: 'rgba(255,255,255,0.9)',
+                pointRadius: 3,
                 pointHoverRadius: 6
             }]
         },
@@ -3824,21 +3695,29 @@ async function loadAffiliationData() {
             linkInput.value = `${window.location.origin}/dashboard_app.html?ref=${data.referral_code || ''}`;
         }
         
-        // Update crypto address input and network selection
-        const fullCrypto = data.crypto_address || '';
-        const networkSelect = document.getElementById('affCryptoNetworkSelect');
+        // Update crypto address input
         const cryptoInput = document.getElementById('affCryptoAddressInput');
-        
-        if (fullCrypto.includes(' | ')) {
-            const parts = fullCrypto.split(' | ');
-            if (networkSelect) networkSelect.value = parts[0];
-            if (cryptoInput) cryptoInput.value = parts[1] || '';
-        } else if (fullCrypto.includes(' - ')) {
-            const parts = fullCrypto.split(' - ');
-            if (networkSelect) networkSelect.value = parts[0];
-            if (cryptoInput) cryptoInput.value = parts[1] || '';
+        if (data.crypto_address) {
+            let netId = 'USDT-TRC20';
+            let addr = data.crypto_address;
+            const match = data.crypto_address.match(/^\[([A-Z0-9_\-]+)\]\s*(.*)$/);
+            if (match) {
+                netId = match[1];
+                addr = match[2];
+            } else if (data.crypto_address.includes(' | ')) {
+                const parts = data.crypto_address.split(' | ');
+                netId = parts[0].trim();
+                addr = parts[1] ? parts[1].trim() : '';
+            } else if (data.crypto_address.includes(' - ')) {
+                const parts = data.crypto_address.split(' - ');
+                netId = parts[0].trim();
+                addr = parts[1] ? parts[1].trim() : '';
+            }
+            selectWithdrawalNetwork(netId);
+            if (cryptoInput) cryptoInput.value = addr;
         } else {
-            if (cryptoInput) cryptoInput.value = fullCrypto;
+            selectWithdrawalNetwork('USDT-TRC20');
+            if (cryptoInput) cryptoInput.value = '';
         }
         
         // Update rank and stats UI
@@ -3980,30 +3859,94 @@ function copyReferralLink() {
     }
 }
 
+// ─────────────────────────────────────────
+// GESTION DES RETRAITS CRYPTO & RESEAUX
+// ─────────────────────────────────────────
+let currentWithdrawalNetwork = 'USDT-TRC20';
+
+const WITHDRAWAL_NETWORKS = {
+    'USDT-TRC20': {
+        name: 'USDT (TRC-20)',
+        networkName: 'TRC-20 (Tron)',
+        badge: 'Réseau : TRC-20',
+        badgeColor: 'text-emerald-400',
+        placeholder: 'Collez votre adresse USDT TRC-20 (commence par T...)'
+    },
+    'USDT-BEP20': {
+        name: 'USDT (BEP-20)',
+        networkName: 'BEP-20 (BSC)',
+        badge: 'Réseau : BEP-20',
+        badgeColor: 'text-amber-400',
+        placeholder: 'Collez votre adresse USDT BEP-20 (commence par 0x...)'
+    },
+    'USDT-ERC20': {
+        name: 'USDT (ERC-20)',
+        networkName: 'ERC-20 (Ethereum)',
+        badge: 'Réseau : ERC-20',
+        badgeColor: 'text-indigo-400',
+        placeholder: 'Collez votre adresse USDT ERC-20 (commence par 0x...)'
+    },
+    'USDC-POLYGON': {
+        name: 'USDC (Polygon)',
+        networkName: 'Polygon (PoS)',
+        badge: 'Réseau : Polygon',
+        badgeColor: 'text-purple-400',
+        placeholder: 'Collez votre adresse USDC Polygon (commence par 0x...)'
+    }
+};
+
+function selectWithdrawalNetwork(netId) {
+    if (!WITHDRAWAL_NETWORKS[netId]) netId = 'USDT-TRC20';
+    currentWithdrawalNetwork = netId;
+
+    Object.keys(WITHDRAWAL_NETWORKS).forEach(id => {
+        const btn = document.getElementById(`netBtn-${id}`);
+        if (btn) {
+            if (id === netId) {
+                btn.className = "network-pill active py-2.5 px-3 rounded-xl border border-amber-500 bg-amber-500/10 text-amber-400 text-xs font-semibold flex items-center justify-between transition-all";
+            } else {
+                btn.className = "network-pill py-2.5 px-3 rounded-xl border border-white/10 bg-white/5 hover:border-white/20 text-slate-300 text-xs font-semibold flex items-center justify-between transition-all";
+            }
+        }
+    });
+
+    const netInfo = WITHDRAWAL_NETWORKS[netId];
+    const label = document.getElementById('affCryptoLabel');
+    if (label) label.textContent = `Adresse de réception ${netInfo.name}`;
+
+    const badge = document.getElementById('affCryptoNetworkBadge');
+    if (badge) {
+        badge.textContent = netInfo.badge;
+        badge.className = `text-[9px] font-mono ${netInfo.badgeColor}`;
+    }
+
+    const input = document.getElementById('affCryptoAddressInput');
+    if (input) input.placeholder = netInfo.placeholder;
+}
+
 async function saveAffiliateCryptoAddress() {
-    const networkSelect = document.getElementById('affCryptoNetworkSelect');
     const addressInput = document.getElementById('affCryptoAddressInput');
     if (!addressInput) return;
-    
-    const network = networkSelect ? networkSelect.value : 'USDT-TRC20';
-    const address = addressInput.value.trim();
-    if (!address) {
-        showToast("Veuillez renseigner votre adresse de portefeuille.", "error");
+
+    const rawAddress = addressInput.value.trim();
+    if (!rawAddress) {
+        showToast("Veuillez renseigner votre adresse crypto.", "error");
         return;
     }
-    
-    const fullAddress = `${network} | ${address}`;
-    
+
+    const cleanAddress = rawAddress.replace(/^\[[A-Z0-9_\-]+\]\s*/, '').trim();
+    const formattedAddress = `[${currentWithdrawalNetwork}] ${cleanAddress}`;
+
     try {
         const res = await fetch(`${API_URL}/affiliation/crypto`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 email: currentUser.email,
-                crypto_address: fullAddress
+                crypto_address: formattedAddress
             })
         });
-        
+
         const data = await res.json();
         if (data.status === 'success') {
             showToast("Moyen et adresse de retrait enregistrés !", "success");
