@@ -3729,8 +3729,8 @@ async function loadAffiliationData() {
         
         // Update rank and stats UI
         const rank = data.rank || 'bronze';
-        const rankBadge = rank === 'diamond' ? '💎' : rank === 'gold' ? '🥇' : rank === 'silver' ? '🥈' : '🥉';
-        const rankTitle = rank === 'diamond' ? 'Ambassadeur Diamant' : rank === 'gold' ? 'Ambassadeur Gold' : rank === 'silver' ? 'Ambassadeur Silver' : 'Ambassadeur Bronze';
+        const rankBadge = rank === 'diamond' ? '💎' : rank === 'platinum' ? '💠' : rank === 'gold' ? '🥇' : rank === 'silver' ? '🥈' : '🥉';
+        const rankTitle = rank === 'diamond' ? 'Ambassadeur Diamant' : rank === 'platinum' ? 'Ambassadeur Platine' : rank === 'gold' ? 'Ambassadeur Gold' : rank === 'silver' ? 'Ambassadeur Silver' : 'Ambassadeur Bronze';
         
         const badgeEl = document.getElementById('affRankBadge');
         if (badgeEl) badgeEl.textContent = rankBadge;
@@ -3745,23 +3745,43 @@ async function loadAffiliationData() {
         if (pctEl) pctEl.textContent = `${data.commission_rate}.00%`;
         
         // Highlight active tier card in breakdown grid
-        ['Bronze', 'Silver', 'Gold', 'Diamond'].forEach(t => {
+        const tierDefaultBadges = {
+            'Bronze': '0 à 25k$',
+            'Silver': '25k$ à 70k$',
+            'Gold': '70k$ à 200k$',
+            'Platinum': '200k$ à 500k$',
+            'Diamond': 'Plus de 500k$'
+        };
+        const tierBadgeClasses = {
+            'Bronze': 'text-[9px] uppercase tracking-widest font-bold px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20',
+            'Silver': 'text-[9px] uppercase tracking-widest font-bold px-2.5 py-0.5 rounded-full bg-slate-300/10 text-slate-300 border border-slate-300/20',
+            'Gold': 'text-[9px] uppercase tracking-widest font-bold px-2.5 py-0.5 rounded-full bg-yellow-400/20 text-yellow-300 border border-yellow-400/30',
+            'Platinum': 'text-[9px] uppercase tracking-widest font-bold px-2.5 py-0.5 rounded-full bg-purple-400/20 text-purple-300 border border-purple-400/30',
+            'Diamond': 'text-[9px] uppercase tracking-widest font-bold px-2.5 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 border border-cyan-400/30'
+        };
+
+        ['Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond'].forEach(t => {
             const cardEl = document.getElementById(`tierCard${t}`);
             const badgeEl = document.getElementById(`tierBadge${t}`);
             const isCurrentRank = rank.toLowerCase() === t.toLowerCase();
             
             if (cardEl) {
                 if (isCurrentRank) {
-                    cardEl.style.borderColor = t === 'Diamond' ? 'rgba(34, 211, 238, 0.8)' : t === 'Gold' ? 'rgba(234, 179, 8, 0.8)' : t === 'Silver' ? 'rgba(226, 232, 240, 0.8)' : 'rgba(245, 158, 11, 0.8)';
-                    cardEl.style.boxShadow = t === 'Diamond' ? '0 0 20px rgba(34, 211, 238, 0.25)' : '0 0 20px rgba(245, 158, 11, 0.2)';
+                    cardEl.style.borderColor = t === 'Diamond' ? 'rgba(34, 211, 238, 0.8)' : t === 'Platinum' ? 'rgba(168, 85, 247, 0.8)' : t === 'Gold' ? 'rgba(234, 179, 8, 0.8)' : t === 'Silver' ? 'rgba(226, 232, 240, 0.8)' : 'rgba(245, 158, 11, 0.8)';
+                    cardEl.style.boxShadow = t === 'Diamond' ? '0 0 20px rgba(34, 211, 238, 0.25)' : t === 'Platinum' ? '0 0 20px rgba(168, 85, 247, 0.25)' : '0 0 20px rgba(245, 158, 11, 0.2)';
                 } else {
                     cardEl.style.borderColor = '';
                     cardEl.style.boxShadow = '';
                 }
             }
-            if (badgeEl && isCurrentRank) {
-                badgeEl.textContent = "★ RANG ACTUEL ★";
-                badgeEl.className = "text-[9px] uppercase tracking-widest font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40";
+            if (badgeEl) {
+                if (isCurrentRank) {
+                    badgeEl.textContent = "★ RANG ACTUEL ★";
+                    badgeEl.className = "text-[9px] uppercase tracking-widest font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40";
+                } else {
+                    badgeEl.textContent = tierDefaultBadges[t];
+                    badgeEl.className = tierBadgeClasses[t];
+                }
             }
         });
         
@@ -3790,7 +3810,7 @@ async function loadAffiliationData() {
                 progressBarEl.style.width = `${progressPct}%`;
             }
         } else {
-            // Maximum tier reached (Gold)
+            // Maximum tier reached (Diamant)
             if (progressTextEl) progressTextEl.textContent = "PALIER MAXIMUM ATTEINT";
             if (progressBarEl) progressBarEl.style.width = "100%";
         }

@@ -986,34 +986,40 @@ app.get('/api/dashboard/affiliation', async (req, res) => {
 
         // 3. Determine rank and commission rate
         let rank = 'bronze';
-        let commissionRate = 0.23;
+        let commissionRate = 0.02;
         let rankTitle = 'Ambassadeur Bronze';
         let rankBadge = '🥉';
 
         const checkRank = userOverride || (
             salesCount >= 50 ? 'diamond' :
-            salesCount >= 25 ? 'gold' :
-            salesCount >= 10 ? 'silver' : 'bronze'
+            salesCount >= 25 ? 'platinum' :
+            salesCount >= 10 ? 'gold' :
+            salesCount >= 5 ? 'silver' : 'bronze'
         );
 
         if (checkRank === 'diamond' || checkRank === 'diamant') {
             rank = 'diamond';
-            commissionRate = 0.40;
+            commissionRate = 0.10;
             rankTitle = 'Ambassadeur Diamant';
-            rankBadge = '👑';
+            rankBadge = '💎';
+        } else if (checkRank === 'platinum' || checkRank === 'platine') {
+            rank = 'platinum';
+            commissionRate = 0.08;
+            rankTitle = 'Ambassadeur Platine';
+            rankBadge = '💠';
         } else if (checkRank === 'gold' || checkRank === 'or') {
             rank = 'gold';
-            commissionRate = 0.35;
-            rankTitle = 'Ambassadeur Or';
+            commissionRate = 0.06;
+            rankTitle = 'Ambassadeur Gold';
             rankBadge = '🥇';
         } else if (checkRank === 'silver' || checkRank === 'argent') {
             rank = 'silver';
-            commissionRate = 0.30;
-            rankTitle = 'Ambassadeur Argent';
+            commissionRate = 0.04;
+            rankTitle = 'Ambassadeur Silver';
             rankBadge = '🥈';
         } else {
             rank = 'bronze';
-            commissionRate = 0.23;
+            commissionRate = 0.02;
             rankTitle = 'Ambassadeur Bronze';
             rankBadge = '🥉';
         }

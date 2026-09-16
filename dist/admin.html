@@ -658,7 +658,7 @@
                     </p>
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 16px;">
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;">
                         <!-- Bronze -->
                         <div style="display: flex; flex-direction: column; gap: 6px; text-align: left;">
                             <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim);">Seuil Bronze ($)</label>
@@ -678,12 +678,19 @@
                             <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim);">Seuil Gold ($)</label>
                             <input type="number" id="configGoldLimit" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="200000">
                             <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim); margin-top: 4px;">Comm. Gold (%)</label>
-                            <input type="number" id="configGoldPct" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="7">
+                            <input type="number" id="configGoldPct" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="6">
+                        </div>
+                        <!-- Platinum -->
+                        <div style="display: flex; flex-direction: column; gap: 6px; text-align: left;">
+                            <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim);">Seuil Platine ($)</label>
+                            <input type="number" id="configPlatinumLimit" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="500000">
+                            <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim); margin-top: 4px;">Comm. Platine (%)</label>
+                            <input type="number" id="configPlatinumPct" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="8">
                         </div>
                         <!-- Diamond -->
                         <div style="display: flex; flex-direction: column; gap: 6px; text-align: left;">
                             <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim);">Seuil Diamant ($)</label>
-                            <input type="number" id="configDiamondLimit" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="200000">
+                            <input type="number" id="configDiamondLimit" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="500000">
                             <label style="font-size: 10px; text-transform: uppercase; color: var(--text-dim); margin-top: 4px;">Comm. Diamant (%)</label>
                             <input type="number" id="configDiamondPct" class="form-input" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px;" value="10">
                         </div>
@@ -1004,11 +1011,12 @@
                             <div>
                                 <label style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; display: block; margin-bottom: 6px; font-weight: 600;">Grade / Surcharge Commission</label>
                                 <select id="detAffiliateRankOverride" class="select-field" style="width: 100%;">
-                                    <option value="auto">Automatique (Grade par ventes)</option>
-                                    <option value="bronze">🥉 Bronze (23%)</option>
-                                    <option value="silver">🥈 Argent (30%)</option>
-                                    <option value="gold">🥇 Or (35%)</option>
-                                    <option value="diamond">👑 Diamant (40%)</option>
+                                    <option value="auto">Automatique (Selon les fonds levés)</option>
+                                    <option value="bronze">🥉 Bronze (2%)</option>
+                                    <option value="silver">🥈 Argent (4%)</option>
+                                    <option value="gold">🥇 Or (6%)</option>
+                                    <option value="platinum">💠 Platine (8%)</option>
+                                    <option value="diamond">💎 Diamant (10%)</option>
                                 </select>
                             </div>
                         </div>
@@ -1117,8 +1125,10 @@
             silver_limit: 70000,
             silver_pct: 4,
             gold_limit: 200000,
-            gold_pct: 7,
-            diamond_limit: 200000,
+            gold_pct: 6,
+            platinum_limit: 500000,
+            platinum_pct: 8,
+            diamond_limit: 500000,
             diamond_pct: 10
         };
 
@@ -1354,27 +1364,56 @@
                 });
             });
 
-            // Determine rank based on total capital
+            // Determine rank based on override or total capital
             let rank = 'bronze';
             let rate = (affiliateSettings.bronze_pct || 2) / 100;
             let title = '🥉 Bronze';
             
-            if (totalCapitalBrought >= (affiliateSettings.gold_limit || 200000)) {
-                rank = 'diamond';
-                rate = (affiliateSettings.diamond_pct || 10) / 100;
-                title = '💎 Diamant';
-            } else if (totalCapitalBrought >= (affiliateSettings.silver_limit || 70000)) {
-                rank = 'gold';
-                rate = (affiliateSettings.gold_pct || 7) / 100;
-                title = '🥇 Gold';
-            } else if (totalCapitalBrought >= (affiliateSettings.bronze_limit || 25000)) {
-                rank = 'silver';
-                rate = (affiliateSettings.silver_pct || 4) / 100;
-                title = '🥈 Silver';
+            const override = user.affiliate_rank_override;
+            if (override && override !== 'auto') {
+                if (override === 'diamond') {
+                    rank = 'diamond';
+                    rate = (affiliateSettings.diamond_pct || 10) / 100;
+                    title = '💎 Diamant';
+                } else if (override === 'platinum') {
+                    rank = 'platinum';
+                    rate = (affiliateSettings.platinum_pct || 8) / 100;
+                    title = '💠 Platine';
+                } else if (override === 'gold') {
+                    rank = 'gold';
+                    rate = (affiliateSettings.gold_pct || 6) / 100;
+                    title = '🥇 Gold';
+                } else if (override === 'silver') {
+                    rank = 'silver';
+                    rate = (affiliateSettings.silver_pct || 4) / 100;
+                    title = '🥈 Silver';
+                } else {
+                    rank = 'bronze';
+                    rate = (affiliateSettings.bronze_pct || 2) / 100;
+                    title = '🥉 Bronze';
+                }
             } else {
-                rank = 'bronze';
-                rate = (affiliateSettings.bronze_pct || 2) / 100;
-                title = '🥉 Bronze';
+                if (totalCapitalBrought >= (affiliateSettings.diamond_limit || 500000)) {
+                    rank = 'diamond';
+                    rate = (affiliateSettings.diamond_pct || 10) / 100;
+                    title = '💎 Diamant';
+                } else if (totalCapitalBrought >= (affiliateSettings.gold_limit || 200000)) {
+                    rank = 'platinum';
+                    rate = (affiliateSettings.platinum_pct || 8) / 100;
+                    title = '💠 Platine';
+                } else if (totalCapitalBrought >= (affiliateSettings.silver_limit || 70000)) {
+                    rank = 'gold';
+                    rate = (affiliateSettings.gold_pct || 6) / 100;
+                    title = '🥇 Gold';
+                } else if (totalCapitalBrought >= (affiliateSettings.bronze_limit || 25000)) {
+                    rank = 'silver';
+                    rate = (affiliateSettings.silver_pct || 4) / 100;
+                    title = '🥈 Silver';
+                } else {
+                    rank = 'bronze';
+                    rate = (affiliateSettings.bronze_pct || 2) / 100;
+                    title = '🥉 Bronze';
+                }
             }
 
             // Calculate weekly commission based on master accounts weekly performance
@@ -2044,8 +2083,10 @@
                     document.getElementById('configSilverLimit').value = data.silver_limit || 70000;
                     document.getElementById('configSilverPct').value = data.silver_pct || 4;
                     document.getElementById('configGoldLimit').value = data.gold_limit || 200000;
-                    document.getElementById('configGoldPct').value = data.gold_pct || 7;
-                    if (document.getElementById('configDiamondLimit')) document.getElementById('configDiamondLimit').value = data.diamond_limit || 200000;
+                    document.getElementById('configGoldPct').value = data.gold_pct || 6;
+                    if (document.getElementById('configPlatinumLimit')) document.getElementById('configPlatinumLimit').value = data.platinum_limit || 500000;
+                    if (document.getElementById('configPlatinumPct')) document.getElementById('configPlatinumPct').value = data.platinum_pct || 8;
+                    if (document.getElementById('configDiamondLimit')) document.getElementById('configDiamondLimit').value = data.diamond_limit || 500000;
                     if (document.getElementById('configDiamondPct')) document.getElementById('configDiamondPct').value = data.diamond_pct || 10;
                 }
             } catch (e) {
@@ -2069,7 +2110,9 @@
                         silver_pct: parseFloat(document.getElementById('configSilverPct').value),
                         gold_limit: parseFloat(document.getElementById('configGoldLimit').value),
                         gold_pct: parseFloat(document.getElementById('configGoldPct').value),
-                        diamond_limit: parseFloat(document.getElementById('configDiamondLimit') ? document.getElementById('configDiamondLimit').value : 200000),
+                        platinum_limit: parseFloat(document.getElementById('configPlatinumLimit') ? document.getElementById('configPlatinumLimit').value : 500000),
+                        platinum_pct: parseFloat(document.getElementById('configPlatinumPct') ? document.getElementById('configPlatinumPct').value : 8),
+                        diamond_limit: parseFloat(document.getElementById('configDiamondLimit') ? document.getElementById('configDiamondLimit').value : 500000),
                         diamond_pct: parseFloat(document.getElementById('configDiamondPct') ? document.getElementById('configDiamondPct').value : 10)
                     })
                 });

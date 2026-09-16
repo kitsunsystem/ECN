@@ -1530,13 +1530,15 @@ export async function onRequest(context) {
             });
             
             const bronzeLimit = parseFloat(settings['aff_bronze_limit']) || 25000;
-            const bronzePct = parseFloat(settings['aff_bronze_pct']) || 4;
+            const bronzePct = parseFloat(settings['aff_bronze_pct']) || 2;
             const silverLimit = parseFloat(settings['aff_silver_limit']) || 70000;
-            const silverPct = parseFloat(settings['aff_silver_pct']) || 7;
+            const silverPct = parseFloat(settings['aff_silver_pct']) || 4;
             const goldLimit = parseFloat(settings['aff_gold_limit']) || 200000;
-            const goldPct = parseFloat(settings['aff_gold_pct']) || 10;
-            const diamondLimit = parseFloat(settings['aff_diamond_limit']) || 200000;
-            const diamondPct = parseFloat(settings['aff_diamond_pct']) || 12;
+            const goldPct = parseFloat(settings['aff_gold_pct']) || 6;
+            const platinumLimit = parseFloat(settings['aff_platinum_limit']) || 500000;
+            const platinumPct = parseFloat(settings['aff_platinum_pct']) || 8;
+            const diamondLimit = parseFloat(settings['aff_diamond_limit']) || 500000;
+            const diamondPct = parseFloat(settings['aff_diamond_pct']) || 10;
             
             // Load crypto address
             let cryptoAddresses = {};
@@ -1595,27 +1597,63 @@ export async function onRequest(context) {
             
             const totalCapitalBrought = finalReferredListRaw.reduce((sum, r) => sum + r.capital, 0);
             
+            // Check for override
+            let overrides = {};
+            if (settings['affiliate_overrides']) {
+                try {
+                    overrides = JSON.parse(settings['affiliate_overrides']);
+                } catch (e) {
+                    console.error("Parse affiliate_overrides error:", e);
+                }
+            }
+            const userOverride = overrides[email] || null;
+
             // Determine tier rank and commission rate
             let rank = 'bronze';
             let commissionRate = bronzePct;
             let nextTier = { limit: bronzeLimit, pct: silverPct };
-            
-            if (totalCapitalBrought >= goldLimit) {
-                rank = 'diamond';
-                commissionRate = diamondPct;
-                nextTier = null;
-            } else if (totalCapitalBrought >= silverLimit) {
-                rank = 'gold';
-                commissionRate = goldPct;
-                nextTier = { limit: goldLimit, pct: diamondPct };
-            } else if (totalCapitalBrought >= bronzeLimit) {
-                rank = 'silver';
-                commissionRate = silverPct;
-                nextTier = { limit: silverLimit, pct: goldPct };
+
+            if (userOverride && userOverride !== 'auto') {
+                rank = userOverride;
+                if (rank === 'diamond') {
+                    commissionRate = diamondPct;
+                    nextTier = null;
+                } else if (rank === 'platinum') {
+                    commissionRate = platinumPct;
+                    nextTier = { limit: diamondLimit, pct: diamondPct };
+                } else if (rank === 'gold') {
+                    commissionRate = goldPct;
+                    nextTier = { limit: platinumLimit, pct: platinumPct };
+                } else if (rank === 'silver') {
+                    commissionRate = silverPct;
+                    nextTier = { limit: goldLimit, pct: goldPct };
+                } else {
+                    rank = 'bronze';
+                    commissionRate = bronzePct;
+                    nextTier = { limit: bronzeLimit, pct: silverPct };
+                }
             } else {
-                rank = 'bronze';
-                commissionRate = bronzePct;
-                nextTier = { limit: bronzeLimit, pct: silverPct };
+                if (totalCapitalBrought >= diamondLimit) {
+                    rank = 'diamond';
+                    commissionRate = diamondPct;
+                    nextTier = null;
+                } else if (totalCapitalBrought >= goldLimit) {
+                    rank = 'platinum';
+                    commissionRate = platinumPct;
+                    nextTier = { limit: diamondLimit, pct: diamondPct };
+                } else if (totalCapitalBrought >= silverLimit) {
+                    rank = 'gold';
+                    commissionRate = goldPct;
+                    nextTier = { limit: platinumLimit, pct: platinumPct };
+                } else if (totalCapitalBrought >= bronzeLimit) {
+                    rank = 'silver';
+                    commissionRate = silverPct;
+                    nextTier = { limit: silverLimit, pct: goldPct };
+                } else {
+                    rank = 'bronze';
+                    commissionRate = bronzePct;
+                    nextTier = { limit: bronzeLimit, pct: silverPct };
+                }
             }
             
             // Retrieve PAMM monthly returns from settings
@@ -1782,8 +1820,10 @@ export async function onRequest(context) {
                     silver_limit: parseFloat(settings['aff_silver_limit']) || 70000,
                     silver_pct: parseFloat(settings['aff_silver_pct']) || 4,
                     gold_limit: parseFloat(settings['aff_gold_limit']) || 200000,
-                    gold_pct: parseFloat(settings['aff_gold_pct']) || 7,
-                    diamond_limit: parseFloat(settings['aff_diamond_limit']) || 200000,
+                    gold_pct: parseFloat(settings['aff_gold_pct']) || 6,
+                    platinum_limit: parseFloat(settings['aff_platinum_limit']) || 500000,
+                    platinum_pct: parseFloat(settings['aff_platinum_pct']) || 8,
+                    diamond_limit: parseFloat(settings['aff_diamond_limit']) || 500000,
                     diamond_pct: parseFloat(settings['aff_diamond_pct']) || 10,
                     crypto_addresses: settings['aff_crypto_addresses'] ? JSON.parse(settings['aff_crypto_addresses']) : {}
                 }), {
@@ -1801,7 +1841,7 @@ export async function onRequest(context) {
                     });
                 }
                 
-                const { bronze_limit, bronze_pct, silver_limit, silver_pct, gold_limit, gold_pct, diamond_limit, diamond_pct } = reqData;
+                const { bronze_limit, bronze_pct, silver_limit, silver_pct, gold_limit, gold_pct, platinum_limit, platinum_pct, diamond_limit, diamond_pct } = reqData;
                 
                 const keys = {
                     'aff_bronze_limit': String(bronze_limit || 25000),
@@ -1809,8 +1849,10 @@ export async function onRequest(context) {
                     'aff_silver_limit': String(silver_limit || 70000),
                     'aff_silver_pct': String(silver_pct || 4),
                     'aff_gold_limit': String(gold_limit || 200000),
-                    'aff_gold_pct': String(gold_pct || 7),
-                    'aff_diamond_limit': String(diamond_limit || 200000),
+                    'aff_gold_pct': String(gold_pct || 6),
+                    'aff_platinum_limit': String(platinum_limit || 500000),
+                    'aff_platinum_pct': String(platinum_pct || 8),
+                    'aff_diamond_limit': String(diamond_limit || 500000),
                     'aff_diamond_pct': String(diamond_pct || 10)
                 };
                 
