@@ -1224,6 +1224,8 @@ export async function onRequest(context) {
 
         // --- 8.6C. ADMIN PAMM MONTHLY PERFORMANCES (GET/POST) ---
         if (path === '/api/admin/pamm-performances') {
+            const requestedMonth = url.searchParams.get('month');
+
             if (request.method === 'GET') {
                 const { data: settingRow } = await supabase
                     .from('admin_settings')
@@ -1231,7 +1233,7 @@ export async function onRequest(context) {
                     .eq('key', 'pamm_monthly_returns')
                     .maybeSingle();
 
-                let returns = {
+                const defaultReturns = {
                     v1_modere: 3.5,
                     v1_casino: 18.0,
                     v2_safe: 7.5,
@@ -1240,14 +1242,37 @@ export async function onRequest(context) {
                     tpsl_safe: 14.0,
                     tpsl_normal: 28.0
                 };
+
+                let rawData = {};
                 if (settingRow && settingRow.value) {
                     try {
-                        returns = { ...returns, ...JSON.parse(settingRow.value) };
+                        rawData = JSON.parse(settingRow.value);
                     } catch (e) {
                         console.error("Parse pamm_monthly_returns error:", e);
                     }
                 }
-                return new Response(JSON.stringify({ status: 'success', returns }), {
+
+                let monthsMap = rawData.months || {};
+                let currentMonth = rawData.current_month || new Date().toISOString().substring(0, 7);
+
+                // Backward compatibility: if rawData has top-level v1_modere, merge it into current month if needed
+                if (rawData.v1_modere !== undefined && !monthsMap[currentMonth]) {
+                    monthsMap[currentMonth] = { ...defaultReturns };
+                    Object.keys(defaultReturns).forEach(k => {
+                        if (rawData[k] !== undefined) monthsMap[currentMonth][k] = rawData[k];
+                    });
+                }
+
+                const targetMonth = requestedMonth || currentMonth;
+                const monthReturns = monthsMap[targetMonth] || { ...defaultReturns };
+
+                return new Response(JSON.stringify({
+                    status: 'success',
+                    month: targetMonth,
+                    current_month: currentMonth,
+                    returns: monthReturns,
+                    available_months: Object.keys(monthsMap)
+                }), {
                     headers: { ...corsHeaders, 'Content-Type': 'application/json' }
                 });
             }
@@ -1262,7 +1287,7 @@ export async function onRequest(context) {
                     });
                 }
 
-                const { returns } = reqData;
+                const { returns, month } = reqData;
                 if (!returns || typeof returns !== 'object') {
                     return new Response(JSON.stringify({ status: 'error', message: 'Données de rendement invalides.' }), {
                         status: 400,
@@ -1270,12 +1295,42 @@ export async function onRequest(context) {
                     });
                 }
 
+                const targetMonth = month || new Date().toISOString().substring(0, 7);
+
+                // Load existing data
+                const { data: existingRow } = await supabase
+                    .from('admin_settings')
+                    .select('value')
+                    .eq('key', 'pamm_monthly_returns')
+                    .maybeSingle();
+
+                let store = { months: {} };
+                if (existingRow && existingRow.value) {
+                    try {
+                        const parsed = JSON.parse(existingRow.value);
+                        if (parsed && typeof parsed === 'object') {
+                            if (parsed.months) store = parsed;
+                            else store = { months: {}, ...parsed };
+                        }
+                    } catch (e) {}
+                }
+
+                store.months = store.months || {};
+                store.months[targetMonth] = returns;
+                store.current_month = targetMonth;
+                // Also copy top-level keys for backward compatibility
+                Object.assign(store, returns);
+
                 await supabase.from('admin_settings').upsert({
                     key: 'pamm_monthly_returns',
-                    value: JSON.stringify(returns)
+                    value: JSON.stringify(store)
                 });
 
-                return new Response(JSON.stringify({ status: 'success', message: 'Performances mensuelles PAMM enregistrées.' }), {
+                return new Response(JSON.stringify({
+                    status: 'success',
+                    month: targetMonth,
+                    message: `Performances mensuelles PAMM (${targetMonth}) enregistrées.`
+                }), {
                     headers: { ...corsHeaders, 'Content-Type': 'application/json' }
                 });
             }
@@ -1668,7 +1723,14 @@ export async function onRequest(context) {
             };
             if (settings['pamm_monthly_returns']) {
                 try {
-                    pammReturns = { ...pammReturns, ...JSON.parse(settings['pamm_monthly_returns']) };
+                    const parsed = JSON.parse(settings['pamm_monthly_returns']);
+                    if (parsed && typeof parsed === 'object') {
+                        if (parsed.months && parsed.current_month && parsed.months[parsed.current_month]) {
+                            pammReturns = { ...pammReturns, ...parsed.months[parsed.current_month] };
+                        } else {
+                            pammReturns = { ...pammReturns, ...parsed };
+                        }
+                    }
                 } catch (e) {
                     console.error("Parse pamm_monthly_returns error:", e);
                 }

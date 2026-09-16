@@ -467,10 +467,13 @@
                 <div class="glass" style="padding: 8px 16px; display: flex; align-items: center; gap: 12px; border-radius: 10px;">
                     <span style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; font-weight: 600;">Mois de Référence :</span>
                     <select id="pammResultMonthSelect" class="select-field" style="width: auto; padding: 6px 12px; font-weight: 700; color: var(--theme);" onchange="onPammMonthChange()">
-                        <option value="2026-03" selected>Mars 2026 (En cours)</option>
-                        <option value="2026-02">Février 2026</option>
-                        <option value="2026-01">Janvier 2026</option>
-                        <option value="2025-12">Décembre 2025</option>
+                        <option value="2026-09" selected>Septembre 2026 (En cours)</option>
+                        <option value="2026-08">Août 2026</option>
+                        <option value="2026-07">Juillet 2026</option>
+                        <option value="2026-06">Juin 2026</option>
+                        <option value="2026-05">Mai 2026</option>
+                        <option value="2026-04">Avril 2026</option>
+                        <option value="2026-03">Mars 2026</option>
                     </select>
                 </div>
             </div>
@@ -2923,16 +2926,66 @@
             }
         }
 
-        function onPammMonthChange() {
-            loadPammPerformances();
+        function getMonthNameFR(year, monthIdx) {
+            const months = [
+                'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+                'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+            ];
+            return `${months[monthIdx]} ${year}`;
+        }
+
+        function initPammMonthSelector(availableMonths = [], selectedMonth = '') {
+            const selectEl = document.getElementById('pammResultMonthSelect');
+            if (!selectEl) return;
+
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const currentMonthIdx = now.getMonth();
+            const currentIsoMonth = `${currentYear}-${String(currentMonthIdx + 1).padStart(2, '0')}`;
+
+            const activeMonth = selectedMonth || selectEl.value || currentIsoMonth;
+
+            // Generate rolling 18 months (12 past months, current, and 5 future months)
+            const monthsSet = new Set(Array.isArray(availableMonths) ? availableMonths : []);
+            for (let offset = -12; offset <= 3; offset++) {
+                const d = new Date(currentYear, currentMonthIdx + offset, 1);
+                const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+                monthsSet.add(iso);
+            }
+            monthsSet.add(activeMonth);
+
+            // Sort descending (most recent first)
+            const sortedMonths = Array.from(monthsSet).sort().reverse();
+
+            selectEl.innerHTML = sortedMonths.map(iso => {
+                const [y, m] = iso.split('-').map(Number);
+                const label = getMonthNameFR(y, m - 1);
+                const isCurrent = (iso === currentIsoMonth);
+                const isSelected = (iso === activeMonth);
+                return `<option value="${iso}" ${isSelected ? 'selected' : ''}>${label}${isCurrent ? ' (En cours)' : ''}</option>`;
+            }).join('');
+        }
+
+        async function onPammMonthChange() {
+            const selectEl = document.getElementById('pammResultMonthSelect');
+            const month = selectEl ? selectEl.value : '';
+            await loadPammPerformances(month);
             renderPammOverviewTable();
         }
 
-        async function loadPammPerformances() {
+        async function loadPammPerformances(monthOverride = '') {
+            const selectEl = document.getElementById('pammResultMonthSelect');
+            const month = monthOverride || (selectEl ? selectEl.value : '');
             try {
-                const res = await fetch('/api/admin/pamm-performances');
+                const url = month ? `/api/admin/pamm-performances?month=${encodeURIComponent(month)}` : '/api/admin/pamm-performances';
+                const res = await fetch(url);
                 if (res.ok) {
                     const data = await res.json();
+                    if (data.available_months && Array.isArray(data.available_months)) {
+                        initPammMonthSelector(data.available_months, data.month || month);
+                    } else if (selectEl && (!selectEl.children || selectEl.children.length <= 4)) {
+                        initPammMonthSelector([], month);
+                    }
                     if (data.returns) {
                         adminPammReturns = { ...adminPammReturns, ...data.returns };
                         Object.keys(adminPammReturns).forEach(id => {
@@ -2949,6 +3002,9 @@
         async function savePammPerformances() {
             const codeEl = document.getElementById('admin2faCode');
             const code = codeEl ? codeEl.value.trim() : "";
+            const selectEl = document.getElementById('pammResultMonthSelect');
+            const selectedMonth = selectEl ? selectEl.value : new Date().toISOString().substring(0, 7);
+            const monthLabel = selectEl && selectEl.selectedOptions[0] ? selectEl.selectedOptions[0].textContent : selectedMonth;
 
             const returns = {};
             Object.keys(adminPammReturns).forEach(id => {
@@ -2963,6 +3019,7 @@
                     body: JSON.stringify({
                         password: adminPass,
                         code: code,
+                        month: selectedMonth,
                         returns: returns
                     })
                 });
@@ -2970,7 +3027,9 @@
                 const data = await res.json();
                 if (res.ok && data.status === 'success') {
                     adminPammReturns = returns;
-                    showToast("Performances mensuelles des 7 PAMMs enregistrées !", "success");
+                    showToast(`Performances PAMM (${monthLabel}) enregistrées !`, "success");
+                    await loadPammPerformances(selectedMonth);
+                    renderPammOverviewTable();
                     fetchData();
                 } else {
                     showToast(data.message || "Erreur lors de la sauvegarde.", "error");
