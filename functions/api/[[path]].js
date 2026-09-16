@@ -1033,18 +1033,7 @@ export async function onRequest(context) {
                 });
             }
 
-            // Check if this user already has an active or pending account
-            const { data: userAccounts } = await supabase
-                .from('accounts')
-                .select('config')
-                .eq('email', email);
-
-            if (userAccounts && userAccounts.some(acc => acc.config && (acc.config.status === 'pending' || acc.config.status === 'approved'))) {
-                return new Response(JSON.stringify({ status: 'error', message: 'Vous avez déjà une demande en cours ou un compte actif.' }), {
-                    status: 400,
-                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-                });
-            }
+            // Multiple activations allowed: Users can request activations for multiple MT5 accounts / bots
 
             // Insert pending account
             const { error: insertError } = await supabase.from('accounts').insert([{
@@ -1541,13 +1530,13 @@ export async function onRequest(context) {
             });
             
             const bronzeLimit = parseFloat(settings['aff_bronze_limit']) || 25000;
-            const bronzePct = parseFloat(settings['aff_bronze_pct']) || 2;
+            const bronzePct = parseFloat(settings['aff_bronze_pct']) || 4;
             const silverLimit = parseFloat(settings['aff_silver_limit']) || 70000;
-            const silverPct = parseFloat(settings['aff_silver_pct']) || 4;
+            const silverPct = parseFloat(settings['aff_silver_pct']) || 7;
             const goldLimit = parseFloat(settings['aff_gold_limit']) || 200000;
-            const goldPct = parseFloat(settings['aff_gold_pct']) || 7;
+            const goldPct = parseFloat(settings['aff_gold_pct']) || 10;
             const diamondLimit = parseFloat(settings['aff_diamond_limit']) || 200000;
-            const diamondPct = parseFloat(settings['aff_diamond_pct']) || 10;
+            const diamondPct = parseFloat(settings['aff_diamond_pct']) || 12;
             
             // Load crypto address
             let cryptoAddresses = {};

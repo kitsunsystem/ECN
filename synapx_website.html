@@ -86,6 +86,34 @@
         .theme-transition {
             transition: background-color 0.7s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
         }
+
+        .glossy-gold-btn {
+            background: rgba(212, 175, 55, 0.08);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 4px 15px rgba(0, 0, 0, 0.15);
+            color: #f5d061;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glossy-gold-btn:hover {
+            background: rgba(212, 175, 55, 0.18);
+            border-color: rgba(212, 175, 55, 0.6);
+            color: #ffffff;
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15), 0 6px 20px rgba(212, 175, 55, 0.25);
+            transform: scale(1.05);
+        }
+        
+        html.light .glossy-gold-btn {
+            background: rgba(197, 160, 89, 0.06);
+            border-color: rgba(197, 160, 89, 0.3);
+            color: #aa7c11;
+        }
+        html.light .glossy-gold-btn:hover {
+            background: rgba(197, 160, 89, 0.15);
+            border-color: rgba(197, 160, 89, 0.7);
+            color: #aa7c11;
+        }
     </style>
 </head>
 <body class="bg-[#030712] text-slate-100 font-jakarta selection:bg-amber-400 selection:text-black overflow-x-hidden relative theme-transition">
@@ -110,7 +138,7 @@
                 <div class="absolute inset-0 border border-amber-500/10 rounded-full"></div>
                 <div class="absolute inset-0 border-t-2 border-r border-amber-400 rounded-full animate-spinSlow [animation-duration:3s]"></div>
                 <div class="w-20 h-20 rounded-full bg-[#070b19] border border-amber-500/20 flex items-center justify-center shadow-[0_0_40px_rgba(212,175,55,0.15)]">
-                    <span class="font-cinzel text-3xl font-light text-transparent bg-clip-text bg-gradient-to-b from-amber-100 to-amber-500">S</span>
+                    <img src="icon.png" alt="SynapX Logo" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -145,57 +173,68 @@
     </div>
 
     <!-- 2. GLOWING GOLDEN LUXURY DROPDOWN MENU -->
-    <div id="dropdown-menu" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-3xl hidden flex-col items-center justify-center p-4 transition-all duration-500 opacity-0">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-[140px] pointer-events-none"></div>
+    <div id="dropdown-menu" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-3xl hidden flex-col items-center justify-start md:justify-center overflow-y-auto p-4 pt-24 md:pt-4 pb-12 md:pb-4 transition-all duration-500 opacity-0 custom-scrollbar">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-amber-500/10 rounded-full blur-[100px] md:blur-[140px] pointer-events-none"></div>
         
-        <button id="close-menu-btn" class="absolute top-8 right-8 p-3 bg-white/5 border border-white/10 hover:border-amber-400/50 rounded-full text-amber-400 hover:text-white transition-all duration-300 hover:scale-105">
-            <i data-lucide="x" class="w-5 h-5"></i>
+        <button id="close-menu-btn" class="absolute top-6 right-6 md:top-8 md:right-8 p-2.5 md:p-3 bg-white/5 border border-white/10 hover:border-amber-400/50 rounded-full text-amber-400 hover:text-white transition-all duration-300 hover:scale-105 z-20">
+            <i data-lucide="x" class="w-4 h-4 md:w-5 md:h-5"></i>
         </button>
 
-        <div class="max-w-md w-full text-center space-y-12 relative z-10">
+        <div class="max-w-md w-full text-center space-y-8 md:space-y-12 relative z-10">
             <div class="space-y-2">
-                <span class="font-cinzel text-3xl font-light tracking-[0.25em] text-white">
+                <span class="font-cinzel text-2xl md:text-3xl font-light tracking-[0.25em] text-white">
                     SYNAP<span class="text-amber-400 font-bold">X</span>
                 </span>
-                <div class="w-16 h-[1px] bg-amber-500/50 mx-auto"></div>
-                <span class="text-[9px] uppercase tracking-[0.35em] text-amber-500 font-bold block">NAVIGATION PRESTIGE</span>
+                <div class="w-12 md:w-16 h-[1px] bg-amber-500/50 mx-auto"></div>
+                <span class="text-[8px] md:text-[9px] uppercase tracking-[0.35em] text-amber-500 font-bold block">NAVIGATION PRESTIGE</span>
             </div>
 
-            <nav class="flex flex-col space-y-2">
-                <button onclick="navigateTo('home')" class="group py-3 text-center transition-all duration-300 relative">
+            <nav class="flex flex-col space-y-1 md:space-y-2">
+                <button onclick="navigateTo('home')" class="group py-2 md:py-3 text-center transition-all duration-300 relative">
                     <span class="absolute left-1/2 -translate-x-1/2 bottom-0 w-0 h-[1px] bg-gradient-to-r from-transparent via-amber-400 to-transparent transition-all duration-300 group-hover:w-32"></span>
-                    <span class="font-cinzel text-lg md:text-xl font-medium tracking-[0.15em] text-slate-300 group-hover:text-amber-400 dark:group-hover:text-amber-400 transition-all duration-300 block">Accueil D’exception</span>
+                    <span class="font-cinzel text-base md:text-xl font-medium tracking-[0.15em] text-slate-300 group-hover:text-amber-400 dark:group-hover:text-amber-400 transition-all duration-300 block">Accueil D’exception</span>
                 </button>
-                <button onclick="navigateTo('pillars')" class="group py-3 text-center transition-all duration-300 relative">
+                <button onclick="navigateTo('pillars')" class="group py-2 md:py-3 text-center transition-all duration-300 relative">
                     <span class="absolute left-1/2 -translate-x-1/2 bottom-0 w-0 h-[1px] bg-gradient-to-r from-transparent via-amber-400 to-transparent transition-all duration-300 group-hover:w-32"></span>
-                    <span class="font-cinzel text-lg md:text-xl font-medium tracking-[0.15em] text-slate-300 group-hover:text-amber-400 transition-all duration-300 block">Les 5 Piliers</span>
+                    <span class="font-cinzel text-base md:text-xl font-medium tracking-[0.15em] text-slate-300 group-hover:text-amber-400 transition-all duration-300 block">Les 5 Piliers</span>
                 </button>
-                <button onclick="navigateTo('modes')" class="group py-3 text-center transition-all duration-300 relative">
+                <button onclick="navigateTo('modes')" class="group py-2 md:py-3 text-center transition-all duration-300 relative">
                     <span class="absolute left-1/2 -translate-x-1/2 bottom-0 w-0 h-[1px] bg-gradient-to-r from-transparent via-amber-400 to-transparent transition-all duration-300 group-hover:w-32"></span>
-                    <span class="font-cinzel text-lg md:text-xl font-medium tracking-[0.15em] text-slate-300 group-hover:text-amber-400 transition-all duration-300 block">Profils de Trading</span>
+                    <span class="font-cinzel text-base md:text-xl font-medium tracking-[0.15em] text-slate-300 group-hover:text-amber-400 transition-all duration-300 block">Profils de Trading</span>
                 </button>
-                <button onclick="navigateTo('simulator')" class="group py-3 text-center transition-all duration-300 relative">
+                <button onclick="navigateTo('simulator')" class="group py-2 md:py-3 text-center transition-all duration-300 relative">
                     <span class="absolute left-1/2 -translate-x-1/2 bottom-0 w-0 h-[1px] bg-gradient-to-r from-transparent via-amber-400 to-transparent transition-all duration-300 group-hover:w-32"></span>
-                    <span class="font-cinzel text-lg md:text-xl font-medium tracking-[0.15em] text-slate-300 group-hover:text-amber-400 transition-all duration-300 block">Simulateur Elite</span>
+                    <span class="font-cinzel text-base md:text-xl font-medium tracking-[0.15em] text-slate-300 group-hover:text-amber-400 transition-all duration-300 block">Simulateur Elite</span>
                 </button>
-                <button onclick="navigateTo('risks-protections')" class="group py-3 text-center transition-all duration-300 relative">
+                <button onclick="navigateTo('risks-protections')" class="group py-2 md:py-3 text-center transition-all duration-300 relative">
                     <span class="absolute left-1/2 -translate-x-1/2 bottom-0 w-0 h-[1px] bg-gradient-to-r from-transparent via-amber-400 to-transparent transition-all duration-300 group-hover:w-32"></span>
-                    <span class="font-cinzel text-lg md:text-xl font-medium tracking-[0.15em] text-slate-300 group-hover:text-amber-400 transition-all duration-300 block">Sécurité & Drawdown</span>
+                    <span class="font-cinzel text-base md:text-xl font-medium tracking-[0.15em] text-slate-300 group-hover:text-amber-400 transition-all duration-300 block">Sécurité & Drawdown</span>
                 </button>
-                <button onclick="navigateTo('blueprints')" class="group py-3 text-center transition-all duration-300 relative">
+                <button onclick="navigateTo('blueprints')" class="group py-2 md:py-3 text-center transition-all duration-300 relative">
                     <span class="absolute left-1/2 -translate-x-1/2 bottom-0 w-0 h-[1px] bg-gradient-to-r from-transparent via-amber-400 to-transparent transition-all duration-300 group-hover:w-32"></span>
-                    <span class="font-cinzel text-lg md:text-xl font-medium tracking-[0.15em] text-slate-300 group-hover:text-amber-400 transition-all duration-300 block">Fiches Spécifications</span>
+                    <span class="font-cinzel text-base md:text-xl font-medium tracking-[0.15em] text-slate-300 group-hover:text-amber-400 transition-all duration-300 block">Fiches Spécifications</span>
                 </button>
+                <a href="SynapXMAJ.pdf" target="_blank" onclick="closeMenu()" class="group py-2 md:py-3 text-center transition-all duration-300 relative flex items-center justify-center space-x-2">
+                    <span class="absolute left-1/2 -translate-x-1/2 bottom-0 w-0 h-[1px] bg-gradient-to-r from-transparent via-amber-400 to-transparent transition-all duration-300 group-hover:w-32"></span>
+                    <i data-lucide="file-text" class="w-4 h-4 md:w-5 md:h-5 text-slate-300 group-hover:text-amber-400 transition-colors duration-300"></i>
+                    <span class="font-cinzel text-base md:text-xl font-medium tracking-[0.15em] text-slate-300 group-hover:text-amber-400 transition-all duration-300 block">Livre Blanc PDF</span>
+                </a>
+            
+                <!-- Dashboard Button in Menu -->
+                <a href="dashboard_app.html" class="mt-4 px-5 py-2.5 md:px-6 md:py-3 glossy-gold-btn font-bold text-[10px] md:text-xs uppercase tracking-widest rounded-full flex items-center justify-center space-x-2 hover:scale-105">
+                    <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 md:w-4 md:h-4"></i>
+                    <span>Accéder au Dashboard</span>
+                </a>
             </nav>
 
-            <div class="pt-8 border-t border-white/5 flex justify-center gap-10">
+            <div class="pt-6 md:pt-8 border-t border-white/5 flex justify-center gap-6 md:gap-10">
                 <div class="text-center">
-                    <span class="text-[9px] text-slate-500 block uppercase tracking-wider">Cours Actuel Or</span>
-                    <span class="font-serif text-sm text-white font-medium"><span class="gold-live-price">2384.50</span> $</span>
+                    <span class="text-[8px] md:text-[9px] text-slate-500 block uppercase tracking-wider">Cours Actuel Or</span>
+                    <span class="font-serif text-xs md:text-sm text-white font-medium"><span class="gold-live-price">2384.50</span> $</span>
                 </div>
                 <div class="text-center">
-                    <span class="text-[9px] text-slate-500 block uppercase tracking-wider">Limite Drawdown</span>
-                    <span class="font-serif text-sm text-red-400 font-medium">~ 30% d'exposition</span>
+                    <span class="text-[8px] md:text-[9px] text-slate-500 block uppercase tracking-wider">Limite Drawdown</span>
+                    <span class="font-serif text-xs md:text-sm text-red-400 font-medium">~ 30% d'exposition</span>
                 </div>
             </div>
         </div>
@@ -226,8 +265,8 @@
             
             <!-- Brand Identity / Logo -->
             <div onclick="navigateTo('home')" class="flex items-center space-x-3 cursor-pointer group">
-                <div class="w-9 h-9 rounded-full border border-amber-400/40 bg-[#030712] flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.15)] group-hover:border-amber-400/80 transition-all duration-300">
-                    <span class="font-cinzel text-lg font-light text-amber-400">S</span>
+                <div class="w-9 h-9 rounded-full border border-amber-400/40 bg-[#030712] flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.15)] group-hover:border-amber-400/80 transition-all duration-300 overflow-hidden">
+                    <img src="icon.png" alt="SynapX Logo" class="w-full h-full object-cover">
                 </div>
                 <div class="text-left">
                     <span class="font-cinzel text-base font-medium tracking-[0.2em] block group-hover:text-amber-400 dark:group-hover:text-amber-400 transition-colors text-slate-100 dark:text-slate-100 header-text-color">
@@ -257,9 +296,13 @@
                 </button>
 
                 <!-- Dynamic Menu Toggle Button -->
-                <button id="open-menu-btn" class="px-4 py-1.5 bg-gradient-to-r from-amber-600 via-amber-500 to-amber-400 text-black font-semibold text-[10px] uppercase tracking-widest rounded-full shadow-[0_4px_12px_rgba(212,175,55,0.2)] flex items-center space-x-1.5 transition-all duration-300 hover:scale-105 hover:shadow-[0_4px_16px_rgba(212,175,55,0.3)]">
+                <a href="dashboard_app.html" class="px-3 py-1.5 glossy-gold-btn font-semibold text-[10px] uppercase tracking-widest rounded-full flex items-center space-x-1.5 hover:scale-105">
+                    <i data-lucide="layout-dashboard" class="w-3 h-3"></i>
+                    <span class="hidden xs:inline sm:inline">DASHBOARD</span>
+                </a>
+                <button id="open-menu-btn" class="px-3 py-1.5 glossy-gold-btn font-semibold text-[10px] uppercase tracking-widest rounded-full flex items-center space-x-1.5 hover:scale-105">
                     <i data-lucide="menu" class="w-3 h-3"></i>
-                    <span>EXPLORER</span>
+                    <span class="hidden xs:inline sm:inline">EXPLORER</span>
                 </button>
             </div>
 
@@ -306,12 +349,16 @@
 
                     <!-- Call to actions -->
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
-                        <button onclick="navigateTo('simulator')" class="px-8 py-3.5 bg-gradient-to-r from-amber-600 via-amber-500 to-amber-400 text-black font-semibold uppercase tracking-widest text-[10px] rounded-full transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_8px_24px_rgba(212,175,55,0.3)] text-center">
+                        <button onclick="navigateTo('simulator')" class="px-8 py-3.5 glossy-gold-btn font-semibold uppercase tracking-widest text-[10px] rounded-full text-center hover:scale-[1.03]">
                             SIMULER LES RENDEMENTS
                         </button>
                         <button onclick="navigateTo('blueprints')" id="blueprints-cta-btn" class="px-8 py-3.5 border border-white/10 hover:border-white/20 text-white hover:bg-white/5 font-semibold uppercase tracking-widest text-[10px] rounded-full transition-all duration-300 text-center">
                             FICHES SPECIFICATIONS
                         </button>
+                        <a href="SynapXMAJ.pdf" target="_blank" class="px-8 py-3.5 border border-amber-500/20 hover:border-amber-500/40 text-amber-400 hover:bg-amber-500/5 font-semibold uppercase tracking-widest text-[10px] rounded-full transition-all duration-300 text-center flex items-center justify-center space-x-2">
+                            <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                            <span>LIVRE BLANC (PDF)</span>
+                        </a>
                     </div>
                 </div>
 
@@ -478,167 +525,194 @@
         </div>
     </section>
 
-    <!-- 7. THE 3 TRADING MODES SECTION -->
+    <!-- 7. THE 3 TRADING MOTORS & 7 PAMM FORMULAS SECTION -->
     <section id="modes" class="py-24 border-t border-amber-500/10 bg-transparent relative">
         <div class="max-w-6xl mx-auto px-4 sm:px-6">
             
-            <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
-                <span class="text-xs uppercase tracking-[0.35em] text-amber-500 font-bold">GESTION DU RISQUE ADAPTATIVE</span>
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
+                <span class="text-xs uppercase tracking-[0.35em] text-amber-500 font-bold">LIVRE BLANC OFFICIEL • INFRASTRUCTURE VANTAGE</span>
                 <h2 class="font-cinzel text-2xl md:text-4xl font-light tracking-wider page-section-title text-white">
-                    3 MODES • 3 PROFILS • 1 OBJECTIF
+                    3 MOTEURS • 7 FORMULES PAMM
                 </h2>
                 <div class="w-12 h-[1px] bg-amber-500 mx-auto"></div>
                 <p class="section-muted-text text-slate-400 text-xs font-light leading-relaxed">
-                    Notre technologie adapte son exposition au marché de l'or en fonction de vos exigences de capitalisation et de votre profil psychologique.
+                    Spécifications mathématiques, algorithmiques et quantitatives de nos 3 technologies institutionnelles déclinées en 7 profils de gestion PAMM (Percent Allocation Management Module).
                 </p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 
-                <!-- Mode Conservateur -->
-                <div class="mode-card p-8 rounded-2xl border bg-slate-900/40 border-slate-800/80 border-l-4 border-l-emerald-500 flex flex-col justify-between hover:shadow-xl transition-all duration-300">
-                    <div class="space-y-6 text-left">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <span class="px-2.5 py-0.5 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 text-[9px] font-bold uppercase rounded-full">
-                                    SECURITE MAXIMALE
-                                </span>
-                                <h3 class="font-cinzel text-xl font-medium mt-3 mode-card-title text-white">MODE CONSERVATEUR</h3>
-                            </div>
-                            <div class="w-10 h-10 rounded-full bg-emerald-500/5 border border-emerald-500/20 flex items-center justify-center text-emerald-500">
-                                <i data-lucide="shield" class="w-5 h-5"></i>
-                            </div>
-                        </div>
-
-                        <div class="py-4 border-y border-amber-500/10">
-                            <span class="text-[10px] text-slate-500 uppercase block tracking-wider">Performance cible :</span>
-                            <div class="font-cinzel text-2xl font-bold text-emerald-500">
-                                7 % à 15 % <span class="text-[11px] font-light text-slate-400">/ mois</span>
-                            </div>
-                        </div>
-
-                        <ul class="space-y-3 text-[11px] text-slate-400">
-                            <li class="flex items-center space-x-2">
-                                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0"></i>
-                                <span>Exposition au risque minimale</span>
-                            </li>
-                            <li class="flex items-center space-x-2">
-                                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0"></i>
-                                <span>Sécurisation maximale du capital alloué</span>
-                            </li>
-                            <li class="flex items-center space-x-2">
-                                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0"></i>
-                                <span>Idéal pour une croissance lente et sereine</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="pt-8 mt-6 border-t border-amber-500/10 text-left">
-                        <div class="flex justify-between items-center bg-emerald-500/5 px-3 py-2 rounded-lg text-xs mb-4">
-                            <span class="text-slate-500 text-[10px]">Exposition de risque :</span>
-                            <span class="text-emerald-500 font-bold text-[10px] uppercase">Faible</span>
-                        </div>
-                        <button onclick="selectProfile('conservateur')" class="w-full py-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 text-[10px] uppercase tracking-widest font-semibold rounded-lg transition-all">
-                            SELECTIONNER CE PROFIL
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Mode Équilibré -->
+                <!-- Moteur 1 : SynapX v1 -->
                 <div class="mode-card p-8 rounded-2xl border bg-slate-900/40 border-slate-800/80 border-l-4 border-l-amber-500 flex flex-col justify-between hover:shadow-xl transition-all duration-300">
                     <div class="space-y-6 text-left">
                         <div class="flex justify-between items-start">
                             <div>
-                                <span class="px-2.5 py-0.5 bg-amber-500/10 text-amber-500 border border-amber-500/20 text-[9px] font-bold uppercase rounded-full">
-                                    LE JUSTE EQUILIBRE
+                                <span class="px-2.5 py-0.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[9px] font-bold uppercase rounded-full">
+                                    MOTEUR 1 • SESSION ASIATIQUE
                                 </span>
-                                <h3 class="font-cinzel text-xl font-medium mt-3 mode-card-title text-white">MODE ÉQUILIBRÉ</h3>
+                                <h3 class="font-cinzel text-lg font-bold mt-3 mode-card-title text-white">SYNAPX NOCTURNE</h3>
+                                <span class="text-[10px] text-slate-400 font-light block">v1 • Session Asiatique & Grille Contrôlée</span>
                             </div>
-                            <div class="w-10 h-10 rounded-full bg-amber-500/5 border border-amber-500/20 flex items-center justify-center text-amber-500">
-                                <i data-lucide="zap" class="w-5 h-5"></i>
-                            </div>
-                        </div>
-
-                        <div class="py-4 border-y border-amber-500/10">
-                            <span class="text-[10px] text-slate-500 uppercase block tracking-wider">Performance cible :</span>
-                            <div class="font-cinzel text-2xl font-bold text-amber-500">
-                                Jusqu'à 45 % <span class="text-[11px] font-light text-slate-400">/ mois</span>
+                            <div class="w-10 h-10 rounded-full bg-amber-500/5 border border-amber-500/20 flex items-center justify-center text-amber-400 flex-shrink-0">
+                                <i data-lucide="activity" class="w-5 h-5"></i>
                             </div>
                         </div>
 
-                        <ul class="space-y-3 text-[11px] text-slate-400">
-                            <li class="flex items-center space-x-2">
-                                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-amber-500 flex-shrink-0"></i>
-                                <span>Équilibre optimal rendement / sécurité</span>
-                            </li>
-                            <li class="flex items-center space-x-2">
-                                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-amber-500 flex-shrink-0"></i>
-                                <span>Gestion du risque optimisée au quotidien</span>
-                            </li>
-                            <li class="flex items-center space-x-2">
-                                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-amber-500 flex-shrink-0"></i>
-                                <span>Idéal pour une capitalisation robuste</span>
-                            </li>
-                        </ul>
+                        <p class="text-[11px] text-slate-300 font-light leading-relaxed">
+                            Prise de position circonscrite aux creux de volatilité institutionnelle de nuit (session Tokyo / Sydney). Marge régulée à 15% maximum du capital.
+                        </p>
+
+                        <!-- Formules PAMM -->
+                        <div class="space-y-3 pt-2">
+                            <div class="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-1.5">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-cinzel text-xs font-bold text-emerald-400 uppercase">1. Version Modéré</span>
+                                    <span class="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400">DD Max 30%</span>
+                                </div>
+                                <div class="flex justify-between text-[11px] text-slate-300">
+                                    <span class="text-slate-400">Cible rendement :</span>
+                                    <span class="font-mono font-semibold text-white">≤ 2,5% / jour</span>
+                                </div>
+                                <span class="text-[9.5px] text-slate-500 block">Coupe-circuit Hard Stop à 30% (Proba DD/j : 2%)</span>
+                            </div>
+
+                            <div class="p-3.5 rounded-xl bg-white/5 border border-rose-500/20 space-y-1.5">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-cinzel text-xs font-bold text-rose-400 uppercase">2. Version Agressif</span>
+                                    <span class="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-rose-500/10 text-rose-400">Hyper-Agressif</span>
+                                </div>
+                                <div class="flex justify-between text-[11px] text-slate-300">
+                                    <span class="text-slate-400">Cible rendement :</span>
+                                    <span class="font-mono font-semibold text-white">Jusqu'à 10% / jour</span>
+                                </div>
+                                <span class="text-[9.5px] text-slate-500 block">Stop-Loss absolu à 100% (Proba DD/j : 0,1%) • Retraits ultra-rapides</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="pt-8 mt-6 border-t border-amber-500/10 text-left">
-                        <div class="flex justify-between items-center bg-amber-500/5 px-3 py-2 rounded-lg text-xs mb-4">
-                            <span class="text-slate-500 text-[10px]">Exposition de risque :</span>
-                            <span class="text-amber-500 font-bold text-[10px] uppercase">Modéré</span>
-                        </div>
-                        <button onclick="selectProfile('equilibre')" class="w-full py-2.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 text-[10px] uppercase tracking-widest font-semibold rounded-lg transition-all">
-                            SELECTIONNER CE PROFIL
-                        </button>
+                    <div class="pt-6 mt-6 border-t border-amber-500/10 text-left">
+                        <a href="dashboard_app.html" class="w-full py-2.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-[10px] uppercase tracking-widest font-semibold rounded-lg transition-all block text-center">
+                            CONFIGURER DANS LE DASHBOARD
+                        </a>
                     </div>
                 </div>
 
-                <!-- Mode Débridé -->
-                <div class="mode-card p-8 rounded-2xl border bg-slate-900/40 border-slate-800/80 border-l-4 border-l-rose-500 flex flex-col justify-between hover:shadow-xl transition-all duration-300">
+                <!-- Moteur 2 : SynapX v2 -->
+                <div class="mode-card p-8 rounded-2xl border bg-slate-900/40 border-slate-800/80 border-l-4 border-l-emerald-500 flex flex-col justify-between hover:shadow-xl transition-all duration-300">
                     <div class="space-y-6 text-left">
                         <div class="flex justify-between items-start">
                             <div>
-                                <span class="px-2.5 py-0.5 bg-rose-500/10 text-rose-500 border border-rose-500/20 text-[9px] font-bold uppercase rounded-full">
-                                    PERFORMANCE INTENSE
+                                <span class="px-2.5 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[9px] font-bold uppercase rounded-full">
+                                    MOTEUR 2 • INSTITUTIONNEL
                                 </span>
-                                <h3 class="font-cinzel text-xl font-medium mt-3 mode-card-title text-white">MODE DÉBRIDÉ</h3>
+                                <h3 class="font-cinzel text-lg font-bold mt-3 mode-card-title text-white">SYNAPX MOMENTUM</h3>
+                                <span class="text-[10px] text-slate-400 font-light block">v2 • Swing Multi-Jours & Trailing Stop</span>
                             </div>
-                            <div class="w-10 h-10 rounded-full bg-rose-500/5 border border-rose-500/20 flex items-center justify-center text-rose-500">
-                                <i data-lucide="trending-up" class="w-5 h-5"></i>
-                            </div>
-                        </div>
-
-                        <div class="py-4 border-y border-amber-500/10">
-                            <span class="text-[10px] text-slate-500 uppercase block tracking-wider">Performance cible :</span>
-                            <div class="font-cinzel text-2xl font-bold text-rose-500">
-                                Jusqu'à 100 % <span class="text-[11px] font-light text-slate-400">/ mois</span>
+                            <div class="w-10 h-10 rounded-full bg-emerald-500/5 border border-emerald-500/20 flex items-center justify-center text-emerald-400 flex-shrink-0">
+                                <i data-lucide="shield-check" class="w-5 h-5"></i>
                             </div>
                         </div>
 
-                        <ul class="space-y-3 text-[11px] text-slate-400">
-                            <li class="flex items-center space-x-2">
-                                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-rose-500 flex-shrink-0"></i>
-                                <span>Recherche de rendement absolu</span>
-                            </li>
-                            <li class="flex items-center space-x-2">
-                                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-rose-500 flex-shrink-0"></i>
-                                <span>Exposition de volatilité supérieure</span>
-                            </li>
-                            <li class="flex items-center space-x-2">
-                                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-rose-500 flex-shrink-0"></i>
-                                <span>Réservé aux investisseurs qualifiés</span>
-                            </li>
-                        </ul>
+                        <p class="text-[11px] text-slate-300 font-light leading-relaxed">
+                            Algorithme quantitatif de tendance long terme (Swing Trading & Momentum). Marge moyenne ≈ 5% en séance, Trailing Stop multi-paliers et supervision humaine continue.
+                        </p>
+
+                        <!-- Formules PAMM -->
+                        <div class="space-y-3 pt-2">
+                            <div class="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-cinzel text-xs font-bold text-emerald-400 uppercase">1. Safe (Grands Capitaux)</span>
+                                    <span class="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400">DD Max 20%</span>
+                                </div>
+                                <div class="flex justify-between text-[11px] text-slate-300">
+                                    <span class="text-slate-400">Rendement visé :</span>
+                                    <span class="font-mono font-semibold text-white">Jusqu'à 10% / mois</span>
+                                </div>
+                            </div>
+
+                            <div class="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-cinzel text-xs font-bold text-amber-400 uppercase">2. Normal</span>
+                                    <span class="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-400">DD Max 30%</span>
+                                </div>
+                                <div class="flex justify-between text-[11px] text-slate-300">
+                                    <span class="text-slate-400">Rendement visé :</span>
+                                    <span class="font-mono font-semibold text-white">Jusqu'à 30% / mois</span>
+                                </div>
+                            </div>
+
+                            <div class="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-cinzel text-xs font-bold text-rose-400 uppercase">3. Débridé</span>
+                                    <span class="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-rose-500/10 text-rose-400">DD Max 50%</span>
+                                </div>
+                                <div class="flex justify-between text-[11px] text-slate-300">
+                                    <span class="text-slate-400">Rendement visé :</span>
+                                    <span class="font-mono font-semibold text-white">Jusqu'à 100% / mois</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="pt-8 mt-6 border-t border-amber-500/10 text-left">
-                        <div class="flex justify-between items-center bg-rose-500/5 px-3 py-2 rounded-lg text-xs mb-4">
-                            <span class="text-slate-500 text-[10px]">Exposition de risque :</span>
-                            <span class="text-rose-500 font-bold text-[10px] uppercase">Élevé</span>
+                    <div class="pt-6 mt-6 border-t border-amber-500/10 text-left">
+                        <a href="dashboard_app.html" class="w-full py-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-[10px] uppercase tracking-widest font-semibold rounded-lg transition-all block text-center">
+                            CONFIGURER DANS LE DASHBOARD
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Moteur 3 : SynapX TP/SL -->
+                <div class="mode-card p-8 rounded-2xl border bg-slate-900/40 border-slate-800/80 border-l-4 border-l-sky-500 flex flex-col justify-between hover:shadow-xl transition-all duration-300">
+                    <div class="space-y-6 text-left">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="px-2.5 py-0.5 bg-sky-500/10 text-sky-400 border border-sky-500/20 text-[9px] font-bold uppercase rounded-full">
+                                    MOTEUR 3 • 12-EN-1
+                                </span>
+                                <h3 class="font-cinzel text-lg font-bold mt-3 mode-card-title text-white">SYNAPX PRISME</h3>
+                                <span class="text-[10px] text-slate-400 font-light block">TP/SL • Consensus 12 Stratégies & Ordres en Attente</span>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-sky-500/5 border border-sky-500/20 flex items-center justify-center text-sky-400 flex-shrink-0">
+                                <i data-lucide="layers" class="w-5 h-5"></i>
+                            </div>
                         </div>
-                        <button onclick="selectProfile('debride')" class="w-full py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 text-[10px] uppercase tracking-widest font-semibold rounded-lg transition-all">
-                            SELECTIONNER CE PROFIL
-                        </button>
+
+                        <p class="text-[11px] text-slate-300 font-light leading-relaxed">
+                            Matrice algorithmique synthétisant 12 méthodologies professionnelles. Ordres en attente (Pending Orders), Take-Profit & Stop-Loss réels et stricts sur chaque position.
+                        </p>
+
+                        <!-- Formules PAMM -->
+                        <div class="space-y-3 pt-2">
+                            <div class="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-1.5">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-cinzel text-xs font-bold text-sky-400 uppercase">1. Version Safe</span>
+                                    <span class="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-sky-500/10 text-sky-400">DD Max 12%</span>
+                                </div>
+                                <div class="flex justify-between text-[11px] text-slate-300">
+                                    <span class="text-slate-400">Rendement moyen :</span>
+                                    <span class="font-mono font-semibold text-white">Moy. 15% / mois</span>
+                                </div>
+                                <span class="text-[9.5px] text-slate-500 block">Profil ultra-régulier et protecteur • Faible volatilité</span>
+                            </div>
+
+                            <div class="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-1.5">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-cinzel text-xs font-bold text-amber-400 uppercase">2. Version Normal</span>
+                                    <span class="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-400">DD Max 24%</span>
+                                </div>
+                                <div class="flex justify-between text-[11px] text-slate-300">
+                                    <span class="text-slate-400">Rendement moyen :</span>
+                                    <span class="font-mono font-semibold text-white">Moy. 30% / mois</span>
+                                </div>
+                                <span class="text-[9.5px] text-slate-500 block">Profil d'équilibre optimal rendement / risque</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 mt-6 border-t border-amber-500/10 text-left">
+                        <a href="dashboard_app.html" class="w-full py-2.5 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 text-[10px] uppercase tracking-widest font-semibold rounded-lg transition-all block text-center">
+                            CONFIGURER DANS LE DASHBOARD
+                        </a>
                     </div>
                 </div>
 
@@ -646,11 +720,11 @@
 
             <!-- Golden quote flyer callout -->
             <div class="mt-12 p-6 bg-amber-500/5 border border-amber-500/15 rounded-xl max-w-4xl mx-auto flex items-start space-x-4 text-left">
-                <i data-lucide="info" class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5"></i>
+                <i data-lucide="check-circle" class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5"></i>
                 <div class="space-y-1">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-amber-500">Rationnel Mathématique de la Volatilité :</span>
-                    <p class="text-[11px] text-slate-400 leading-relaxed font-light">
-                        Plus l'objectif de performance mensuelle est configuré à un niveau élevé, plus le niveau de risque associé par loterie augmente mécaniquement. À l'inverse, en modérant vos objectifs mensuels, vous augmentez la robustesse de l'algorithme face aux fluctuations boursières.
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400">Allocation & Diversification Multi-PAMM :</span>
+                    <p class="text-[11px] text-slate-300 leading-relaxed font-light">
+                        Chaque investisseur peut allouer son capital sur <strong>un ou plusieurs profils simultanément</strong> (ex. 50% Momentum Safe, 25% Prisme Normal, 25% Nocturne Modéré) pour optimiser sa diversification et lisser ses rendements face aux différentes configurations de marché.
                     </p>
                 </div>
             </div>
@@ -682,30 +756,41 @@
                     </div>
                 </div>
 
-                <!-- Interactive Calculator Block -->
+                <!-- Interactive Calculator Block (Multi-Bot & Multi-Profile) -->
                 <div id="calc-block" class="lg:col-span-7 border p-8 rounded-2xl shadow-xl relative bg-slate-950 border-slate-800">
                     <div class="space-y-8">
                         
-                        <!-- Mode Select -->
+                        <!-- 1. Bot Select -->
                         <div class="space-y-3 text-left">
-                            <label class="text-[10px] uppercase tracking-wider text-slate-500 font-bold block">1. Choisir le Profil de Risque :</label>
-                            <div class="grid grid-cols-3 gap-3">
-                                <button id="btn-calc-conservateur" onclick="setCalcMode('conservateur')" class="py-3 text-[10px] font-bold uppercase border rounded-xl transition-all duration-300 bg-transparent border-slate-800 text-slate-500">
-                                    Conservateur
+                            <label class="text-[10px] uppercase tracking-wider text-slate-500 font-bold block">1. Choisir le Bot Algorithmique :</label>
+                            <div class="grid grid-cols-3 gap-2.5">
+                                <button type="button" id="btn-bot-nocturne" onclick="setCalcBot('nocturne')" class="py-2.5 px-3 text-[10px] font-bold uppercase border rounded-xl transition-all duration-300 bg-amber-500/10 border-amber-500 text-amber-400 shadow-md">
+                                    <div class="text-xs">Nocturne</div>
+                                    <span class="text-[8px] opacity-75 font-normal block">Session Asiatique</span>
                                 </button>
-                                <button id="btn-calc-equilibre" onclick="setCalcMode('equilibre')" class="py-3 text-[10px] font-bold uppercase border rounded-xl transition-all duration-300 bg-amber-500/5 border-amber-500 text-amber-400 shadow-md">
-                                    Équilibré
+                                <button type="button" id="btn-bot-momentum" onclick="setCalcBot('momentum')" class="py-2.5 px-3 text-[10px] font-bold uppercase border rounded-xl transition-all duration-300 bg-transparent border-slate-800 text-slate-400 hover:border-slate-700">
+                                    <div class="text-xs">Momentum</div>
+                                    <span class="text-[8px] opacity-75 font-normal block">Swing TrendSurfer</span>
                                 </button>
-                                <button id="btn-calc-debride" onclick="setCalcMode('debride')" class="py-3 text-[10px] font-bold uppercase border rounded-xl transition-all duration-300 bg-transparent border-slate-800 text-slate-500">
-                                    Débridé
+                                <button type="button" id="btn-bot-prisme" onclick="setCalcBot('prisme')" class="py-2.5 px-3 text-[10px] font-bold uppercase border rounded-xl transition-all duration-300 bg-transparent border-slate-800 text-slate-400 hover:border-slate-700">
+                                    <div class="text-xs">Prisme</div>
+                                    <span class="text-[8px] opacity-75 font-normal block">TP/SL 12-en-1</span>
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Capital Allocation -->
+                        <!-- 2. Profile Select (Dynamically populated based on chosen bot) -->
+                        <div class="space-y-3 text-left">
+                            <label class="text-[10px] uppercase tracking-wider text-slate-500 font-bold block">2. Choisir la Formule / Profil de Risque :</label>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5" id="sim-profiles-container">
+                                <!-- Injected dynamically by setCalcBot -->
+                            </div>
+                        </div>
+
+                        <!-- 3. Capital Allocation -->
                         <div class="space-y-3 text-left">
                             <div class="flex justify-between items-center">
-                                <label class="text-[10px] uppercase tracking-wider text-slate-500 font-bold">2. Capital initial alloué :</label>
+                                <label class="text-[10px] uppercase tracking-wider text-slate-500 font-bold">3. Capital initial alloué :</label>
                                 <span class="font-mono text-base font-bold text-amber-400"><span id="calc-capital-display">15 000</span> $</span>
                             </div>
                             <input id="capital-range" type="range" min="1000" max="100000" step="1000" value="15000" oninput="updateCapital(this.value)" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500">
@@ -722,28 +807,35 @@
                                 <div class="space-y-1">
                                     <span class="text-[9px] text-slate-500 uppercase block tracking-wider">Cible d'Intérêts Mensuels :</span>
                                     <div class="font-cinzel text-xl font-bold text-white dark:text-white calc-text-color">
-                                        <span id="calc-monthly-min">2 250</span> $ à <span id="calc-monthly-max">6 750</span> $
+                                        <span id="calc-monthly-min">2 250</span> $ à <span id="calc-monthly-max">5 250</span> $
                                     </div>
                                 </div>
                                 <div class="space-y-1">
                                     <span class="text-[9px] text-slate-500 uppercase block tracking-wider">Cumulé annuel estimatif :</span>
                                     <div class="font-cinzel text-xl font-bold text-amber-500">
-                                        ~ <span id="calc-yearly">69 000</span> $
+                                        ~ <span id="calc-yearly">55 000</span> $
                                     </div>
                                 </div>
                             </div>
 
                             <div class="pt-4 border-t border-slate-800 flex flex-wrap gap-4 items-center justify-between text-[11px] calc-border-color">
                                 <div class="flex items-center space-x-2">
-                                    <span class="text-slate-500">Risque du Profile :</span>
+                                    <span class="text-slate-500">Risque & Drawdown :</span>
                                     <span id="calc-risk-level" class="px-2 py-0.5 border rounded text-[8.5px] font-bold text-amber-500 bg-amber-500/10 border-amber-500/20">
-                                        MODÉRÉ
+                                        MODÉRÉ (DD MAX 30%)
                                     </span>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <span class="text-slate-500">Protection intégrée :</span>
-                                    <span id="calc-protection" class="text-slate-300 font-medium">Optimisation Rendement/Risque</span>
+                                    <span class="text-slate-500">Protection :</span>
+                                    <span id="calc-protection" class="text-slate-300 font-medium">Hard Stop 30% • Marge ≤15%</span>
                                 </div>
+                            </div>
+
+                            <div class="pt-4">
+                                <a href="dashboard_app.html" class="w-full py-3.5 glossy-gold-btn font-bold text-xs uppercase tracking-widest rounded-xl flex items-center justify-center space-x-2">
+                                    <i data-lucide="arrow-right-circle" class="w-4 h-4"></i>
+                                    <span>Configurer ce profil dans le Dashboard</span>
+                                </a>
                             </div>
                         </div>
 
@@ -843,23 +935,37 @@
 
             </div>
 
-            <!-- Loss Protection callout -->
-            <div id="drawdown-callout" class="mt-12 bg-amber-500/5 border border-amber-500/20 rounded-xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 text-left shadow-md">
-                <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-500 flex-shrink-0">
-                        <i data-lucide="shield" class="w-6 h-6"></i>
+            <!-- Multi-Bot Loss Protection Callout -->
+            <div id="drawdown-callout" class="mt-12 bg-amber-500/5 border border-amber-500/20 rounded-2xl p-8 flex flex-col lg:flex-row items-center justify-between gap-8 text-left shadow-xl">
+                <div class="flex items-start space-x-5">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-500 flex-shrink-0 mt-1 shadow-inner">
+                        <i data-lucide="shield-check" class="w-7 h-7"></i>
                     </div>
-                    <div class="space-y-1">
-                        <span class="text-[9px] text-slate-500 uppercase tracking-widest block font-bold">Sécurisation d'Équité</span>
-                        <h4 class="font-cinzel text-base font-bold drawdown-callout-title text-white">ENVIRON 30% DU CAPITAL EN PROTECTION ULTIME</h4>
-                        <p class="drawdown-callout-p text-slate-500 text-[11px] font-light max-w-2xl leading-relaxed">
-                            Contrairement à de nombreux robots sur le marché qui risquent l'intégralité de vos fonds en cas de crise extrême, SynapX intègre un coupe-circuit définitif visant à sauvegarder environ 70% de votre capital net de tout risque.
+                    <div class="space-y-3">
+                        <span class="text-[9px] text-amber-400 uppercase tracking-widest block font-bold">Sécurisation d'Équité Algorithmique</span>
+                        <h4 class="font-cinzel text-lg md:text-xl font-bold drawdown-callout-title text-white">ARCHITECTURE MULTI-NIVEAUX : PROTECTIONS SUR-MESURE PAR BOT</h4>
+                        <p class="drawdown-callout-p text-slate-400 text-xs font-light max-w-3xl leading-relaxed">
+                            Contrairement aux robots risquant la totalité de votre capital sur un seul algorithme, SynapX sépare strictement les risques selon le moteur choisi :
                         </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                            <div class="p-3 rounded-xl bg-slate-950/60 border border-white/5 space-y-1">
+                                <span class="font-cinzel text-xs font-bold text-amber-400 block">SynapX Nocturne</span>
+                                <p class="text-[10px] text-slate-400 font-light leading-relaxed">Coupe-circuit Hard Stop automatique à 30% (Modéré) ou 100% (Agressif) & marge plafonnée à 15%.</p>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-950/60 border border-white/5 space-y-1">
+                                <span class="font-cinzel text-xs font-bold text-emerald-400 block">SynapX Momentum</span>
+                                <p class="text-[10px] text-slate-400 font-light leading-relaxed">Marge moyenne ultra-basse (≈ 5%), Trailing Stop multi-paliers et DD maîtrisé (20% à 50%).</p>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-950/60 border border-white/5 space-y-1">
+                                <span class="font-cinzel text-xs font-bold text-sky-400 block">SynapX Prisme</span>
+                                <p class="text-[10px] text-slate-400 font-light leading-relaxed">Take-Profit et Stop-Loss stricts et réels par trade (ordres en attente), DD structurel de 12% à 24%.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div id="drawdown-badge" class="text-right flex-shrink-0 border px-5 py-3 rounded-lg bg-slate-950 border-slate-800">
+                <div id="drawdown-badge" class="text-right flex-shrink-0 border px-5 py-3 rounded-xl bg-slate-950 border-slate-800">
                     <span class="text-[8px] text-slate-400 uppercase block tracking-wider font-bold">Divergent Légal</span>
-                    <span class="text-red-500 font-bold uppercase tracking-wider text-[10px]">Aucun rendement garanti</span>
+                    <span class="text-amber-400 font-bold uppercase tracking-wider text-[10px]">Aucun rendement garanti</span>
                 </div>
             </div>
 
@@ -967,66 +1073,22 @@
                 </h2>
                 <div class="w-12 h-[1px] bg-amber-500 mx-auto"></div>
                 <p class="section-muted-text text-slate-400 text-xs font-light leading-relaxed">
-                    Consultez les trois documents originaux de notre infrastructure algorithmique. Cliquez sur l'icône de zoom pour les agrandir en haute résolution.
+                    Les schémas techniques certifiés de notre infrastructure algorithmique sont en cours de certification et validation.
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-                
-                <!-- Doc 1 -->
-                <div class="blueprint-card border rounded-2xl overflow-hidden group shadow-lg bg-slate-900/40 border-slate-800/80 hover:border-amber-500/40 transition-all duration-300">
-                    <div class="relative aspect-[4/3] bg-slate-900 overflow-hidden flex items-center justify-center">
-                        <img src="image_6ff99a.jpg" alt="Infrastructure SynapX" class="object-cover w-full h-full opacity-80 group-hover:scale-105 group-hover:opacity-95 transition-all duration-500">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
-                        <button onclick="openLightbox('image_6ff99a.jpg', 'Fiche Spécification 01 - Écosystème & Accompagnement')" class="absolute bottom-4 right-4 p-2 bg-amber-500 text-black rounded-full hover:bg-amber-400 hover:scale-110 transition-all duration-300" title="Agrandir en Plein Écran">
-                            <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
-                        </button>
+            <div class="max-w-md mx-auto">
+                <div class="border rounded-2xl p-8 text-center space-y-6 bg-slate-900/40 border-slate-800/80 shadow-lg">
+                    <div class="w-16 h-16 rounded-full bg-amber-500/5 border border-amber-500/20 flex items-center justify-center mx-auto text-amber-400">
+                        <i data-lucide="hammer" class="w-8 h-8"></i>
                     </div>
-                    <div class="p-5 space-y-1.5">
-                        <span class="text-[9px] text-amber-500 font-bold uppercase tracking-widest">Document Certifié 01</span>
-                        <h4 class="font-cinzel text-xs font-bold uppercase blueprint-text-title text-white">Écosystème & Accompagnement</h4>
-                        <p class="blueprint-desc text-slate-400 text-[10.5px] font-light leading-relaxed">
-                            Schéma directeur des 5 piliers de croissance et de l'encadrement exclusif des membres.
+                    <div class="space-y-2">
+                        <h4 class="font-cinzel text-base text-white tracking-widest uppercase">En cours de construction</h4>
+                        <p class="text-xs text-slate-400 font-light leading-relaxed">
+                            Les schémas techniques et les rapports d'audits structurels de notre robot SynapX sont actuellement en cours de préparation et de validation de conformité par nos équipes.
                         </p>
                     </div>
                 </div>
-
-                <!-- Doc 2 -->
-                <div class="blueprint-card border rounded-2xl overflow-hidden group shadow-lg bg-slate-900/40 border-slate-800/80 hover:border-amber-500/40 transition-all duration-300">
-                    <div class="relative aspect-[4/3] bg-slate-900 overflow-hidden flex items-center justify-center">
-                        <img src="image_6ff9b8.jpg" alt="Gestion des Risques SynapX" class="object-cover w-full h-full opacity-80 group-hover:scale-105 group-hover:opacity-95 transition-all duration-500">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
-                        <button onclick="openLightbox('image_6ff9b8.jpg', 'Fiche Spécification 02 - Risques, Protections & Engagements')" class="absolute bottom-4 right-4 p-2 bg-amber-500 text-black rounded-full hover:bg-amber-400 hover:scale-110 transition-all duration-300" title="Agrandir en Plein Écran">
-                            <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
-                        </button>
-                    </div>
-                    <div class="p-5 space-y-1.5">
-                        <span class="text-[9px] text-amber-500 font-bold uppercase tracking-widest">Document Certifié 02</span>
-                        <h4 class="font-cinzel text-xs font-bold uppercase blueprint-text-title text-white">Sécurité, Risques & Limites</h4>
-                        <p class="blueprint-desc text-slate-400 text-[10.5px] font-light leading-relaxed">
-                            Cartographie complète du drawdown, de la limitation à 30% et du coupe-circuit automatique.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Doc 3 -->
-                <div class="blueprint-card border rounded-2xl overflow-hidden group shadow-lg bg-slate-900/40 border-slate-800/80 hover:border-amber-500/40 transition-all duration-300">
-                    <div class="relative aspect-[4/3] bg-slate-900 overflow-hidden flex items-center justify-center">
-                        <img src="image_6ff983.jpg" alt="Les 3 Modes SynapX" class="object-cover w-full h-full opacity-80 group-hover:scale-105 group-hover:opacity-95 transition-all duration-500">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
-                        <button onclick="openLightbox('image_6ff983.jpg', 'Fiche Spécification 03 - Les 3 Modes & Ratios de Risques')" class="absolute bottom-4 right-4 p-2 bg-amber-500 text-black rounded-full hover:bg-amber-400 hover:scale-110 transition-all duration-300" title="Agrandir en Plein Écran">
-                            <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
-                        </button>
-                    </div>
-                    <div class="p-5 space-y-1.5">
-                        <span class="text-[9px] text-amber-500 font-bold uppercase tracking-widest">Document Certifié 03</span>
-                        <h4 class="font-cinzel text-xs font-bold uppercase blueprint-text-title text-white">Les 3 Modes Opérationnels</h4>
-                        <p class="blueprint-desc text-slate-400 text-[10.5px] font-light leading-relaxed">
-                            Comparateur des configurations d’exposition (Conservateur, Équilibré et Débridé).
-                        </p>
-                    </div>
-                </div>
-
             </div>
 
         </div>
@@ -1040,8 +1102,8 @@
                 <!-- Brand column -->
                 <div class="space-y-4 md:col-span-2">
                     <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-full border border-amber-400 bg-slate-950 flex items-center justify-center">
-                            <span class="font-cinzel text-sm font-bold text-amber-400">S</span>
+                        <div class="w-8 h-8 rounded-full border border-amber-400 bg-slate-950 flex items-center justify-center overflow-hidden">
+                            <img src="icon.png" alt="SynapX Logo" class="w-full h-full object-cover">
                         </div>
                         <span class="font-cinzel text-base font-bold tracking-widest text-white">
                             SYNAP<span class="text-amber-400">X</span>
@@ -1069,6 +1131,7 @@
                     <ul class="space-y-2 text-slate-500 text-[11px]">
                         <li><button onclick="navigateTo('blueprints')" class="hover:text-amber-400 transition-all">Fiches Certifiées</button></li>
                         <li><button onclick="navigateTo('risks-protections')" class="hover:text-amber-400 transition-all">Drawdown & Limites</button></li>
+                        <li><a href="SynapXMAJ.pdf" target="_blank" class="hover:text-amber-400 transition-all">Livre Blanc PDF</a></li>
                         <li><span class="text-amber-500/80 font-bold block">Assistance Technique 24/7</span></li>
                     </ul>
                 </div>
@@ -1385,81 +1448,209 @@
             }
         }
 
-        // Live Fluctuating Simulated Gold Ticker
-        setInterval(() => {
-            const change = (Math.random() - 0.48) * 1.5;
-            goldPrice = +(goldPrice + change).toFixed(2);
-            
-            const goldDisplays = document.querySelectorAll('.gold-live-price');
-            goldDisplays.forEach(el => {
-                el.innerText = goldPrice.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            });
-        }, 4000);
+        // Live Gold Price Ticker (XAU/USD) using Binance public keyless API as Spot Gold proxy
+        async function fetchLiveGoldPrice() {
+            try {
+                const response = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=PAXGUSDT');
+                if (response.ok) {
+                    const data = await response.json();
+                    const price = parseFloat(data.price);
+                    if (price && !isNaN(price)) {
+                        goldPrice = price;
+                        const goldDisplays = document.querySelectorAll('.gold-live-price');
+                        goldDisplays.forEach(el => {
+                            el.innerText = goldPrice.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        });
+                    }
+                }
+            } catch (e) {
+                console.warn('Real-time gold price fetch failed, using fallback.');
+            }
+        }
 
-        // Interactive Premium Simulator Logic
-        function setCalcMode(mode) {
+        // Initial fetch and regular polling
+        fetchLiveGoldPrice();
+        setInterval(fetchLiveGoldPrice, 15000);
+
+        // Interactive Premium Simulator Logic (Multi-Bot & Multi-Profile)
+        let calcBot = 'nocturne';
+        let calcProfile = 'modere';
+        let calcCapital = 15000;
+
+        const BOT_SIM_CONFIG = {
+            nocturne: {
+                name: 'SynapX Nocturne',
+                profiles: {
+                    modere: {
+                        name: 'Modéré',
+                        minPct: 0.15,
+                        maxPct: 0.35,
+                        yearlyMult: 3.8,
+                        riskLabel: 'MODÉRÉ (DD MAX 30%)',
+                        riskColor: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
+                        protection: 'Hard Stop 30% • Marge ≤15%'
+                    },
+                    agressif: {
+                        name: 'Agressif',
+                        minPct: 0.40,
+                        maxPct: 0.90,
+                        yearlyMult: 8.5,
+                        riskLabel: 'HYPER-AGRESSIF (DD MAX 100%)',
+                        riskColor: 'text-rose-400 bg-rose-500/10 border-rose-500/20',
+                        protection: 'Hard SL 100% • Retraits Fréquents'
+                    }
+                }
+            },
+            momentum: {
+                name: 'SynapX Momentum',
+                profiles: {
+                    safe: {
+                        name: 'Safe',
+                        minPct: 0.05,
+                        maxPct: 0.10,
+                        yearlyMult: 1.8,
+                        riskLabel: 'FAIBLE (DD MAX 20%)',
+                        riskColor: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
+                        protection: 'Marge ≈ 5% • Trailing Stop Multi-Paliers'
+                    },
+                    normal: {
+                        name: 'Normal',
+                        minPct: 0.15,
+                        maxPct: 0.30,
+                        yearlyMult: 3.2,
+                        riskLabel: 'ÉQUILIBRÉ (DD MAX 30%)',
+                        riskColor: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
+                        protection: 'Trailing Stop • Protection d\'Équité'
+                    },
+                    debride: {
+                        name: 'Débridé',
+                        minPct: 0.40,
+                        maxPct: 1.00,
+                        yearlyMult: 10.0,
+                        riskLabel: 'ÉLEVÉ (DD MAX 50%)',
+                        riskColor: 'text-rose-400 bg-rose-500/10 border-rose-500/20',
+                        protection: 'Coupe-circuit 50% • Forte Volatilité'
+                    }
+                }
+            },
+            prisme: {
+                name: 'SynapX Prisme',
+                profiles: {
+                    safe: {
+                        name: 'Safe',
+                        minPct: 0.10,
+                        maxPct: 0.15,
+                        yearlyMult: 2.5,
+                        riskLabel: 'CONSERVATEUR (DD MAX 12%)',
+                        riskColor: 'text-sky-400 bg-sky-500/10 border-sky-500/20',
+                        protection: 'TP & SL Stricts sur chaque trade'
+                    },
+                    normal: {
+                        name: 'Normal',
+                        minPct: 0.20,
+                        maxPct: 0.30,
+                        yearlyMult: 4.2,
+                        riskLabel: 'ÉQUILIBRÉ (DD MAX 24%)',
+                        riskColor: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/20',
+                        protection: 'Ordres en Attente • TP/SL Stricts'
+                    }
+                }
+            }
+        };
+
+        function setCalcBot(botKey) {
             playBeep(580, 0.05);
-            calcMode = mode;
-            
-            // Visual Active State updates
-            ['conservateur', 'equilibre', 'debride'].forEach(m => {
-                const btn = document.getElementById(`btn-calc-${m}`);
-                if (m === mode) {
-                    btn.className = "py-3 text-[10px] font-bold uppercase border rounded-xl transition-all duration-300 bg-amber-500/5 border-amber-500 text-amber-400 shadow-md";
-                } else {
-                    btn.className = `py-3 text-[10px] font-bold uppercase border rounded-xl transition-all duration-300 bg-transparent ${currentTheme === 'dark' ? 'border-slate-800' : 'border-slate-200'} text-slate-500`;
+            calcBot = botKey;
+
+            // Highlight bot button
+            ['nocturne', 'momentum', 'prisme'].forEach(b => {
+                const btn = document.getElementById(`btn-bot-${b}`);
+                if (btn) {
+                    if (b === botKey) {
+                        btn.className = "py-2.5 px-3 text-[10px] font-bold uppercase border rounded-xl transition-all duration-300 bg-amber-500/10 border-amber-500 text-amber-400 shadow-md";
+                    } else {
+                        btn.className = `py-2.5 px-3 text-[10px] font-bold uppercase border rounded-xl transition-all duration-300 bg-transparent ${currentTheme === 'dark' ? 'border-slate-800' : 'border-slate-200'} text-slate-400 hover:border-slate-700`;
+                    }
                 }
             });
 
+            // Set default profile for this bot
+            const profiles = Object.keys(BOT_SIM_CONFIG[botKey].profiles);
+            calcProfile = profiles[0];
+
+            renderSimProfiles();
+            calculateSimulator();
+        }
+
+        function renderSimProfiles() {
+            const container = document.getElementById('sim-profiles-container');
+            if (!container) return;
+            const botData = BOT_SIM_CONFIG[calcBot];
+            const profiles = botData.profiles;
+
+            container.innerHTML = Object.keys(profiles).map(pKey => {
+                const p = profiles[pKey];
+                const isActive = (pKey === calcProfile);
+                const activeClasses = "bg-amber-500/10 border-amber-500 text-amber-400 shadow-md";
+                const inactiveClasses = `bg-transparent ${currentTheme === 'dark' ? 'border-slate-800' : 'border-slate-200'} text-slate-400 hover:border-slate-700`;
+                return `
+                    <button type="button" onclick="setCalcProfile('${pKey}')" id="btn-prof-${pKey}" class="py-2.5 px-3 text-[10px] font-bold uppercase border rounded-xl transition-all duration-300 ${isActive ? activeClasses : inactiveClasses}">
+                        ${p.name}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function setCalcProfile(pKey) {
+            playBeep(600, 0.05);
+            calcProfile = pKey;
+            renderSimProfiles();
             calculateSimulator();
         }
 
         function updateCapital(val) {
             calcCapital = Number(val);
-            document.getElementById('calc-capital-display').innerText = calcCapital.toLocaleString('fr-FR');
+            const disp = document.getElementById('calc-capital-display');
+            if (disp) disp.innerText = calcCapital.toLocaleString('fr-FR');
             calculateSimulator();
         }
 
         function calculateSimulator() {
-            let minMonthly, maxMonthly, yearlyEst, riskLevel, riskColor, protection;
-            
-            if (calcMode === 'conservateur') {
-                minMonthly = Math.round(calcCapital * 0.07);
-                maxMonthly = Math.round(calcCapital * 0.15);
-                yearlyEst = Math.round(calcCapital * 1.95);
-                riskLevel = 'FAIBLE';
-                riskColor = 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20';
-                protection = 'Maximale (Drawdown limité)';
-            } else if (calcMode === 'equilibre') {
-                minMonthly = Math.round(calcCapital * 0.15);
-                maxMonthly = Math.round(calcCapital * 0.45);
-                yearlyEst = Math.round(calcCapital * 4.6);
-                riskLevel = 'MODÉRÉ';
-                riskColor = 'text-amber-500 bg-amber-500/10 border-amber-500/20';
-                protection = 'Optimisation Rendement/Risque';
-            } else if (calcMode === 'debride') {
-                minMonthly = Math.round(calcCapital * 0.40);
-                maxMonthly = Math.round(calcCapital * 1.00);
-                yearlyEst = Math.round(calcCapital * 11.5);
-                riskLevel = 'ÉLEVÉ';
-                riskColor = 'text-rose-500 bg-rose-500/10 border-rose-500/20';
-                protection = 'Limite Drawdown Max (30%)';
-            }
+            const botData = BOT_SIM_CONFIG[calcBot];
+            if (!botData) return;
+            const prof = botData.profiles[calcProfile] || Object.values(botData.profiles)[0];
 
-            document.getElementById('calc-monthly-min').innerText = minMonthly.toLocaleString('fr-FR');
-            document.getElementById('calc-monthly-max').innerText = maxMonthly.toLocaleString('fr-FR');
-            document.getElementById('calc-yearly').innerText = yearlyEst.toLocaleString('fr-FR');
-            
+            const minMonthly = Math.round(calcCapital * prof.minPct);
+            const maxMonthly = Math.round(calcCapital * prof.maxPct);
+            const yearlyEst = Math.round(calcCapital * prof.yearlyMult);
+
+            const minEl = document.getElementById('calc-monthly-min');
+            const maxEl = document.getElementById('calc-monthly-max');
+            const yrEl = document.getElementById('calc-yearly');
             const riskBadge = document.getElementById('calc-risk-level');
-            riskBadge.innerText = riskLevel;
-            riskBadge.className = `px-2 py-0.5 border rounded text-[8.5px] font-bold ${riskColor}`;
-            
-            document.getElementById('calc-protection').innerText = protection;
+            const protEl = document.getElementById('calc-protection');
+
+            if (minEl) minEl.innerText = minMonthly.toLocaleString('fr-FR');
+            if (maxEl) maxEl.innerText = maxMonthly.toLocaleString('fr-FR');
+            if (yrEl) yrEl.innerText = yearlyEst.toLocaleString('fr-FR');
+            if (riskBadge) {
+                riskBadge.innerText = prof.riskLabel;
+                riskBadge.className = `px-2 py-0.5 border rounded text-[8.5px] font-bold ${prof.riskColor}`;
+            }
+            if (protEl) protEl.innerText = prof.protection;
         }
 
-        // Quick profile select from Cards
-        function selectProfile(profile) {
-            setCalcMode(profile);
+        function selectProfile(bot, profile) {
+            if (bot && BOT_SIM_CONFIG[bot]) {
+                calcBot = bot;
+                if (profile && BOT_SIM_CONFIG[bot].profiles[profile]) {
+                    calcProfile = profile;
+                } else {
+                    calcProfile = Object.keys(BOT_SIM_CONFIG[bot].profiles)[0];
+                }
+                setCalcBot(calcBot);
+                setCalcProfile(calcProfile);
+            }
             navigateTo('simulator');
         }
 
@@ -1536,6 +1727,7 @@
             // Initialize Lucide Icons
             lucide.createIcons();
             // Initial computation
+            renderSimProfiles();
             calculateSimulator();
         });
     </script>

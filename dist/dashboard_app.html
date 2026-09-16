@@ -792,153 +792,134 @@
                     <h2 class="font-cinzel text-2xl sm:text-3xl text-center text-white">Nos Solutions <span class="gold-luxury-text font-medium">Algorithmiques</span></h2>
                     <p class="text-xs text-slate-400 text-center max-w-xl mx-auto leading-relaxed">Sélectionnez le robot de trading adapté à vos objectifs financiers pour accéder à sa configuration.</p>
                     
-                    <div class="stage-a-grid grid grid-cols-1 lg:grid-cols-12 gap-6">
-                        <!-- Column Left: Available Bots Stack -->
-                        <div class="lg:col-span-8 space-y-6">
-                            <h3 class="bot-selection-header font-cinzel text-lg text-white">🤖 Robots Disponibles</h3>
-                            
-                            <div class="space-y-6" id="tutoBotList">
-                                <!-- Bot 1: SynapX v1 -->
-                                <div class="glass bot-selection-card p-6 md:p-8 relative overflow-hidden border border-white/10 hover:border-amber-500/30 cursor-pointer transition flex flex-col justify-between rounded-3xl" id="cardBotV1" onclick="selectBot('v1')">
-                                    <div class="panda-glow absolute inset-0 bg-radial-gradient from-amber-500/5 to-transparent pointer-events-none"></div>
-                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center z-10 relative">
-                                        <div class="md:col-span-4 flex flex-col items-center justify-center text-center border-b md:border-b-0 md:border-r border-white/10 pb-6 md:pb-0 md:pr-8">
-                                            <div class="relative mb-3 group">
-                                                <div class="absolute -inset-2 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 opacity-20 blur-lg group-hover:opacity-40 transition duration-500"></div>
-                                                <img src="icon.png" alt="SynapX v1" class="bot-logo-img w-20 h-20 rounded-3xl object-contain border border-white/15 bg-[#0a0f1d] p-3 shadow-xl relative z-10">
-                                            </div>
-                                            <h3 class="font-cinzel text-lg font-bold tracking-wider text-white">SynapX « v1 »</h3>
-                                            <span class="text-[9.5px] text-amber-400 font-light mt-0.5 block">Asian Trend Surfing</span>
-                                            <span class="mt-2 inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-amber-500/10 text-amber-400 border border-amber-500/25">Moteur 1 Actif</span>
+                    <div class="max-w-4xl mx-auto space-y-6">
+                        <div class="space-y-6" id="tutoBotList">
+                            <!-- Bot 1: SynapX Nocturne -->
+                            <div class="glass bot-selection-card p-6 md:p-8 relative overflow-hidden border border-white/10 hover:border-amber-500/30 cursor-pointer transition flex flex-col justify-between rounded-3xl" id="cardBotNocturne" onclick="selectBot('nocturne')">
+                                <div class="panda-glow absolute inset-0 bg-radial-gradient from-amber-500/5 to-transparent pointer-events-none"></div>
+                                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center z-10 relative">
+                                    <div class="md:col-span-4 flex flex-col items-center justify-center text-center border-b md:border-b-0 md:border-r border-white/10 pb-6 md:pb-0 md:pr-8">
+                                        <div class="relative mb-3 group">
+                                            <div class="absolute -inset-2 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 opacity-20 blur-lg group-hover:opacity-40 transition duration-500"></div>
+                                            <img src="icon.png" alt="SynapX Nocturne" class="bot-logo-img w-20 h-20 rounded-3xl object-contain border border-white/15 bg-[#0a0f1d] p-3 shadow-xl relative z-10">
                                         </div>
-                                        <div class="md:col-span-8 flex flex-col justify-between text-left space-y-4">
-                                            <p class="bot-desc text-xs text-slate-300 font-light leading-relaxed">
-                                                Prise de position circonscrite aux creux de volatilité institutionnelle de nuit (session asiatique Tokyo / Sydney). Marge régulée à 15% maximum du capital total, même en stress de marché.
-                                            </p>
-                                            <div class="grid grid-cols-2 gap-x-4 gap-y-2 pt-1">
-                                                <div class="flex items-center gap-2 text-[11px] text-slate-300">
-                                                    <span class="text-amber-400 text-xs">✓</span>
-                                                    <span>Session Asiatique Stricte</span>
-                                                </div>
-                                                <div class="flex items-center gap-2 text-[11px] text-slate-300">
-                                                    <span class="text-amber-400 text-xs">✓</span>
-                                                    <span>Hard Stop 30% / 100%</span>
-                                                </div>
-                                                <div class="flex items-center gap-2 text-[11px] text-slate-300">
-                                                    <span class="text-amber-400 text-xs">✓</span>
-                                                    <span>Marge ≤ 15% Maximum</span>
-                                                </div>
-                                                <div class="flex items-center gap-2 text-[11px] text-slate-300">
-                                                    <span class="text-amber-400 text-xs">✓</span>
-                                                    <span>Validé 2 à 5 ans réels</span>
-                                                </div>
-                                            </div>
-                                            <div class="border-t border-white/5 pt-3 flex flex-col sm:flex-row justify-between items-center gap-3">
-                                                <span class="text-[10px] text-slate-400 font-light uppercase tracking-wider">Formules PAMM : Modéré | Casino</span>
-                                                <button class="btn-gold py-2 px-5 text-xs font-bold uppercase tracking-widest shadow-lg shadow-amber-500/10">Configurer v1</button>
-                                            </div>
-                                        </div>
+                                        <h3 class="font-cinzel text-lg font-bold tracking-wider text-white">SynapX Nocturne</h3>
+                                        <span class="text-[9.5px] text-amber-400 font-light mt-0.5 block">v1 • Session Asiatique & Grille Contrôlée</span>
+                                        <span class="mt-2 inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-amber-500/10 text-amber-400 border border-amber-500/25">Moteur 1 Actif</span>
                                     </div>
-                                </div>
-
-                                <!-- Bot 2: SynapX v2 -->
-                                <div class="glass bot-selection-card p-6 md:p-8 relative overflow-hidden border border-white/10 hover:border-emerald-500/30 cursor-pointer transition flex flex-col justify-between rounded-3xl" id="cardBotV2" onclick="selectBot('v2')">
-                                    <div class="panda-glow absolute inset-0 bg-radial-gradient from-emerald-500/5 to-transparent pointer-events-none"></div>
-                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center z-10 relative">
-                                        <div class="md:col-span-4 flex flex-col items-center justify-center text-center border-b md:border-b-0 md:border-r border-white/10 pb-6 md:pb-0 md:pr-8">
-                                            <div class="relative mb-3 group">
-                                                <div class="absolute -inset-2 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 opacity-20 blur-lg group-hover:opacity-40 transition duration-500"></div>
-                                                <img src="icon.png" alt="SynapX v2" class="bot-logo-img w-20 h-20 rounded-3xl object-contain border border-white/15 bg-[#0a0f1d] p-3 shadow-xl relative z-10">
+                                    <div class="md:col-span-8 flex flex-col justify-between text-left space-y-4">
+                                        <p class="bot-desc text-xs text-slate-300 font-light leading-relaxed">
+                                            Prise de position circonscrite aux creux de volatilité institutionnelle de nuit (session asiatique Tokyo / Sydney). Marge régulée à 15% maximum du capital total, même en stress de marché.
+                                        </p>
+                                        <div class="grid grid-cols-2 gap-x-4 gap-y-2 pt-1">
+                                            <div class="flex items-center gap-2 text-[11px] text-slate-300">
+                                                <span class="text-amber-400 text-xs">✓</span>
+                                                <span>Session Asiatique Stricte</span>
                                             </div>
-                                            <h3 class="font-cinzel text-lg font-bold tracking-wider text-white">SynapX « v2 »</h3>
-                                            <span class="text-[9.5px] text-emerald-400 font-light mt-0.5 block">Institutional TrendSurfer</span>
-                                            <span class="mt-2 inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">Moteur 2 Actif</span>
-                                        </div>
-                                        <div class="md:col-span-8 flex flex-col justify-between text-left space-y-4">
-                                            <p class="bot-desc text-xs text-slate-300 font-light leading-relaxed">
-                                                Algorithme quantitatif de tendance long terme (Swing Trading & Momentum). Marge moyenne ≈ 5% en séance, Trailing Stop multi-paliers et supervision humaine continue (Human-in-the-Loop).
-                                            </p>
-                                            <div class="grid grid-cols-2 gap-x-4 gap-y-2 pt-1">
-                                                <div class="flex items-center gap-2 text-[11px] text-slate-300">
-                                                    <span class="text-emerald-400 text-xs">✓</span>
-                                                    <span>Positionnement Swing Sélectif</span>
-                                                </div>
-                                                <div class="flex items-center gap-2 text-[11px] text-slate-300">
-                                                    <span class="text-emerald-400 text-xs">✓</span>
-                                                    <span>Marge Mobilisée ≈ 5%</span>
-                                                </div>
-                                                <div class="flex items-center gap-2 text-[11px] text-slate-300">
-                                                    <span class="text-emerald-400 text-xs">✓</span>
-                                                    <span>Trailing Stop Multi-Paliers</span>
-                                                </div>
-                                                <div class="flex items-center gap-2 text-[11px] text-slate-300">
-                                                    <span class="text-emerald-400 text-xs">✓</span>
-                                                    <span>Backtesté 5 ans en ticks réels</span>
-                                                </div>
+                                            <div class="flex items-center gap-2 text-[11px] text-slate-300">
+                                                <span class="text-amber-400 text-xs">✓</span>
+                                                <span>Hard Stop 30% / 100%</span>
                                             </div>
-                                            <div class="border-t border-white/5 pt-3 flex flex-col sm:flex-row justify-between items-center gap-3">
-                                                <span class="text-[10px] text-slate-400 font-light uppercase tracking-wider">Formules PAMM : Safe | Normal | Débridé</span>
-                                                <button class="btn-gold py-2 px-5 text-xs font-bold uppercase tracking-widest shadow-lg shadow-emerald-500/10">Configurer v2</button>
+                                            <div class="flex items-center gap-2 text-[11px] text-slate-300">
+                                                <span class="text-amber-400 text-xs">✓</span>
+                                                <span>Marge ≤ 15% Maximum</span>
+                                            </div>
+                                            <div class="flex items-center gap-2 text-[11px] text-slate-300">
+                                                <span class="text-amber-400 text-xs">✓</span>
+                                                <span>Validé 2 à 5 ans réels</span>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-
-                                <!-- Bot 3: SynapX TP/SL -->
-                                <div class="glass bot-selection-card p-6 md:p-8 relative overflow-hidden border border-white/10 hover:border-sky-500/30 cursor-pointer transition flex flex-col justify-between rounded-3xl" id="cardBotTPSL" onclick="selectBot('tpsl')">
-                                    <div class="panda-glow absolute inset-0 bg-radial-gradient from-sky-500/5 to-transparent pointer-events-none"></div>
-                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center z-10 relative">
-                                        <div class="md:col-span-4 flex flex-col items-center justify-center text-center border-b md:border-b-0 md:border-r border-white/10 pb-6 md:pb-0 md:pr-8">
-                                            <div class="relative mb-3 group">
-                                                <div class="absolute -inset-2 rounded-full bg-gradient-to-r from-sky-500 to-indigo-500 opacity-20 blur-lg group-hover:opacity-40 transition duration-500"></div>
-                                                <img src="icon.png" alt="SynapX TP/SL" class="bot-logo-img w-20 h-20 rounded-3xl object-contain border border-white/15 bg-[#0a0f1d] p-3 shadow-xl relative z-10">
-                                            </div>
-                                            <h3 class="font-cinzel text-lg font-bold tracking-wider text-white">SynapX « TP/SL »</h3>
-                                            <span class="text-[9.5px] text-sky-400 font-light mt-0.5 block">Consensus 12-en-1</span>
-                                            <span class="mt-2 inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-sky-500/10 text-sky-400 border border-sky-500/25">Moteur 3 Actif</span>
-                                        </div>
-                                        <div class="md:col-span-8 flex flex-col justify-between text-left space-y-4">
-                                            <p class="bot-desc text-xs text-slate-300 font-light leading-relaxed">
-                                                Matrice algorithmique confrontant 12 méthodologies professionnelles (cassures de volatilité, flux d'ordres, offre/demande). Ordres en attente programmés avec Take-Profit & Stop-Loss réels.
-                                            </p>
-                                            <div class="grid grid-cols-2 gap-x-4 gap-y-2 pt-1">
-                                                <div class="flex items-center gap-2 text-[11px] text-slate-300">
-                                                    <span class="text-sky-400 text-xs">✓</span>
-                                                    <span>Consensus Multi-Stratégies</span>
-                                                </div>
-                                                <div class="flex items-center gap-2 text-[11px] text-slate-300">
-                                                    <span class="text-sky-400 text-xs">✓</span>
-                                                    <span>Pending Orders (Ordres différés)</span>
-                                                </div>
-                                                <div class="flex items-center gap-2 text-[11px] text-slate-300">
-                                                    <span class="text-sky-400 text-xs">✓</span>
-                                                    <span>Take-Profit & Stop-Loss Réels</span>
-                                                </div>
-                                                <div class="flex items-center gap-2 text-[11px] text-slate-300">
-                                                    <span class="text-sky-400 text-xs">✓</span>
-                                                    <span>Validé 3 ans de données réelles</span>
-                                                </div>
-                                            </div>
-                                            <div class="border-t border-white/5 pt-3 flex flex-col sm:flex-row justify-between items-center gap-3">
-                                                <span class="text-[10px] text-slate-400 font-light uppercase tracking-wider">Formules PAMM : Safe | Normal</span>
-                                                <button class="btn-gold py-2 px-5 text-xs font-bold uppercase tracking-widest shadow-lg shadow-sky-500/10">Configurer TP/SL</button>
-                                            </div>
+                                        <div class="border-t border-white/5 pt-3 flex flex-col sm:flex-row justify-between items-center gap-3">
+                                            <span class="text-[10px] text-slate-400 font-light uppercase tracking-wider">Profils PAMM : Modéré | Agressif</span>
+                                            <button class="btn-gold py-2 px-5 text-xs font-bold uppercase tracking-widest shadow-lg shadow-amber-500/10">Configurer Nocturne</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Video Presentation Card -->
-                        <div class="lg:col-span-4 space-y-6">
-                            <h3 class="bot-selection-header font-cinzel text-lg text-white">🎬 Présentation</h3>
-                            <div class="glass p-5 space-y-4 rounded-3xl border border-white/10">
-                                <div class="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-lg">
-                                    <iframe class="w-full h-full" src="https://www.youtube.com/embed/BrjA8SqutFw" title="Présentation SynapX" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                            <!-- Bot 2: SynapX Momentum -->
+                            <div class="glass bot-selection-card p-6 md:p-8 relative overflow-hidden border border-white/10 hover:border-emerald-500/30 cursor-pointer transition flex flex-col justify-between rounded-3xl" id="cardBotMomentum" onclick="selectBot('momentum')">
+                                <div class="panda-glow absolute inset-0 bg-radial-gradient from-emerald-500/5 to-transparent pointer-events-none"></div>
+                                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center z-10 relative">
+                                    <div class="md:col-span-4 flex flex-col items-center justify-center text-center border-b md:border-b-0 md:border-r border-white/10 pb-6 md:pb-0 md:pr-8">
+                                        <div class="relative mb-3 group">
+                                            <div class="absolute -inset-2 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 opacity-20 blur-lg group-hover:opacity-40 transition duration-500"></div>
+                                            <img src="icon.png" alt="SynapX Momentum" class="bot-logo-img w-20 h-20 rounded-3xl object-contain border border-white/15 bg-[#0a0f1d] p-3 shadow-xl relative z-10">
+                                        </div>
+                                        <h3 class="font-cinzel text-lg font-bold tracking-wider text-white">SynapX Momentum</h3>
+                                        <span class="text-[9.5px] text-emerald-400 font-light mt-0.5 block">v2 • Swing Multi-Jours & Trailing Stop</span>
+                                        <span class="mt-2 inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">Moteur 2 Actif</span>
+                                    </div>
+                                    <div class="md:col-span-8 flex flex-col justify-between text-left space-y-4">
+                                        <p class="bot-desc text-xs text-slate-300 font-light leading-relaxed">
+                                            Algorithme quantitatif de tendance long terme (Swing Trading & Momentum). Marge moyenne ≈ 5% en séance, Trailing Stop multi-paliers et supervision humaine continue (Human-in-the-Loop).
+                                        </p>
+                                        <div class="grid grid-cols-2 gap-x-4 gap-y-2 pt-1">
+                                            <div class="flex items-center gap-2 text-[11px] text-slate-300">
+                                                <span class="text-emerald-400 text-xs">✓</span>
+                                                <span>Positionnement Swing Sélectif</span>
+                                            </div>
+                                            <div class="flex items-center gap-2 text-[11px] text-slate-300">
+                                                <span class="text-emerald-400 text-xs">✓</span>
+                                                <span>Marge Mobilisée ≈ 5%</span>
+                                            </div>
+                                            <div class="flex items-center gap-2 text-[11px] text-slate-300">
+                                                <span class="text-emerald-400 text-xs">✓</span>
+                                                <span>Trailing Stop Multi-Paliers</span>
+                                            </div>
+                                            <div class="flex items-center gap-2 text-[11px] text-slate-300">
+                                                <span class="text-emerald-400 text-xs">✓</span>
+                                                <span>Backtesté 5 ans en ticks réels</span>
+                                            </div>
+                                        </div>
+                                        <div class="border-t border-white/5 pt-3 flex flex-col sm:flex-row justify-between items-center gap-3">
+                                            <span class="text-[10px] text-slate-400 font-light uppercase tracking-wider">Profils PAMM : Safe | Normal | Débridé</span>
+                                            <button class="btn-gold py-2 px-5 text-xs font-bold uppercase tracking-widest shadow-lg shadow-emerald-500/10">Configurer Momentum</button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="text-left space-y-1">
-                                    <h4 class="font-cinzel text-sm font-bold text-white uppercase tracking-wider">Académie SynapX</h4>
-                                    <p class="text-xs text-slate-400 font-light leading-relaxed">Découvrez le fonctionnement complet de l'algorithme SynapX et ses stratégies de trading adaptatives.</p>
+                            </div>
+
+                            <!-- Bot 3: SynapX Prisme -->
+                            <div class="glass bot-selection-card p-6 md:p-8 relative overflow-hidden border border-white/10 hover:border-sky-500/30 cursor-pointer transition flex flex-col justify-between rounded-3xl" id="cardBotPrisme" onclick="selectBot('prisme')">
+                                <div class="panda-glow absolute inset-0 bg-radial-gradient from-sky-500/5 to-transparent pointer-events-none"></div>
+                                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center z-10 relative">
+                                    <div class="md:col-span-4 flex flex-col items-center justify-center text-center border-b md:border-b-0 md:border-r border-white/10 pb-6 md:pb-0 md:pr-8">
+                                        <div class="relative mb-3 group">
+                                            <div class="absolute -inset-2 rounded-full bg-gradient-to-r from-sky-500 to-indigo-500 opacity-20 blur-lg group-hover:opacity-40 transition duration-500"></div>
+                                            <img src="icon.png" alt="SynapX Prisme" class="bot-logo-img w-20 h-20 rounded-3xl object-contain border border-white/15 bg-[#0a0f1d] p-3 shadow-xl relative z-10">
+                                        </div>
+                                        <h3 class="font-cinzel text-lg font-bold tracking-wider text-white">SynapX Prisme</h3>
+                                        <span class="text-[9.5px] text-sky-400 font-light mt-0.5 block">TP/SL • Consensus 12 Stratégies & Ordres en Attente</span>
+                                        <span class="mt-2 inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-sky-500/10 text-sky-400 border border-sky-500/25">Moteur 3 Actif</span>
+                                    </div>
+                                    <div class="md:col-span-8 flex flex-col justify-between text-left space-y-4">
+                                        <p class="bot-desc text-xs text-slate-300 font-light leading-relaxed">
+                                            Matrice algorithmique confrontant 12 méthodologies professionnelles (cassures de volatilité, flux d'ordres, offre/demande). Ordres en attente programmés avec Take-Profit & Stop-Loss réels.
+                                        </p>
+                                        <div class="grid grid-cols-2 gap-x-4 gap-y-2 pt-1">
+                                            <div class="flex items-center gap-2 text-[11px] text-slate-300">
+                                                <span class="text-sky-400 text-xs">✓</span>
+                                                <span>Consensus Multi-Stratégies</span>
+                                            </div>
+                                            <div class="flex items-center gap-2 text-[11px] text-slate-300">
+                                                <span class="text-sky-400 text-xs">✓</span>
+                                                <span>Pending Orders (Ordres différés)</span>
+                                            </div>
+                                            <div class="flex items-center gap-2 text-[11px] text-slate-300">
+                                                <span class="text-sky-400 text-xs">✓</span>
+                                                <span>Take-Profit & Stop-Loss Réels</span>
+                                            </div>
+                                            <div class="flex items-center gap-2 text-[11px] text-slate-300">
+                                                <span class="text-sky-400 text-xs">✓</span>
+                                                <span>Validé 3 ans de données réelles</span>
+                                            </div>
+                                        </div>
+                                        <div class="border-t border-white/5 pt-3 flex flex-col sm:flex-row justify-between items-center gap-3">
+                                            <span class="text-[10px] text-slate-400 font-light uppercase tracking-wider">Profils PAMM : Safe | Normal</span>
+                                            <button class="btn-gold py-2 px-5 text-xs font-bold uppercase tracking-widest shadow-lg shadow-sky-500/10">Configurer Prisme</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1170,13 +1151,13 @@
                             <div class="cc-icon telegram w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
                                 <i data-lucide="bell" class="w-6 h-6"></i>
                             </div>
-                            <span class="cc-tag telegram inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/20">Telegram VIP</span>
+                            <span class="cc-tag telegram inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/20">Telegram Officiel</span>
                             <h3 class="cc-title font-cinzel text-lg text-white">Canal Annonces SynapX</h3>
                             <p class="cc-desc text-xs text-slate-400 font-light leading-relaxed">
                                 Suivez en direct les bilans hebdomadaires, les annonces de performances officielles des 7 PAMMs et les notes stratégiques des équipes quantitatives.
                             </p>
                         </div>
-                        <a href="https://t.me/ysestp" target="_blank" class="cc-btn btn-gold py-3 text-center">Accéder au Canal</a>
+                        <a href="https://t.me/SynapXAlgo" target="_blank" class="cc-btn btn-gold py-3 text-center">Accéder au Canal Officiel</a>
                     </div>
 
                     <!-- 2. Groupe Club Investisseurs -->
@@ -1185,13 +1166,13 @@
                             <div class="cc-icon telegram w-12 h-12 rounded-2xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
                                 <i data-lucide="users" class="w-6 h-6"></i>
                             </div>
-                            <span class="cc-tag telegram inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-sky-500/10 text-sky-400 border border-sky-500/20">Club Privé</span>
+                            <span class="cc-tag telegram inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-sky-500/10 text-sky-400 border border-sky-500/20">⏳ En Attente</span>
                             <h3 class="cc-title font-cinzel text-lg text-white">Cercle des Investisseurs</h3>
                             <p class="cc-desc text-xs text-slate-400 font-light leading-relaxed">
-                                Échangez directement avec les investisseurs de l'écosystème SynapX. Partagez vos résultats, découvrez les stratégies de diversification et retours d'expérience.
+                                Le groupe communautaire est actuellement en préparation pour accueillir le déploiement des membres. Ouverture prochaine !
                             </p>
                         </div>
-                        <a href="https://t.me/ysestp" target="_blank" class="cc-btn btn-gold py-3 text-center">Rejoindre le Groupe</a>
+                        <button type="button" disabled class="cc-btn btn-gold py-3 text-center opacity-60 cursor-not-allowed w-full" style="pointer-events: none;">Ouverture Prochaine (En Attente)</button>
                     </div>
 
                     <!-- 3. Conciergerie & Support 7j/7 -->
@@ -1206,7 +1187,7 @@
                                 Une assistance directe et personnalisée disponible 7j/7 pour vos questions de dépôts Vantage, d'allocations multi-PAMM et de traitement de vos retraits.
                             </p>
                         </div>
-                        <a href="https://t.me/ysestp" target="_blank" class="cc-btn btn-gold py-3 text-center">Contacter le Support</a>
+                        <a href="https://t.me/JymiJym" target="_blank" class="cc-btn btn-gold py-3 text-center">Contacter le Support (@JymiJym)</a>
                     </div>
                 </div>
             </div>
@@ -1279,7 +1260,7 @@
                             </div>
                             <div class="pt-2 border-t border-white/10 flex justify-between items-baseline">
                                 <span class="text-[10px] text-slate-400 uppercase tracking-wider">Commission :</span>
-                                <span class="font-mono text-xl font-bold text-amber-400">2 %</span>
+                                <span class="font-mono text-xl font-bold text-amber-400">4 %</span>
                             </div>
                         </div>
 
@@ -1295,7 +1276,7 @@
                             </div>
                             <div class="pt-2 border-t border-white/10 flex justify-between items-baseline">
                                 <span class="text-[10px] text-slate-400 uppercase tracking-wider">Commission :</span>
-                                <span class="font-mono text-xl font-bold text-slate-200">4 %</span>
+                                <span class="font-mono text-xl font-bold text-slate-200">7 %</span>
                             </div>
                         </div>
 
@@ -1311,7 +1292,7 @@
                             </div>
                             <div class="pt-2 border-t border-white/10 flex justify-between items-baseline">
                                 <span class="text-[10px] text-slate-400 uppercase tracking-wider">Commission :</span>
-                                <span class="font-mono text-xl font-bold text-yellow-400">7 %</span>
+                                <span class="font-mono text-xl font-bold text-yellow-400">10 %</span>
                             </div>
                         </div>
 
@@ -1327,7 +1308,7 @@
                             </div>
                             <div class="pt-2 border-t border-white/10 flex justify-between items-baseline">
                                 <span class="text-[10px] text-slate-400 uppercase tracking-wider">Commission :</span>
-                                <span class="font-mono text-xl font-bold text-cyan-300">10 %</span>
+                                <span class="font-mono text-xl font-bold text-cyan-300">12 %</span>
                             </div>
                         </div>
                     </div>
@@ -1371,59 +1352,42 @@
                         </div>
 
                         <div class="space-y-4">
-                            <!-- Network Custom Selector Pills -->
+                            <!-- 1. Crypto Symbol Selector (USDC, USDT, SOL, ETH, BTC) -->
                             <div class="space-y-2">
-                                <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block">Crypto / Réseau de Retrait</span>
-                                <div class="grid grid-cols-2 gap-2" id="cryptoNetworkSelector">
-                                    <button type="button" onclick="selectWithdrawalNetwork('USDT-TRC20')" id="netBtn-USDT-TRC20" class="network-pill active py-2.5 px-3 rounded-xl border border-amber-500 bg-amber-500/10 text-amber-400 text-xs font-semibold flex items-center justify-between transition-all">
-                                        <div class="flex items-center gap-2">
-                                            <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 font-bold text-[10px] flex items-center justify-center">₮</span>
-                                            <div class="text-left">
-                                                <div class="font-mono text-xs text-white">USDT</div>
-                                                <div class="text-[9px] text-emerald-400 font-medium">TRC-20 (Tron)</div>
-                                            </div>
-                                        </div>
-                                        <span class="text-[8px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-bold">Conseillé</span>
+                                <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block">1. Cryptomonnaie de Retrait</span>
+                                <div class="grid grid-cols-5 gap-2" id="cryptoSymbolSelector">
+                                    <button type="button" onclick="selectWithdrawalCrypto('USDT')" id="cryptoBtn-USDT" class="py-2 px-1 rounded-xl border border-amber-500 bg-amber-500/10 text-amber-400 text-xs font-bold text-center transition-all">
+                                        USDT
                                     </button>
+                                    <button type="button" onclick="selectWithdrawalCrypto('USDC')" id="cryptoBtn-USDC" class="py-2 px-1 rounded-xl border border-white/10 bg-white/5 hover:border-white/20 text-slate-300 text-xs font-bold text-center transition-all">
+                                        USDC
+                                    </button>
+                                    <button type="button" onclick="selectWithdrawalCrypto('SOL')" id="cryptoBtn-SOL" class="py-2 px-1 rounded-xl border border-white/10 bg-white/5 hover:border-white/20 text-slate-300 text-xs font-bold text-center transition-all">
+                                        SOL
+                                    </button>
+                                    <button type="button" onclick="selectWithdrawalCrypto('ETH')" id="cryptoBtn-ETH" class="py-2 px-1 rounded-xl border border-white/10 bg-white/5 hover:border-white/20 text-slate-300 text-xs font-bold text-center transition-all">
+                                        ETH
+                                    </button>
+                                    <button type="button" onclick="selectWithdrawalCrypto('BTC')" id="cryptoBtn-BTC" class="py-2 px-1 rounded-xl border border-white/10 bg-white/5 hover:border-white/20 text-slate-300 text-xs font-bold text-center transition-all">
+                                        BTC
+                                    </button>
+                                </div>
+                            </div>
 
-                                    <button type="button" onclick="selectWithdrawalNetwork('USDT-BEP20')" id="netBtn-USDT-BEP20" class="network-pill py-2.5 px-3 rounded-xl border border-white/10 bg-white/5 hover:border-white/20 text-slate-300 text-xs font-semibold flex items-center justify-between transition-all">
-                                        <div class="flex items-center gap-2">
-                                            <span class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 font-bold text-[10px] flex items-center justify-center">₮</span>
-                                            <div class="text-left">
-                                                <div class="font-mono text-xs text-white">USDT</div>
-                                                <div class="text-[9px] text-amber-400 font-medium">BEP-20 (BSC)</div>
-                                            </div>
-                                        </div>
-                                    </button>
-
-                                    <button type="button" onclick="selectWithdrawalNetwork('USDT-ERC20')" id="netBtn-USDT-ERC20" class="network-pill py-2.5 px-3 rounded-xl border border-white/10 bg-white/5 hover:border-white/20 text-slate-300 text-xs font-semibold flex items-center justify-between transition-all">
-                                        <div class="flex items-center gap-2">
-                                            <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 font-bold text-[10px] flex items-center justify-center">₮</span>
-                                            <div class="text-left">
-                                                <div class="font-mono text-xs text-white">USDT</div>
-                                                <div class="text-[9px] text-indigo-400 font-medium">ERC-20 (ETH)</div>
-                                            </div>
-                                        </div>
-                                    </button>
-
-                                    <button type="button" onclick="selectWithdrawalNetwork('USDC-POLYGON')" id="netBtn-USDC-POLYGON" class="network-pill py-2.5 px-3 rounded-xl border border-white/10 bg-white/5 hover:border-white/20 text-slate-300 text-xs font-semibold flex items-center justify-between transition-all">
-                                        <div class="flex items-center gap-2">
-                                            <span class="w-6 h-6 rounded-lg bg-purple-500/20 text-purple-400 font-bold text-[10px] flex items-center justify-center">$</span>
-                                            <div class="text-left">
-                                                <div class="font-mono text-xs text-white">USDC</div>
-                                                <div class="text-[9px] text-purple-400 font-medium">Polygon</div>
-                                            </div>
-                                        </div>
-                                    </button>
+                            <!-- 2. Dynamic Network Pills according to selected Crypto -->
+                            <div class="space-y-2">
+                                <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block">2. Réseau Blockchain Associé</span>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="cryptoNetworkSelector">
+                                    <!-- Injected dynamically by selectWithdrawalCrypto -->
                                 </div>
                             </div>
 
                             <div class="space-y-1">
                                 <div class="flex justify-between items-center">
-                                    <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block" id="affCryptoLabel">Adresse de réception USDT (TRC-20)</span>
-                                    <span class="text-[9px] text-emerald-400 font-mono" id="affCryptoNetworkBadge">Réseau : TRC-20</span>
+                                    <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold block" id="affCryptoLabel">Adresse de réception</span>
+                                    <span class="text-[9px] text-emerald-400 font-mono" id="affCryptoNetworkBadge">Réseau</span>
                                 </div>
-                                <input type="text" id="affCryptoAddressInput" class="input-field font-mono text-white text-xs" placeholder="Collez votre adresse USDT TRC-20 (commence par T...)" style="margin-bottom:0;">
+                                <input type="text" id="affCryptoAddressInput" class="input-field font-mono text-white text-xs" placeholder="Collez votre adresse de retrait..." style="margin-bottom:0;">
                             </div>
 
                             <button class="btn-gold py-3 text-xs font-semibold uppercase tracking-wider" onclick="saveAffiliateCryptoAddress()">Enregistrer mon Moyen de Retrait</button>

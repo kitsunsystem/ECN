@@ -1063,10 +1063,10 @@ let mitsuChart = null;
 
 // Multi-Bot PAMM Specifications based on SynapXMAJ.pdf
 const BOT_CONFIGS = {
-    v1: {
-        id: 'v1',
-        title: 'SynapX « v1 »',
-        subtitle: 'Asian Trend Surfing & Controlled Grid',
+    nocturne: {
+        id: 'nocturne',
+        title: 'SynapX Nocturne',
+        subtitle: 'v1 • Session Asiatique & Grille Contrôlée',
         color: '#f59e0b',
         badge: 'Moteur 1 Actif',
         badgeClass: 'bg-amber-500/10 text-amber-400 border-amber-500/25',
@@ -1076,7 +1076,7 @@ const BOT_CONFIGS = {
                 title: 'Modéré',
                 monthlyGross: 22.5,
                 weeklyGross: 5.2,
-                maxDD: 18,
+                maxDD: 30,
                 hardSL: 'Hard SL 30%',
                 margin: 'Marge ≤ 15%',
                 icon: '🛡️',
@@ -1085,22 +1085,22 @@ const BOT_CONFIGS = {
             },
             {
                 id: 'v1_casino',
-                title: 'Casino',
+                title: 'Agressif',
                 monthlyGross: 75.0,
                 weeklyGross: 17.5,
-                maxDD: 45,
+                maxDD: 100,
                 hardSL: 'Hard SL 100%',
                 margin: 'Marge ≤ 15%',
                 icon: '⚡',
-                risk: 'Ultra-Agressif (High Frequency)',
-                desc: 'Mode haute vélocité jusqu\'à 10%/jour pour un capital spéculatif dédié au risque maximal (30% de partage de profits sur les gains réels).'
+                risk: 'Hyper-Agressif (High Frequency)',
+                desc: 'Mode haute vélocité jusqu\'à 10%/jour pour un capital spéculatif dédié au risque maximal (Stop-Loss absolu à 100%).'
             }
         ]
     },
-    v2: {
-        id: 'v2',
-        title: 'SynapX « v2 »',
-        subtitle: 'Advanced Institutional TrendSurfer',
+    momentum: {
+        id: 'momentum',
+        title: 'SynapX Momentum',
+        subtitle: 'v2 • Swing Multi-Jours & Trailing Stop',
         color: '#10b981',
         badge: 'Moteur 2 Actif',
         badgeClass: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25',
@@ -1115,7 +1115,7 @@ const BOT_CONFIGS = {
                 margin: 'Marge ≈ 5%',
                 icon: '🛡️',
                 risk: 'Prudent & Institutionnel',
-                desc: 'Préservation institutionnelle du capital, Trailing Stop multi-paliers et supervision humaine continue (Human-in-the-Loop).'
+                desc: 'Préservation institutionnelle du capital, Trailing Stop multi-paliers et supervision continue.'
             },
             {
                 id: 'v2_normal',
@@ -1127,7 +1127,7 @@ const BOT_CONFIGS = {
                 margin: 'Marge ≈ 5%',
                 icon: '⚖️',
                 risk: 'Équilibré & Dynamique',
-                desc: 'Le meilleur équilibre rendement/protection pour surfer les grandes impulsions de marché et les tendances macroéconomiques durables.'
+                desc: 'Le meilleur équilibre rendement/protection pour surfer les grandes impulsions de marché et les tendances durables.'
             },
             {
                 id: 'v2_debride',
@@ -1143,10 +1143,10 @@ const BOT_CONFIGS = {
             }
         ]
     },
-    tpsl: {
-        id: 'tpsl',
-        title: 'SynapX « TP/SL »',
-        subtitle: 'Consensus Multi-Stratégies 12-en-1',
+    prisme: {
+        id: 'prisme',
+        title: 'SynapX Prisme',
+        subtitle: 'TP/SL • Consensus 12 Stratégies & Ordres en Attente',
         color: '#38bdf8',
         badge: 'Moteur 3 Actif',
         badgeClass: 'bg-sky-500/10 text-sky-400 border-sky-500/25',
@@ -1161,7 +1161,7 @@ const BOT_CONFIGS = {
                 margin: 'Marge ≤ 10%',
                 icon: '🛡️',
                 risk: 'Prudent (Consensus Strict)',
-                desc: 'Ordres en attente (Pending Orders) et SL/TP réels sur chaque trade avec un drawdown maximum historiquement bas de 12%.'
+                desc: 'Ordres en attente (Pending Orders) et SL/TP réels sur chaque trade avec un drawdown maximum de 12%.'
             },
             {
                 id: 'tpsl_normal',
@@ -1173,18 +1173,22 @@ const BOT_CONFIGS = {
                 margin: 'Marge ≤ 10%',
                 icon: '⚖️',
                 risk: 'Équilibré & Optimisé',
-                desc: 'Consensus agressif confrontant 12 méthodologies professionnelles simultanément pour des ratios R:R maximisés.'
+                desc: 'Consensus confrontant 12 méthodologies professionnelles simultanément pour des ratios R:R maximisés.'
             }
         ]
     }
 };
 
+// Aliases for full backward compatibility
+BOT_CONFIGS.v1 = BOT_CONFIGS.nocturne;
+BOT_CONFIGS.v2 = BOT_CONFIGS.momentum;
+BOT_CONFIGS.tpsl = BOT_CONFIGS.prisme;
+
 function selectBot(botId) {
-    if (!botId || !BOT_CONFIGS[botId]) {
-        if (botId === 'rubix') botId = 'v2';
-        else if (botId === 'lionx') botId = 'tpsl';
-        else botId = 'v2';
-    }
+    if (botId === 'v1' || botId === 'nocturne') botId = 'nocturne';
+    else if (botId === 'v2' || botId === 'momentum' || botId === 'rubix') botId = 'momentum';
+    else if (botId === 'tpsl' || botId === 'prisme' || botId === 'lionx') botId = 'prisme';
+    if (!botId || !BOT_CONFIGS[botId]) botId = 'momentum';
     selectedBotId = botId;
 
     const botSelectionStage = document.getElementById('botSelectionStage');
@@ -1547,7 +1551,7 @@ function sendCustomBotOrderTelegram(botName) {
         }
     }
     
-    const telegramUrl = `https://t.me/ysestp?text=${encodeURIComponent(message)}`;
+    const telegramUrl = `https://t.me/JymiJym?text=${encodeURIComponent(message)}`;
     window.open(telegramUrl, '_blank');
 }
 
@@ -2018,7 +2022,7 @@ Voici mes paramètres de configuration :
 
 Merci de préparer mon accès VIP et de m'indiquer la marche à suivre !`;
     
-    const telegramUrl = `https://t.me/ysestp?text=${encodeURIComponent(message)}`;
+    const telegramUrl = `https://t.me/JymiJym?text=${encodeURIComponent(message)}`;
     window.open(telegramUrl, '_blank');
 }
 
@@ -2167,7 +2171,7 @@ Détails de ma simulation d'affiliation :
 
 Merci de me recontacter pour valider mon accès affilié et configurer mes liens de parrainage !`;
     
-    const telegramUrl = `https://t.me/ysestp?text=${encodeURIComponent(message)}`;
+    const telegramUrl = `https://t.me/JymiJym?text=${encodeURIComponent(message)}`;
     window.open(telegramUrl, '_blank');
 }
 
@@ -2677,7 +2681,7 @@ Voici les détails de mon audience / communauté :
 
 Merci de vérifier ma communauté pour activer le switch dans mon espace admin !`;
     
-    const telegramUrl = `https://t.me/ysestp?text=${encodeURIComponent(message)}`;
+    const telegramUrl = `https://t.me/JymiJym?text=${encodeURIComponent(message)}`;
     window.open(telegramUrl, '_blank');
 }
 
@@ -2705,7 +2709,7 @@ Veuillez trouver ci-dessous mes détails de paiement pour procéder au virement 
 
 Merci de traiter ce retrait manuellement et de remettre mon solde à zéro depuis votre espace administrateur une fois le paiement envoyé.`;
 
-        const telegramUrl = `https://t.me/ysestp?text=${encodeURIComponent(message)}`;
+        const telegramUrl = `https://t.me/JymiJym?text=${encodeURIComponent(message)}`;
         window.open(telegramUrl, '_blank');
     } catch (e) {
         console.error("Error preparing withdrawal request:", e);
@@ -2829,7 +2833,7 @@ E-mail de mon compte : ${currentUser.email}
     
 Merci de me confirmer la prise en compte de ma demande et d'interrompre le prélèvement mensuel du compte.`;
 
-    const telegramUrl = `https://t.me/ysestp?text=${encodeURIComponent(message)}`;
+    const telegramUrl = `https://t.me/JymiJym?text=${encodeURIComponent(message)}`;
     window.open(telegramUrl, '_blank');
 }
 
@@ -2843,7 +2847,7 @@ Nombre de comptes actuels : ${Object.keys(loadedAccounts).length}
     
 Merci de me préparer l'accès de trading et de m'indiquer la marche à suivre pour l'installation !`;
 
-    const telegramUrl = `https://t.me/ysestp?text=${encodeURIComponent(message)}`;
+    const telegramUrl = `https://t.me/JymiJym?text=${encodeURIComponent(message)}`;
     window.open(telegramUrl, '_blank');
 }
 
@@ -3338,7 +3342,7 @@ Voici mes paramètres de configuration :
  
 Merci de préparer mon accès VIP et de m'indiquer la marche à suivre pour l'installation !`;
     
-    const telegramUrl = `https://t.me/ysestp?text=${encodeURIComponent(message)}`;
+    const telegramUrl = `https://t.me/JymiJym?text=${encodeURIComponent(message)}`;
     window.open(telegramUrl, '_blank');
 }
 
@@ -3583,14 +3587,8 @@ function openActivationWizard() {
         nextBtn.classList.add('opacity-50', 'cursor-not-allowed');
     }
     
-    // Check if the user already has a pending or approved request
-    console.log("loadedAccounts currently contains:", loadedAccounts);
-    const hasPending = Object.values(loadedAccounts).some(a => a.config && (a.config.status === 'pending' || a.config.status === 'approved'));
-    console.log("hasPending check evaluated to:", hasPending);
-    if (hasPending) {
-        showToast("Vous avez déjà une demande d'activation ou un compte actif.", "error");
-        return;
-    }
+    // Multiple activations allowed: Users can request activations for multiple MT5 accounts / bots
+    console.log("Opening activation wizard for user accounts:", loadedAccounts);
     
     const step1 = document.getElementById('activationStep1');
     const step2 = document.getElementById('activationStep2');
@@ -3700,22 +3698,31 @@ async function loadAffiliationData() {
         if (data.crypto_address) {
             let netId = 'USDT-TRC20';
             let addr = data.crypto_address;
-            const match = data.crypto_address.match(/^\[([A-Z0-9_\-]+)\]\s*(.*)$/);
+            const match = data.crypto_address.match(/^\[([A-Z0-9_\-\s]+)\]\s*(.*)$/);
             if (match) {
-                netId = match[1];
+                netId = match[1].trim();
                 addr = match[2];
             } else if (data.crypto_address.includes(' | ')) {
                 const parts = data.crypto_address.split(' | ');
                 netId = parts[0].trim();
                 addr = parts[1] ? parts[1].trim() : '';
-            } else if (data.crypto_address.includes(' - ')) {
-                const parts = data.crypto_address.split(' - ');
-                netId = parts[0].trim();
-                addr = parts[1] ? parts[1].trim() : '';
             }
+            
+            // Find which crypto this network belongs to
+            let detectedCrypto = 'USDT';
+            for (const [sym, cfg] of Object.entries(CRYPTO_CONFIG)) {
+                if (cfg.networks.some(n => n.id.toLowerCase() === netId.toLowerCase())) {
+                    detectedCrypto = sym;
+                    const matchedNet = cfg.networks.find(n => n.id.toLowerCase() === netId.toLowerCase());
+                    netId = matchedNet.id;
+                    break;
+                }
+            }
+            selectWithdrawalCrypto(detectedCrypto);
             selectWithdrawalNetwork(netId);
             if (cryptoInput) cryptoInput.value = addr;
         } else {
+            selectWithdrawalCrypto('USDT');
             selectWithdrawalNetwork('USDT-TRC20');
             if (cryptoInput) cryptoInput.value = '';
         }
@@ -3860,68 +3867,132 @@ function copyReferralLink() {
 }
 
 // ─────────────────────────────────────────
-// GESTION DES RETRAITS CRYPTO & RESEAUX
+// GESTION DES RETRAITS CRYPTO & RESEAUX (USDC, USDT, SOL, ETH, BTC)
 // ─────────────────────────────────────────
+let currentWithdrawalCrypto = 'USDT';
 let currentWithdrawalNetwork = 'USDT-TRC20';
 
-const WITHDRAWAL_NETWORKS = {
-    'USDT-TRC20': {
-        name: 'USDT (TRC-20)',
-        networkName: 'TRC-20 (Tron)',
-        badge: 'Réseau : TRC-20',
-        badgeColor: 'text-emerald-400',
-        placeholder: 'Collez votre adresse USDT TRC-20 (commence par T...)'
+const CRYPTO_CONFIG = {
+    USDT: {
+        symbol: 'USDT',
+        name: 'Tether USD',
+        networks: [
+            { id: 'USDT-TRC20', name: 'USDT-TRC20', badge: 'Réseau : TRC-20 (Tron)', badgeColor: 'text-emerald-400', placeholder: 'Collez votre adresse USDT TRC-20 (commence par T...)' },
+            { id: 'USDT-ERC20', name: 'USDT-ERC20', badge: 'Réseau : ERC-20 (Ethereum)', badgeColor: 'text-indigo-400', placeholder: 'Collez votre adresse USDT ERC-20 (commence par 0x...)' },
+            { id: 'USDT-BEP20', name: 'USDT-BEP20', badge: 'Réseau : BEP-20 (BSC)', badgeColor: 'text-yellow-400', placeholder: 'Collez votre adresse USDT BEP-20 (commence par 0x...)' },
+            { id: 'USDT-POLYGON', name: 'USDT-POLYGON (MATIC)', badge: 'Réseau : Polygon (PoS)', badgeColor: 'text-purple-400', placeholder: 'Collez votre adresse Polygon (commence par 0x...)' },
+            { id: 'USDT-SOLANA', name: 'USDT-SOLANA', badge: 'Réseau : Solana', badgeColor: 'text-purple-400', placeholder: 'Collez votre adresse USDT Solana...' },
+            { id: 'USDT-ARBITRUM', name: 'USDT-ARBITRUM', badge: 'Réseau : Arbitrum One', badgeColor: 'text-blue-400', placeholder: 'Collez votre adresse Arbitrum (commence par 0x...)' },
+            { id: 'USDT-AVALANCHE-C', name: 'USDT-AVALANCHE-C', badge: 'Réseau : Avalanche C-Chain', badgeColor: 'text-rose-400', placeholder: 'Collez votre adresse Avalanche (commence par 0x...)' }
+        ]
     },
-    'USDT-BEP20': {
-        name: 'USDT (BEP-20)',
-        networkName: 'BEP-20 (BSC)',
-        badge: 'Réseau : BEP-20',
-        badgeColor: 'text-amber-400',
-        placeholder: 'Collez votre adresse USDT BEP-20 (commence par 0x...)'
+    USDC: {
+        symbol: 'USDC',
+        name: 'USD Coin',
+        networks: [
+            { id: 'USDC-ERC20', name: 'USDC-ERC20', badge: 'Réseau : ERC-20 (Ethereum)', badgeColor: 'text-indigo-400', placeholder: 'Collez votre adresse USDC ERC-20 (commence par 0x...)' },
+            { id: 'USDC-Arbitrum One', name: 'USDC-Arbitrum One', badge: 'Réseau : Arbitrum One', badgeColor: 'text-blue-400', placeholder: 'Collez votre adresse USDC Arbitrum (commence par 0x...)' },
+            { id: 'Crypto-USDCBEP20', name: 'Crypto-USDCBEP20', badge: 'Réseau : BEP-20 (BSC)', badgeColor: 'text-yellow-400', placeholder: 'Collez votre adresse USDC BEP-20 (commence par 0x...)' },
+            { id: 'USDC-Solana', name: 'USDC-Solana', badge: 'Réseau : Solana', badgeColor: 'text-purple-400', placeholder: 'Collez votre adresse USDC Solana...' }
+        ]
     },
-    'USDT-ERC20': {
-        name: 'USDT (ERC-20)',
-        networkName: 'ERC-20 (Ethereum)',
-        badge: 'Réseau : ERC-20',
-        badgeColor: 'text-indigo-400',
-        placeholder: 'Collez votre adresse USDT ERC-20 (commence par 0x...)'
+    SOL: {
+        symbol: 'SOL',
+        name: 'Solana',
+        networks: [
+            { id: 'SOL-SOLANA', name: 'SOL-SOLANA', badge: 'Réseau : Solana Native', badgeColor: 'text-purple-400', placeholder: 'Collez votre adresse Solana native...' },
+            { id: 'SOL-BEP20', name: 'SOL-BEP20', badge: 'Réseau : BEP-20 (BSC)', badgeColor: 'text-yellow-400', placeholder: 'Collez votre adresse SOL BEP-20 (commence par 0x...)' }
+        ]
     },
-    'USDC-POLYGON': {
-        name: 'USDC (Polygon)',
-        networkName: 'Polygon (PoS)',
-        badge: 'Réseau : Polygon',
-        badgeColor: 'text-purple-400',
-        placeholder: 'Collez votre adresse USDC Polygon (commence par 0x...)'
+    ETH: {
+        symbol: 'ETH',
+        name: 'Ethereum',
+        networks: [
+            { id: 'ETH-ERC20', name: 'ETH (ERC-20)', badge: 'Réseau : ERC-20 (Ethereum)', badgeColor: 'text-indigo-400', placeholder: 'Collez votre adresse Ethereum ERC-20 (commence par 0x...)' }
+        ]
+    },
+    BTC: {
+        symbol: 'BTC',
+        name: 'Bitcoin',
+        networks: [
+            { id: 'BTC', name: 'BTC (Native)', badge: 'Réseau : Bitcoin Native', badgeColor: 'text-amber-400', placeholder: 'Collez votre adresse Bitcoin (commence par 1, 3 ou bc1...)' }
+        ]
     }
 };
 
-function selectWithdrawalNetwork(netId) {
-    if (!WITHDRAWAL_NETWORKS[netId]) netId = 'USDT-TRC20';
-    currentWithdrawalNetwork = netId;
+function selectWithdrawalCrypto(cryptoSymbol) {
+    if (!CRYPTO_CONFIG[cryptoSymbol]) cryptoSymbol = 'USDT';
+    currentWithdrawalCrypto = cryptoSymbol;
 
-    Object.keys(WITHDRAWAL_NETWORKS).forEach(id => {
-        const btn = document.getElementById(`netBtn-${id}`);
+    ['USDT', 'USDC', 'SOL', 'ETH', 'BTC'].forEach(sym => {
+        const btn = document.getElementById(`cryptoBtn-${sym}`);
         if (btn) {
-            if (id === netId) {
-                btn.className = "network-pill active py-2.5 px-3 rounded-xl border border-amber-500 bg-amber-500/10 text-amber-400 text-xs font-semibold flex items-center justify-between transition-all";
+            if (sym === cryptoSymbol) {
+                btn.className = "py-2 px-1 rounded-xl border border-amber-500 bg-amber-500/10 text-amber-400 text-xs font-bold text-center transition-all shadow-md";
             } else {
-                btn.className = "network-pill py-2.5 px-3 rounded-xl border border-white/10 bg-white/5 hover:border-white/20 text-slate-300 text-xs font-semibold flex items-center justify-between transition-all";
+                btn.className = "py-2 px-1 rounded-xl border border-white/10 bg-white/5 hover:border-white/20 text-slate-300 text-xs font-bold text-center transition-all";
             }
         }
     });
 
-    const netInfo = WITHDRAWAL_NETWORKS[netId];
+    renderWithdrawalNetworkPills();
+}
+
+function renderWithdrawalNetworkPills() {
+    const container = document.getElementById('cryptoNetworkSelector');
+    if (!container) return;
+    const cryptoData = CRYPTO_CONFIG[currentWithdrawalCrypto] || CRYPTO_CONFIG.USDT;
+
+    const belongs = cryptoData.networks.some(n => n.id === currentWithdrawalNetwork);
+    if (!belongs) {
+        currentWithdrawalNetwork = cryptoData.networks[0].id;
+    }
+
+    container.innerHTML = cryptoData.networks.map(net => {
+        const isActive = (net.id === currentWithdrawalNetwork);
+        const activeClass = isActive
+            ? "border-amber-500 bg-amber-500/10 text-amber-400 shadow-md"
+            : "border-white/10 bg-white/5 hover:border-white/20 text-slate-300";
+        return `
+            <button type="button" onclick="selectWithdrawalNetwork('${net.id}')" class="network-pill py-2.5 px-3 rounded-xl border ${activeClass} text-xs font-semibold flex items-center justify-between transition-all">
+                <div class="text-left">
+                    <div class="font-mono text-xs font-bold text-white">${net.name}</div>
+                    <div class="text-[9px] text-slate-400 font-light">${net.badge}</div>
+                </div>
+            </button>
+        `;
+    }).join('');
+
+    updateWithdrawalInputState();
+}
+
+function selectWithdrawalNetwork(netId) {
+    currentWithdrawalNetwork = netId;
+    renderWithdrawalNetworkPills();
+}
+
+function updateWithdrawalInputState() {
+    let activeNet = null;
+    for (const c of Object.values(CRYPTO_CONFIG)) {
+        const found = c.networks.find(n => n.id === currentWithdrawalNetwork);
+        if (found) {
+            activeNet = found;
+            break;
+        }
+    }
+    if (!activeNet) activeNet = CRYPTO_CONFIG.USDT.networks[0];
+
     const label = document.getElementById('affCryptoLabel');
-    if (label) label.textContent = `Adresse de réception ${netInfo.name}`;
+    if (label) label.textContent = `Adresse de réception ${activeNet.name}`;
 
     const badge = document.getElementById('affCryptoNetworkBadge');
     if (badge) {
-        badge.textContent = netInfo.badge;
-        badge.className = `text-[9px] font-mono ${netInfo.badgeColor}`;
+        badge.textContent = activeNet.badge;
+        badge.className = `text-[9px] font-mono ${activeNet.badgeColor}`;
     }
 
     const input = document.getElementById('affCryptoAddressInput');
-    if (input) input.placeholder = netInfo.placeholder;
+    if (input) input.placeholder = activeNet.placeholder;
 }
 
 async function saveAffiliateCryptoAddress() {
