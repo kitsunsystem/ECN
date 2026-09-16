@@ -1163,8 +1163,6 @@
         // State management
         let currentTheme = 'dark'; // 'dark' | 'light'
         let goldPrice = 2384.50;
-        let calcCapital = 15000;
-        let calcMode = 'equilibre'; // 'conservateur' | 'equilibre' | 'debride'
         let soundMuted = true;
         
         // Audio setup (using Web Audio API)
@@ -1307,18 +1305,16 @@
 
             // Calculator block colors
             const calcBlock = document.getElementById('calc-block');
-            calcBlock.className = `lg:col-span-7 border p-8 rounded-2xl shadow-xl relative ${isDark ? 'bg-slate-950 border-slate-800' : 'bg-white border-stone-200'}`;
+            if (calcBlock) calcBlock.className = `lg:col-span-7 border p-8 rounded-2xl shadow-xl relative ${isDark ? 'bg-slate-950 border-slate-800' : 'bg-white border-stone-200'}`;
             const simOutcomeBox = document.getElementById('sim-outcome-box');
-            simOutcomeBox.className = `border rounded-xl p-6 space-y-4 text-left ${isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-stone-50 border-stone-200'}`;
+            if (simOutcomeBox) simOutcomeBox.className = `border rounded-xl p-6 space-y-4 text-left ${isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-stone-50 border-stone-200'}`;
             const simPhilosophyBox = document.getElementById('sim-philosophy-box');
-            simPhilosophyBox.className = `p-4 rounded-xl space-y-2 border ${isDark ? 'bg-slate-950/80 border-slate-800' : 'bg-white border-stone-200'}`;
+            if (simPhilosophyBox) simPhilosophyBox.className = `p-4 rounded-xl space-y-2 border ${isDark ? 'bg-slate-950/80 border-slate-800' : 'bg-white border-stone-200'}`;
             
             // Simulator Mode Buttons Border Swap
             ['conservateur', 'equilibre', 'debride'].forEach(m => {
                 const btn = document.getElementById(`btn-calc-${m}`);
-                if (calcMode === m) {
-                    btn.className = "py-3 text-[10px] font-bold uppercase border rounded-xl transition-all duration-300 bg-amber-500/5 border-amber-500 text-amber-400 shadow-md";
-                } else {
+                if (btn) {
                     btn.className = `py-3 text-[10px] font-bold uppercase border rounded-xl transition-all duration-300 bg-transparent ${isDark ? 'border-slate-800' : 'border-slate-200'} text-slate-500`;
                 }
             });
@@ -1340,13 +1336,13 @@
 
             // Drawdown callout banner
             const drawdownCallout = document.getElementById('drawdown-callout');
-            drawdownCallout.className = `mt-12 border rounded-xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 text-left shadow-md ${isDark ? 'bg-amber-500/5 border-amber-500/20' : 'bg-amber-500/5 border-amber-500/20'}`;
+            if (drawdownCallout) drawdownCallout.className = `mt-12 border rounded-xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 text-left shadow-md ${isDark ? 'bg-amber-500/5 border-amber-500/20' : 'bg-amber-500/5 border-amber-500/20'}`;
             const drawdownCalloutTitle = document.querySelector('.drawdown-callout-title');
-            drawdownCalloutTitle.className = `font-cinzel text-base font-bold drawdown-callout-title ${isDark ? 'text-white' : 'text-[#1C1A17]'}`;
+            if (drawdownCalloutTitle) drawdownCalloutTitle.className = `font-cinzel text-base font-bold drawdown-callout-title ${isDark ? 'text-white' : 'text-[#1C1A17]'}`;
             const drawdownCalloutP = document.querySelector('.drawdown-callout-p');
-            drawdownCalloutP.className = `text-[11px] font-light max-w-2xl leading-relaxed drawdown-callout-p ${isDark ? 'text-slate-400' : 'text-stone-500'}`;
+            if (drawdownCalloutP) drawdownCalloutP.className = `text-[11px] font-light max-w-2xl leading-relaxed drawdown-callout-p ${isDark ? 'text-slate-400' : 'text-stone-500'}`;
             const drawdownBadge = document.getElementById('drawdown-badge');
-            drawdownBadge.className = `text-right flex-shrink-0 border px-5 py-3 rounded-lg ${isDark ? 'bg-slate-950 border-slate-800' : 'bg-white border-stone-200'}`;
+            if (drawdownBadge) drawdownBadge.className = `text-right flex-shrink-0 border px-5 py-3 rounded-lg ${isDark ? 'bg-slate-950 border-slate-800' : 'bg-white border-stone-200'}`;
 
             // Community Accompaniment List Titles
             const iconListTitles = document.querySelectorAll('.icon-list-title');
