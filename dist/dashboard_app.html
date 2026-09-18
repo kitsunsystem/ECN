@@ -695,94 +695,121 @@
             <!-- PAGE HEADER -->
             <div class="page-header pb-6 border-b border-amber-500/10 space-y-2">
                 <h1 class="page-title text-3xl sm:text-4xl font-light font-cinzel text-white" id="pageTitle">Tableau de <span class="gold-luxury-text font-medium">Bord</span></h1>
-                <p class="page-sub text-xs text-slate-400 font-light tracking-widest uppercase" id="pageSubtitle">Moniteur de performance en temps réel</p>
-                <div id="accountTabs" class="flex gap-2 flex-wrap">
-                    <span class="text-xs bg-amber-500/10 border border-amber-500/30 text-amber-400 rounded-lg px-3 py-1 font-mono">Compte Principal MT5 (#948194)</span>
-                </div>
+                <p class="page-sub text-xs text-slate-400 font-light tracking-widest uppercase" id="pageSubtitle">Espace Investisseur & Accès PAMM</p>
+                <div id="accountTabs" class="flex gap-2 flex-wrap"></div>
             </div>
 
             <!-- ── VIEW: DASHBOARD ── -->
-            <div id="viewDashboard" class="view active relative">
+            <div id="viewDashboard" class="view active relative min-h-[420px] flex flex-col justify-center">
 
-                <!-- Lock Overlay for empty state (Hidden by default in offline test mode) -->
-                <div id="dashboardLockOverlay" class="dashboard-lock-overlay absolute inset-0 z-50 flex items-center justify-center p-4 bg-[#030712]/85 backdrop-blur-xl rounded-3xl border border-amber-500/10 hidden">
-                    <div class="glass lock-card max-w-[480px] w-full p-8 text-center space-y-6 border border-amber-500/20 shadow-2xl">
-                        <div class="lock-icon-container w-16 h-16 rounded-full bg-amber-500/5 border border-amber-500/30 flex items-center justify-center mx-auto" id="lockOverlayIconContainer">
-                            <i data-lucide="key-round" class="w-8 h-8 text-amber-400" id="lockOverlayIcon"></i>
+                <!-- 1. État: Aucun Compte MT5 Lié -->
+                <div id="dashStateNoAccount" class="max-w-xl mx-auto py-12 px-6 text-center space-y-6 hidden">
+                    <div class="glass p-8 sm:p-10 rounded-3xl border border-amber-500/20 shadow-2xl space-y-6">
+                        <div class="w-16 h-16 rounded-full bg-amber-500/5 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-400 shadow-lg shadow-amber-500/10">
+                            <i data-lucide="key-round" class="w-8 h-8"></i>
                         </div>
-                        <h2 class="font-cinzel text-2xl text-white" id="lockOverlayTitle">Aucun Compte MT5 Lié</h2>
-                        <p class="text-xs text-slate-400 leading-relaxed font-light" id="lockOverlayDesc">
-                            Pour commencer à suivre vos performances algorithmiques en direct sur l'Or, vous devez d'abord associer votre compte de trading MetaTrader 5 (MT5).
-                        </p>
-                        <div class="lock-btn-group flex flex-col gap-2" id="lockOverlayBtnGroup">
-                            <button class="lock-btn primary btn-gold" onclick="switchView('bot')">Configurer mon robot avant</button>
+                        <div class="space-y-2">
+                            <h2 class="font-cinzel text-2xl text-white">Aucun Compte MT5 Lié</h2>
+                            <p class="text-xs text-slate-400 leading-relaxed font-light max-w-md mx-auto">
+                                Pour démarrer et rejoindre nos stratégies algorithmiques, configurez votre robot dans l'espace Bots et renseignez votre numéro de compte MT5 PAMM Vantage.
+                            </p>
+                        </div>
+                        <button class="btn-gold py-3.5 px-8 text-xs font-bold uppercase tracking-widest shadow-xl mx-auto inline-flex items-center gap-2" onclick="switchView('bot')">
+                            <i data-lucide="cpu" class="w-4 h-4"></i>
+                            Configurer mon robot
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. État: En attente de validation admin -->
+                <div id="dashStatePending" class="max-w-xl mx-auto py-12 px-6 text-center space-y-6 hidden">
+                    <div class="glass p-8 sm:p-10 rounded-3xl border border-amber-500/30 shadow-2xl space-y-6 relative overflow-hidden">
+                        <div class="absolute -inset-2 bg-gradient-to-r from-amber-500/10 to-yellow-500/10 opacity-30 blur-2xl pointer-events-none"></div>
+                        <div class="w-16 h-16 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-400 animate-pulse">
+                            <i data-lucide="clock" class="w-8 h-8"></i>
+                        </div>
+                        <div class="space-y-3 relative z-10">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                                ● Validation Administrateur en cours
+                            </span>
+                            <h2 class="font-cinzel text-2xl text-white">Compte MT5 <span id="pendingAccountNum" class="text-amber-400 font-mono">#—</span></h2>
+                            <p id="pendingAccountDesc" class="text-xs text-slate-400 leading-relaxed font-light max-w-md mx-auto">
+                                Votre demande d'activation est en cours de validation par notre équipe sous <strong>48h maximum</strong>. Dès approbation par l'administrateur, votre bouton d'accès direct à l'interface PAMM sera activé ici.
+                            </p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 text-xs text-slate-400 max-w-md mx-auto text-left space-y-2 relative z-10">
+                            <div class="flex items-center gap-2 text-white font-semibold text-xs">
+                                <i data-lucide="info" class="w-4 h-4 text-amber-400"></i> Étape suivante
+                            </div>
+                            <p class="font-light text-[11px] leading-relaxed">
+                                Une fois validé, vous accéderez directement au portail officiel PAMM Vantage pour consulter vos comptes et vos performances en direct.
+                            </p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Content grid -->
-                <div id="dashboardRealContent" class="space-y-8">
-                    
-                    <!-- Performance KPIs Row -->
-                    <div class="stats-row grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="glass stat-card p-6 text-center space-y-1" id="tutoStatBalance">
-                            <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Solde PAMM</span>
-                            <div class="stat-val text-xl sm:text-2xl font-bold font-mono text-white" id="statBalance">$24,840.50</div>
+                <!-- 3. État: Approuvé par l'Admin (Redirection vers Interface PAMM) -->
+                <div id="dashStateApproved" class="max-w-2xl mx-auto py-10 px-4 sm:px-6 text-center space-y-6 hidden">
+                    <div class="glass p-8 sm:p-10 rounded-3xl border border-emerald-500/30 shadow-2xl space-y-8 relative overflow-hidden">
+                        <div class="absolute -inset-2 bg-gradient-to-r from-emerald-500/10 to-amber-500/10 opacity-30 blur-2xl pointer-events-none"></div>
+                        
+                        <!-- Header Status -->
+                        <div class="space-y-3 relative z-10">
+                            <div class="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mx-auto text-emerald-400 shadow-lg shadow-emerald-500/10">
+                                <i data-lucide="check-circle-2" class="w-8 h-8"></i>
+                            </div>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                                ● Compte PAMM Validé & Actif
+                            </span>
+                            <h2 class="font-cinzel text-2xl sm:text-3xl text-white">
+                                Compte MT5 <span id="approvedAccountNum" class="text-amber-400 font-mono">#—</span>
+                            </h2>
+                            <p id="approvedAccountFormula" class="text-xs text-slate-300 font-light">
+                                Formule active sur l'infrastructure SynapX PAMM
+                            </p>
                         </div>
-                        <div class="glass stat-card p-6 text-center space-y-1" id="tutoStatProfit">
-                            <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Gains Brut</span>
-                            <div class="stat-val text-xl sm:text-2xl font-bold font-mono text-amber-400" id="statProfit">+$7,452.12</div>
-                        </div>
-                        <div class="glass stat-card p-6 text-center space-y-1" id="tutoStatProfitNet">
-                            <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Gains Net (-30% PAMM)</span>
-                            <div class="stat-val text-xl sm:text-2xl font-bold font-mono text-emerald-400" id="statProfitNet">+$5,216.48</div>
-                        </div>
-                        <div class="glass stat-card p-6 text-center space-y-1" id="tutoStatToday">
-                            <span class="stat-label text-[9px] uppercase tracking-widest text-slate-400">Gain du Jour</span>
-                            <div class="stat-val text-xl sm:text-2xl font-bold font-mono text-white" id="statToday">+$342.10</div>
-                        </div>
-                    </div>
 
-                    <!-- Performance Chart & Widget -->
-                    <div class="dash-grid grid grid-cols-1 lg:grid-cols-12 gap-6">
-                        <!-- Chart -->
-                        <div class="glass chart-card p-6 lg:col-span-8 space-y-6" id="tutoChartCard">
-                            <div class="chart-header flex flex-col sm:flex-row justify-between items-center gap-4">
-                                <h3 class="font-cinzel text-lg text-white">Croissance de l'Équité</h3>
-                                <div class="tf-btns flex gap-1.5 bg-white/5 border border-white/10 rounded-lg p-1">
-                                    <button class="btn-tf px-3 py-1.5 rounded text-[10px] font-bold text-slate-400 hover:text-white" onclick="updateTimeframe('1D')">1J</button>
-                                    <button class="btn-tf px-3 py-1.5 rounded text-[10px] font-bold text-slate-400 hover:text-white" onclick="updateTimeframe('1W')">1S</button>
-                                    <button class="btn-tf px-3 py-1.5 rounded text-[10px] font-bold text-amber-400 bg-amber-500/10" onclick="updateTimeframe('1M')">1M</button>
-                                    <button class="btn-tf px-3 py-1.5 rounded text-[10px] font-bold text-slate-400 hover:text-white" onclick="updateTimeframe('3M')">3M</button>
+                        <!-- Notice -->
+                        <div class="p-5 rounded-2xl bg-white/5 border border-white/10 text-center space-y-3 relative z-10">
+                            <p class="text-xs text-slate-300 leading-relaxed font-light">
+                                Votre compte est approuvé et synchronisé avec le système <strong>PAMM SynapX sur Vantage Markets</strong>.
+                            </p>
+                            <p class="text-xs text-slate-400 leading-relaxed font-light">
+                                Conformément à la gestion PAMM, la consultation de vos comptes en direct, de vos performances, du solde et des positions s'effectue directement sur le portail investisseur officiel :
+                            </p>
+                        </div>
+
+                        <!-- Redirection Button -->
+                        <div class="space-y-3 relative z-10">
+                            <a href="https://pamm16.vantagemarkets.com/app/auth/investor" target="_blank" rel="noopener noreferrer" class="btn-gold py-4 px-8 text-sm font-bold uppercase tracking-widest shadow-2xl inline-flex items-center justify-center gap-3 hover:scale-[1.02] transition-all">
+                                <i data-lucide="external-link" class="w-5 h-5"></i>
+                                Accéder à l'Interface PAMM Vantage
+                            </a>
+                            <p class="text-[11px] text-slate-400 font-light">
+                                Lien officiel sécurisé du portail investisseur Vantage PAMM
+                            </p>
+                        </div>
+
+                        <!-- Instructions -->
+                        <div class="pt-6 border-t border-white/10 text-left space-y-3 relative z-10">
+                            <div class="flex items-center gap-2 text-white font-semibold text-xs">
+                                <i data-lucide="shield" class="w-4 h-4 text-amber-400"></i> Instructions de Connexion Investor
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] text-slate-400 font-light">
+                                <div class="bg-black/30 p-3 rounded-xl border border-white/5 space-y-1">
+                                    <span class="text-slate-300 font-medium block">1. Identifiants</span>
+                                    <span>Utilisez votre numéro de compte MT5 et mot de passe Investor transmis par Vantage.</span>
+                                </div>
+                                <div class="bg-black/30 p-3 rounded-xl border border-white/5 space-y-1">
+                                    <span class="text-slate-300 font-medium block">2. Lien Miroir</span>
+                                    <span>En cas de besoin alternatif : <a href="https://pamm16.vantagemalay.com/app/auth/investor" target="_blank" rel="noopener noreferrer" class="text-amber-400 hover:underline">pamm16.vantagemalay.com</a></span>
                                 </div>
                             </div>
-                            <div class="h-[280px] sm:h-[360px] relative">
-                                <canvas id="performanceChart"></canvas>
-                            </div>
                         </div>
 
-                        <!-- 30 Derniers Jours -->
-                        <div class="glass history-card p-6 lg:col-span-4 space-y-4 flex flex-col justify-between" style="max-height: 480px;">
-                            <div>
-                                <h3 class="font-cinzel text-lg text-white">📊 30 Derniers Jours</h3>
-                                <p class="text-xs text-slate-400 font-light leading-relaxed mb-3">Gains nets et performances consolidées.</p>
-                            </div>
-                            <div class="table-wrap overflow-y-auto" style="flex: 1; max-height: 340px;">
-                                <div class="table-inner divide-y divide-white/5">
-                                    <div class="grid grid-cols-3 gap-2 py-2.5 text-[9px] uppercase tracking-widest text-slate-400 font-bold border-b border-white/5 sticky top-0 bg-[#030712]/80 backdrop-blur z-10">
-                                        <span>Date</span>
-                                        <span class="text-right">Gains</span>
-                                        <span class="text-right">Perf</span>
-                                    </div>
-                                    <div id="dailyHistoryTableBody" class="divide-y divide-white/5">
-                                        <!-- Dynamically populated -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-
                 </div>
+
             </div>
 
             <!-- ── VIEW: BOT ── -->
@@ -1719,7 +1746,7 @@
 
         // VIEW NAVIGATION
         const VIEW_META = {
-            dashboard: { title: 'Tableau de <span class="gold-luxury-text font-medium">Bord</span>', sub: 'Moniteur de performance en temps réel' },
+            dashboard: { title: 'Tableau de <span class="gold-luxury-text font-medium">Bord</span>', sub: 'Espace Investisseur & Accès PAMM' },
             bot: { title: 'Espace <span class="gold-luxury-text font-medium">Bots</span>', sub: 'Gérez et configurez vos robots algorithmiques' },
             config: { title: 'Configuration <span class="gold-luxury-text font-medium">Robot</span>', sub: 'Ajustez vos paramètres et objectifs' },
             community: { title: 'Communauté <span class="gold-luxury-text font-medium">SynapX</span>', sub: 'Rejoignez nos cercles officiels' },

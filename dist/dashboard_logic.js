@@ -363,6 +363,8 @@ async function loadData() {
         if (!Array.isArray(accounts) || accounts.length === 0) {
             loadedAccounts = {};
             currentAccountId = null;
+            const tabContainer = document.getElementById('accountTabs');
+            if (tabContainer) tabContainer.innerHTML = '';
             updateUI();
             return;
         }
@@ -408,111 +410,62 @@ function switchAccount(id) {
 // ─────────────────────────────────────────
 function updateUI() {
     const hasAccounts = currentAccountId && loadedAccounts[currentAccountId];
-    
-    const lockOverlay     = document.getElementById('dashboardLockOverlay');
-    const realContent     = document.getElementById('dashboardRealContent');
-    const configLockMask  = document.getElementById('configLockMask');
-    const centralizedMask = document.getElementById('centralizedConfigMask');
-    
-    // Check if the current account is pending
     const acc = hasAccounts ? loadedAccounts[currentAccountId] : null;
     const cfg = acc ? (acc.config || {}) : {};
     const isPending = acc && cfg.status === 'pending';
-    const isApproved = acc && cfg.status === 'approved';
+    const isApproved = acc && (cfg.status === 'approved' || cfg.status === 'active');
 
-    if (!hasAccounts || isPending) {
-        // Blur and Lock Dashboard + Configuration
-        if (lockOverlay) {
-            lockOverlay.style.display = 'flex';
-            
-            // Dynamic text based on state
-            const lockIcon = document.getElementById('lockOverlayIcon');
-            const lockTitle = document.getElementById('lockOverlayTitle');
-            const lockDesc = document.getElementById('lockOverlayDesc');
-            const lockBtnGroup = document.getElementById('lockOverlayBtnGroup');
-            
-            if (isPending) {
-                if (lockIcon) {
-                    lockIcon.setAttribute('data-lucide', 'hammer');
-                    lockIcon.className = "w-8 h-8 text-amber-400";
-                }
-                if (lockTitle) lockTitle.textContent = "Activation En Cours";
-                if (lockDesc) {
-                    const modeLabel = cfg.requested_mode === 'low' ? 'Conservateur' : cfg.requested_mode === 'normal' ? 'Équilibré' : 'Débridé';
-                    lockDesc.innerHTML = `Votre demande d'activation pour le compte MT5 <strong>#${acc.account_id}</strong> (Mode <strong>${modeLabel}</strong>) est en cours de traitement par notre équipe sous 48h.`;
-                }
-                if (lockBtnGroup) lockBtnGroup.style.display = 'none';
-            } else {
-                if (lockIcon) {
-                    lockIcon.setAttribute('data-lucide', 'key-round');
-                    lockIcon.className = "w-8 h-8 text-amber-400";
-                }
-                if (lockTitle) lockTitle.textContent = "Aucun Compte MT5 Lié";
-                if (lockDesc) {
-                    lockDesc.textContent = "Pour commencer à suivre vos performances algorithmiques en direct sur l'Or, vous devez d'abord associer votre compte de trading MetaTrader 5 (MT5).";
-                }
-                if (lockBtnGroup) lockBtnGroup.style.display = 'flex';
-            }
-            if (typeof lucide !== 'undefined' && lucide.createIcons) {
-                lucide.createIcons();
-            }
-        }
-        
-        if (realContent) {
-            realContent.style.filter = 'blur(16px)';
-            realContent.style.pointerEvents = 'none';
-        }
-        
-        if (configLockMask) {
-            configLockMask.style.display = 'flex';
-            const lockIcon = document.getElementById('configLockIcon');
-            if (lockIcon) {
-                lockIcon.setAttribute('data-lucide', 'key-round');
-                lockIcon.className = "w-6 h-6 text-amber-400";
-            }
-            const lockTitle = document.getElementById('configLockTitle');
-            if (lockTitle) {
-                lockTitle.textContent = "Liaison MT5 Requise";
-                lockTitle.className = "font-cinzel text-base text-amber-400 font-medium mb-2";
-            }
-            const lockDesc = document.getElementById('configLockDesc');
-            if (lockDesc) {
-                lockDesc.textContent = "Veuillez d'abord lier votre compte de trading MetaTrader 5 (MT5) pour pouvoir ajuster les paramètres de trading automatique.";
-            }
-            const lockButton = document.getElementById('configLockButton');
-            if (lockButton) {
-                lockButton.style.display = 'block';
-                lockButton.textContent = "Configurer mon Bot";
-            }
-            if (typeof lucide !== 'undefined' && lucide.createIcons) {
-                lucide.createIcons();
-            }
-        }
+    const noAccountEl = document.getElementById('dashStateNoAccount');
+    const pendingEl   = document.getElementById('dashStatePending');
+    const approvedEl  = document.getElementById('dashStateApproved');
+    const configLockMask  = document.getElementById('configLockMask');
+    const centralizedMask = document.getElementById('centralizedConfigMask');
+
+    // Hide all dashboard states first
+    if (noAccountEl) noAccountEl.classList.add('hidden');
+    if (pendingEl)   pendingEl.classList.add('hidden');
+    if (approvedEl)  approvedEl.classList.add('hidden');
+
+    if (!hasAccounts) {
+        if (noAccountEl) noAccountEl.classList.remove('hidden');
+        if (configLockMask) configLockMask.style.display = 'flex';
         if (centralizedMask) centralizedMask.style.display = 'none';
-        
-        // Reset dashboard values to empty placeholders
-        if (document.getElementById('statBalance')) document.getElementById('statBalance').textContent = '$0.00';
-        if (document.getElementById('statProfit')) document.getElementById('statProfit').textContent  = '$0.00';
-        if (document.getElementById('statProfitNet')) document.getElementById('statProfitNet').textContent = '$0.00';
-        if (document.getElementById('statWin')) document.getElementById('statWin').textContent     = '0%';
-        if (document.getElementById('statPF')) document.getElementById('statPF').textContent      = '0.00';
-        
-        const todayEl = document.getElementById('statToday');
-        if (todayEl) {
-            todayEl.textContent = '$0.00';
-            todayEl.style.color = 'var(--theme)';
-        }
-        
-        renderHistory([]);
-        renderDailyHistory([], 0);
+        if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
         return;
     }
-    
-    // Normal unlocked state: hide overlays
-    if (lockOverlay) lockOverlay.style.display = 'none';
-    if (realContent) {
-        realContent.style.filter = 'none';
-        realContent.style.pointerEvents = 'auto';
+
+    if (isPending) {
+        if (pendingEl) {
+            pendingEl.classList.remove('hidden');
+            const pendingAccNum = document.getElementById('pendingAccountNum');
+            if (pendingAccNum) pendingAccNum.textContent = '#' + acc.account_id;
+            const pendingDesc = document.getElementById('pendingAccountDesc');
+            if (pendingDesc) {
+                const modeLabel = cfg.requested_mode === 'low' ? 'Conservateur' : cfg.requested_mode === 'normal' ? 'Équilibré' : cfg.requested_mode === 'extreme' ? 'Débridé' : (cfg.requested_mode || 'Standard');
+                pendingDesc.innerHTML = `Votre demande d'activation pour le compte MT5 <strong>#${acc.account_id}</strong> (Formule <strong>${modeLabel}</strong>) est en cours de traitement par notre équipe sous <strong>48h maximum</strong>. Dès approbation par l'administrateur, votre bouton d'accès direct à l'interface PAMM sera activé ici.`;
+            }
+        }
+        if (configLockMask) configLockMask.style.display = 'flex';
+        if (centralizedMask) centralizedMask.style.display = 'none';
+        if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+        return;
+    }
+
+    // Account is approved / active:
+    if (approvedEl) {
+        approvedEl.classList.remove('hidden');
+        const approvedAccNum = document.getElementById('approvedAccountNum');
+        if (approvedAccNum) approvedAccNum.textContent = '#' + acc.account_id;
+        const formulaEl = document.getElementById('approvedAccountFormula');
+        if (formulaEl) {
+            let formulaName = 'Formule PAMM SynapX';
+            if (cfg.pamm_allocations && Array.isArray(cfg.pamm_allocations) && cfg.pamm_allocations.length > 0) {
+                formulaName = cfg.pamm_allocations.map(a => a.name || a.pamm).join(', ');
+            } else if (cfg.mode) {
+                formulaName = 'Formule : ' + (cfg.mode === 'low' ? 'Modéré / Safe' : cfg.mode === 'normal' ? 'Normal / Équilibré' : 'Agressif / Débridé');
+            }
+            formulaEl.textContent = `${formulaName} • Infrastructure Vantage Markets`;
+        }
     }
 
     if (isApproved) {
@@ -527,6 +480,10 @@ function updateUI() {
     } else {
         if (centralizedMask) centralizedMask.style.display = 'none';
         if (configLockMask) configLockMask.style.display = 'none';
+    }
+
+    if (typeof lucide !== 'undefined' && lucide.createIcons) {
+        lucide.createIcons();
     }
 
     // ── Core Stats ──
@@ -3614,6 +3571,9 @@ function closeActivationWizard() {
         modal.classList.add('hidden');
         modal.style.display = 'none';
     }
+    if (typeof switchView === 'function') {
+        switchView('dashboard');
+    }
 }
 
 function markPdfDownloaded() {
@@ -3637,9 +3597,15 @@ function goToActivationStep1() {
 }
 
 async function submitActivationRequest() {
-    const mt5Number = document.getElementById('activationMt5Number').value.trim();
+    const mt5Input = document.getElementById('activationMt5Number');
+    const mt5Number = mt5Input ? mt5Input.value.trim() : '';
     if (!mt5Number) {
         showToast("Veuillez renseigner votre numéro de compte MT5 PAMM.", "error");
+        return;
+    }
+    
+    if (!currentUser || !currentUser.email) {
+        showToast("Session expirée. Veuillez vous reconnecter.", "error");
         return;
     }
     
@@ -3648,7 +3614,7 @@ async function submitActivationRequest() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                email: currentUser.email,
+                email: currentUser.email.trim(),
                 account_id: mt5Number,
                 mode: mitsuPlan // 'low', 'normal', 'extreme'
             })
@@ -3659,7 +3625,7 @@ async function submitActivationRequest() {
             document.getElementById('activationStep2').classList.add('hidden');
             document.getElementById('activationStep3').classList.remove('hidden');
             
-            // Reload accounts list in background to update UI lock state
+            // Reload accounts list in background to update UI state
             await loadData();
         } else {
             showToast(data.message || "Erreur lors de la soumission.", "error");

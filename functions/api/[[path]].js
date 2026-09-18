@@ -93,7 +93,8 @@ export async function onRequest(context) {
         // --- 2. LOGIN ---
         if (path === '/api/login' && request.method === 'POST') {
             const { email, password } = await request.json();
-            const { data, error } = await supabase.from('users').select('*').eq('email', email).single();
+            const cleanEmail = (email || '').trim();
+            const { data, error } = await supabase.from('users').select('*').ilike('email', cleanEmail).maybeSingle();
 
             if (data && await bcrypt.compare(password, data.password)) {
                 return new Response(JSON.stringify({ status: 'success', user: { email: data.email, fullName: data.full_name } }), {
@@ -1011,19 +1012,58 @@ export async function onRequest(context) {
 
         // --- 8.5. CLIENT ACTIVATION REQUEST ---
         if (path === '/api/activation-request' && request.method === 'POST') {
-            const { email, account_id, mode } = await request.json();
-            if (!email || !account_id || !mode) {
+            const body = await request.json();
+            const rawEmail = body.email;
+            const rawAccountId = body.account_id;
+            const mode = body.mode;
+
+            if (!rawEmail || !rawAccountId || !mode) {
                 return new Response(JSON.stringify({ status: 'error', message: 'Paramètres invalides.' }), {
                     status: 400,
                     headers: { ...corsHeaders, 'Content-Type': 'application/json' }
                 });
             }
 
-            // Check if account_id already exists in accounts table
+            const cleanEmail = String(rawEmail).trim();
+            const cleanAccountId = String(rawAccountId).trim();
+
+            // 1. Ensure user exists in 'users' table with exact matching email casing to satisfy foreign key
+            let targetEmail = cleanEmail;
+            const { data: matchedUser } = await supabase
+                .from('users')
+                .select('email, full_name')
+                .ilike('email', cleanEmail)
+                .maybeSingle();
+
+            if (matchedUser && matchedUser.email) {
+                targetEmail = matchedUser.email;
+            } else {
+                // If user doesn't exist in 'users' table, auto-create a user record so foreign key is satisfied
+                const defaultHashed = await bcrypt.hash("SynapX_Auto_" + Date.now(), 10);
+                const { error: userInsertErr } = await supabase.from('users').insert([{
+                    email: cleanEmail,
+                    full_name: "Client SynapX",
+                    password: defaultHashed
+                }]);
+                if (!userInsertErr) {
+                    targetEmail = cleanEmail;
+                } else {
+                    const { data: retryUser } = await supabase
+                        .from('users')
+                        .select('email')
+                        .ilike('email', cleanEmail)
+                        .maybeSingle();
+                    if (retryUser && retryUser.email) {
+                        targetEmail = retryUser.email;
+                    }
+                }
+            }
+
+            // 2. Check if account_id already exists in accounts table
             const { data: existingAcc } = await supabase
                 .from('accounts')
                 .select('email, config')
-                .eq('account_id', String(account_id))
+                .eq('account_id', cleanAccountId)
                 .maybeSingle();
 
             if (existingAcc) {
@@ -1035,10 +1075,10 @@ export async function onRequest(context) {
 
             // Multiple activations allowed: Users can request activations for multiple MT5 accounts / bots
 
-            // Insert pending account
+            // 3. Insert pending account with matched user email
             const { error: insertError } = await supabase.from('accounts').insert([{
-                account_id: String(account_id),
-                email: email,
+                account_id: cleanAccountId,
+                email: targetEmail,
                 balance: 0,
                 equity: 0,
                 currency: 'USD',
@@ -1051,7 +1091,12 @@ export async function onRequest(context) {
             }]);
 
             if (insertError) {
-                return new Response(JSON.stringify({ status: 'error', message: insertError.message }), {
+                console.error("Activation insert error:", insertError);
+                let userMsg = insertError.message;
+                if (userMsg && userMsg.includes('accounts_email_fkey')) {
+                    userMsg = "Erreur de liaison de compte. Veuillez vous reconnecter et réitérer votre demande.";
+                }
+                return new Response(JSON.stringify({ status: 'error', message: userMsg }), {
                     status: 500,
                     headers: { ...corsHeaders, 'Content-Type': 'application/json' }
                 });
